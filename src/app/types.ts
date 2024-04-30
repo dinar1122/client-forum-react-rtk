@@ -44,6 +44,13 @@ export type User = {
     post: Post
     postId: string
   }
+  export type Dislike = {
+    id: string
+    user: User
+    userId: string
+    post: Post
+    postId: string
+  }
   
   export type Comment = {
     id: string
