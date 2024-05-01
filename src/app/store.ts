@@ -2,12 +2,16 @@ import type { Action, ThunkAction } from "@reduxjs/toolkit"
 import { combineSlices, configureStore } from "@reduxjs/toolkit"
 import { setupListeners } from "@reduxjs/toolkit/query"
 import { api } from "./services/api"
+import user from '../features/UserSlice'
+import { listenerMiddleware } from "../middleware/auth"
 
 
 export const store = configureStore({
-  reducer: { [api.reducerPath]: api.reducer },
+  reducer: { [api.reducerPath]: api.reducer, user, },
   middleware: getDefaultMiddleware => {
-    return getDefaultMiddleware().concat()
+    return getDefaultMiddleware()
+    .concat(api.middleware)
+    .prepend(listenerMiddleware.middleware)
   },
 })
 setupListeners(store.dispatch)

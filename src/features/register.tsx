@@ -37,7 +37,7 @@ const Register = ({ setSelected }: Props)  => {
     
     const onSubmit = async (data: Register) => {
         try {
-            await register(data).unwrap
+            await register(data).unwrap()
             setSelected('login')
         } catch (error) {
             if (existErrorField(error)) {

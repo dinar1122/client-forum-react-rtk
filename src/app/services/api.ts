@@ -5,21 +5,21 @@ import { RootState } from "../store";
 
 const baseQuery = fetchBaseQuery({
     baseUrl: `${BASE_URL}/api`,
-   /*  prepareHeaders: (headers, { getState}) => {
-        const token = (getState() as RootState).auth.token || localStorage.getItem('token')
+    prepareHeaders: (headers, { getState}) => {
+        const token = (getState() as RootState).user.token || localStorage.getItem('token')
 
         if(token) {
             headers.set('authorization', `Bearer ${token}`)
         }
 
         return headers
-    } */
+    }
 })
-const baseQueryRetry = retry(baseQuery, {maxRetries: 2})
+const baseQueryWithRetry = retry(baseQuery, {maxRetries: 2})
 
 export const api = createApi({
     reducerPath:'splitApi',
-    baseQuery: baseQueryRetry,
+    baseQuery: baseQueryWithRetry,
     refetchOnMountOrArgChange: true,
     endpoints: () => ({})
 })

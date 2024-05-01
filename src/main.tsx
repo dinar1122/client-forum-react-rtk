@@ -13,6 +13,7 @@ import CurrentPost from "./pages/current-post"
 import Profile from "./pages/profile"
 import Subs from "./pages/subs"
 import Followers from "./pages/followers"
+import { AuthGuard } from "./features/authGuard"
 
 const container = document.getElementById("root")
 
@@ -57,7 +58,10 @@ if (container) {
       <Provider store={store}>
 
         <NextUIProvider>
+          
+        <AuthGuard>
           <RouterProvider router={router} />
+        </AuthGuard>
         </NextUIProvider>
       </Provider>
     </React.StrictMode>,
