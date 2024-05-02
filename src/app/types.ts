@@ -2,7 +2,7 @@ export type User = {
     id: string
     email: string
     password: string
-    name?: string
+    username?: string
     avatarUrl?: string
     dateOfBirth?: Date
     createdAt: Date
@@ -31,8 +31,10 @@ export type User = {
     author: User
     authorId: string
     likes: Like[]
+    dislikes: Dislike[]
     comments: Comment[]
     likedByUser: boolean
+    dislikedByUser: boolean
     createdAt: Date
     updatedAt: Date
   }

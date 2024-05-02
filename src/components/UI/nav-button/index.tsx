@@ -10,7 +10,7 @@ type Props = {
 
 export const NavButton: React.FC<Props> = ({ children, icon, href }) => {
   return (
-    <CustomButton className="flex justify-start text-xl" icon={icon}>
+    <CustomButton className="flex justify-start text-xl shadow-md w-full" icon={icon}>
       <Link to={href}>
         {children}
       </Link>

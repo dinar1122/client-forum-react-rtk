@@ -5,6 +5,7 @@ import Container from '../container'
 import { NavBar } from '../nav-bar'
 import { useSelector } from 'react-redux'
 import { selectIsAuthenticated, selectUser } from '../../features/UserSlice'
+import Profile from '../profile'
 
 const Layout = () => {
 
@@ -19,9 +20,9 @@ const Layout = () => {
     }, [])
 
     return (
-        <>
+        <div className="bg-gradient-to-tr from-white to-indigo-50">
             <Header />
-            <Container>
+            <Container >
                 <div className="flex-2 p-4">
                     <NavBar />
                 </div>
@@ -29,10 +30,10 @@ const Layout = () => {
                     <Outlet />
                 </div>
                 <div className="flex-2 p-4">
-
+                    <div className="flex-col flex gap-5">{!user && <Profile />}</div>
                 </div>
             </Container>
-        </>
+        </div>
     )
 }
 

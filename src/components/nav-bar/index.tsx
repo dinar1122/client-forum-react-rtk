@@ -8,7 +8,7 @@ import { CgProfile } from "react-icons/cg"
 export const NavBar: React.FC = () => {
   return (
     <nav>
-      <ul className="flex flex-col gap-5">
+      <ul className="flex flex-col gap-5 ">
         <li>
           <NavButton href="/" icon={<BsPostcard />}>
             Посты
@@ -27,6 +27,11 @@ export const NavBar: React.FC = () => {
         <li>
           <NavButton href="profile" icon={<CgProfile />}>
             Мой профиль
+          </NavButton>
+        </li>
+        <li className="bg-gradient-to-r from-cyan-200 to-blue-300 rounded-xl">
+          <NavButton href="followers" icon={<FaUsers />}>
+            Обсуждения
           </NavButton>
         </li>
       </ul>

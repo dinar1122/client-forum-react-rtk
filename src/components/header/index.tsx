@@ -9,12 +9,12 @@ import {
   import { FaRegMoon } from "react-icons/fa"
   import { useDispatch, useSelector } from "react-redux"
   import { CiLogout } from "react-icons/ci"
-/*   import { logout, selectIsAuthenticated } from "../../features/user/userSlice" */
   import { useNavigate } from "react-router-dom"
   import { useContext } from "react"
+import { logout, selectIsAuthenticated } from "../../features/UserSlice"
   
   export const Header = () => {
-    /* const isAuthenticated = useSelector(selectIsAuthenticated)
+    const isAuthenticated = useSelector(selectIsAuthenticated)
     const dispatch = useDispatch()
     const navigate = useNavigate()
   
@@ -22,16 +22,16 @@ import {
       dispatch(logout())
       localStorage.removeItem('token')
       navigate("/auth")
-    } */
+    }
   
     return (
-      <Navbar>
+      <Navbar className="bg-gradient-to-r from-cyan-200 to-blue-300">
         <NavbarBrand>
           <p className="font-bold text-inherit">Network Social</p>
         </NavbarBrand>
   
         <NavbarContent justify="end">
-          {/* <NavbarItem>
+          <NavbarItem>
             {isAuthenticated && (
               <Button
                 color="default"
@@ -42,7 +42,7 @@ import {
                 <CiLogout /> <span>Выйти</span>
               </Button>
             )}
-          </NavbarItem> */}
+          </NavbarItem>
         </NavbarContent>
       </Navbar>
     )

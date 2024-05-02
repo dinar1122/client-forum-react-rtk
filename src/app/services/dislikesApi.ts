@@ -3,7 +3,7 @@ import { api } from "./api";
 
 export const dislikesApi = api.injectEndpoints({
     endpoints: (builder) => ({
-        createDislike: builder.mutation<Dislike, Partial<Dislike>>({
+        createDislike: builder.mutation<Dislike, string>({
             query: (postId) => ({
                 url: `/dislikes/${postId}`,
                 method: 'POST',
