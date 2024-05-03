@@ -12,6 +12,7 @@ import {
   import { useNavigate } from "react-router-dom"
   import { useContext } from "react"
 import { logout, selectIsAuthenticated } from "../../features/UserSlice"
+import { CustomButton } from "../UI/custom-button"
   
   export const Header = () => {
     const isAuthenticated = useSelector(selectIsAuthenticated)
@@ -33,14 +34,13 @@ import { logout, selectIsAuthenticated } from "../../features/UserSlice"
         <NavbarContent justify="end">
           <NavbarItem>
             {isAuthenticated && (
-              <Button
-                color="default"
-                variant="flat"
-                className="gap-2"
+              <CustomButton
+              color="default"
+              className="flex bg-blue-100"
                 onClick={hadleLogout}
               >
                 <CiLogout /> <span>Выйти</span>
-              </Button>
+              </CustomButton>
             )}
           </NavbarItem>
         </NavbarContent>

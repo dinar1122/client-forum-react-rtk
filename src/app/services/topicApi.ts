@@ -1,6 +1,6 @@
 import { api } from "./api";
 
-export const followsApi = api.injectEndpoints({
+export const topicApi = api.injectEndpoints({
     endpoints: (builder) => ({
         createSubcription: builder.mutation<void, {followingId: string}>({
             query: (topicId) => ({
@@ -8,14 +8,14 @@ export const followsApi = api.injectEndpoints({
                 method: 'POST',
             })
         }),
-        removeSubcription: builder.mutation<void, string>({
+        deleteSubcription: builder.mutation<void, string>({
             query: (topicId) => ({
                 url: `/topic/${topicId}`,
                 method: 'DELETE'
 
             })
         }),
-        getTopicList: builder.query<string[], void>({
+        getTopicList: builder.query<any, void>({
             query: () => ({
                 url: `/topic`,
                 method: `GET`
@@ -23,3 +23,5 @@ export const followsApi = api.injectEndpoints({
         })
     })
 })
+
+export const { endpoints: { createSubcription, deleteSubcription, getTopicList} } = topicApi

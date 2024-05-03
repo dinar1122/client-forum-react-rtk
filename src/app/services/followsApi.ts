@@ -2,7 +2,7 @@ import { api } from "./api";
 
 export const followsApi = api.injectEndpoints({
     endpoints: (builder) => ({
-        followOnUser: builder.mutation<void, {followingId: string}>({
+        followOnUser: builder.mutation<void, string>({
             query: (followingId) => ({
                 url: `/follows/${followingId}`,
                 method: 'POST',

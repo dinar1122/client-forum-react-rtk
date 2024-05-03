@@ -22,7 +22,8 @@ const CurrentPost = () => {
     author,
     likedByUser,
     dislikedByUser,
-    createdAt
+    createdAt,
+    topic
   } = data
 
   return (
@@ -33,12 +34,15 @@ const CurrentPost = () => {
         avatarUrl={author?.avatarUrl ?? ""}
         content={content}
         name={author?.username ?? ""}
-        likesCount={likes.length}
+        likesCount={likes?.length}
+        dislikesCount={dislikes?.length}
         commentsCount={comments?.length}
         authorId={authorId}
         id={id}
         likedByUser={likedByUser}
+        dislikedByUser={dislikedByUser}
         createdAt={createdAt}
+        topicData={topic}
       />
       <div className="mt-10">
         <CommentCreator />

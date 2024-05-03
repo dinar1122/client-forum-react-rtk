@@ -37,6 +37,7 @@ export type User = {
     dislikedByUser: boolean
     createdAt: Date
     updatedAt: Date
+    topic: Topic[]
   }
   
   export type Like = {
@@ -45,6 +46,11 @@ export type User = {
     userId: string
     post: Post
     postId: string
+  }
+  export type Topic = {
+    id: string
+    description: string
+    name: string
   }
   export type Dislike = {
     id: string

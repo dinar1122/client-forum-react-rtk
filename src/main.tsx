@@ -14,6 +14,7 @@ import Profile from "./pages/profile"
 import Subs from "./pages/subs"
 import Followers from "./pages/followers"
 import { AuthGuard } from "./features/authGuard"
+import Topic from "./pages/topic"
 
 const container = document.getElementById("root")
 
@@ -45,6 +46,10 @@ const router = createBrowserRouter([
       {
         path: "followers",
         element: <Followers />,
+      },
+      {
+        path: "topic",
+        element: <Topic />,
       }
     ],
   },

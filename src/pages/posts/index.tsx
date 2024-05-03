@@ -27,6 +27,7 @@ export default function Posts() {
           commentsCount={postData.comments.length}
           likesCount={postData.likes.length}
           dislikesCount={postData.dislikes.length}
+          topicData={postData.topic}
           />
         }) : <></>
       }

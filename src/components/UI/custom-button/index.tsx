@@ -15,6 +15,8 @@ type Props = {
     | "warning"
     | "danger"
     | undefined
+    endContent?: any
+    onClick?: any
 }
 
 export const CustomButton: React.FC<Props> = ({
@@ -24,6 +26,8 @@ export const CustomButton: React.FC<Props> = ({
   type,
   fullWidth,
   color,
+  endContent,
+  onClick
 }) => {
   return (
     <NextUIButton
@@ -34,6 +38,8 @@ export const CustomButton: React.FC<Props> = ({
       className={className}
       type={type}
       fullWidth={fullWidth}
+      endContent={endContent}
+      onClick={onClick}
     >
       {children}
     </NextUIButton>
