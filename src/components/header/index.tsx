@@ -4,6 +4,7 @@ import {
     NavbarContent,
     NavbarItem,
     Button,
+    Input,
   } from "@nextui-org/react"
   import { LuSunMedium } from "react-icons/lu"
   import { FaRegMoon } from "react-icons/fa"
@@ -28,10 +29,24 @@ import { CustomButton } from "../UI/custom-button"
     return (
       <Navbar className="bg-gradient-to-r from-cyan-200 to-blue-300">
         <NavbarBrand>
-          <p className="font-bold text-inherit">Network Social</p>
+          <p className="font-bold text-inherit">TechLogic</p>
         </NavbarBrand>
   
         <NavbarContent justify="end">
+          <NavbarItem>
+          <Input
+          classNames={{
+            base: "max-w-full sm:max-w-[10rem] h-10",
+            mainWrapper: "h-full",
+            input: "text-small",
+            inputWrapper: "h-full font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20",
+          }}
+          placeholder="Type to search..."
+          size="sm"
+          
+          type="search"
+        />
+          </NavbarItem>
           <NavbarItem>
             {isAuthenticated && (
               <CustomButton

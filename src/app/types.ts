@@ -38,6 +38,7 @@ export type User = {
     createdAt: Date
     updatedAt: Date
     topic: Topic[]
+    category: Category 
   }
   
   export type Like = {
@@ -51,6 +52,13 @@ export type User = {
     id: string
     description: string
     name: string
+  }
+  export type Category = {
+    id: string
+    name: string
+    posts: Post[]
+    topics: Topic[]
+
   }
   export type Dislike = {
     id: string

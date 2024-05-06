@@ -6,6 +6,7 @@ import { NavButton } from "../UI/nav-button"
 import { CgProfile } from "react-icons/cg"
 import { useSelector } from "react-redux"
 import { selectCurrent } from "../../features/UserSlice"
+import { IoMdNotificationsOutline } from "react-icons/io"
 
 export const NavBar: React.FC = () => {
   const currentUser = useSelector(selectCurrent)
@@ -13,12 +14,12 @@ export const NavBar: React.FC = () => {
     <nav>
       <ul className="flex flex-col gap-5 ">
         <li>
-          <NavButton href="/" icon={<BsPostcard />}>
+          <NavButton href="/" icon={<BsPostcard />} >
             Посты
           </NavButton>
         </li>
         <li>
-          <NavButton href="subs" icon={<FiUsers />}>
+          <NavButton href={`subs/${currentUser?.id}`} icon={<FiUsers />} >
             Подписки
           </NavButton>
         </li>
@@ -33,8 +34,13 @@ export const NavBar: React.FC = () => {
           </NavButton>
         </li>
         <li className="bg-gradient-to-r from-cyan-200 to-blue-300 rounded-xl">
-          <NavButton href="topic" icon={<FaUsers />}>
-            Обсуждения
+          <NavButton href="categories" icon={<FaUsers />}>
+            Разделы
+          </NavButton>
+        </li>
+        <li className="">
+          <NavButton href="notifications" icon={<IoMdNotificationsOutline />}>
+            Уведомления
           </NavButton>
         </li>
       </ul>

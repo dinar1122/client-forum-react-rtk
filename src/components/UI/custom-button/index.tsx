@@ -30,7 +30,7 @@ export const CustomButton: React.FC<Props> = ({
   onClick
 }) => {
   return (
-    <NextUIButton
+    <NextUIButton 
       startContent={icon}
       size="lg"
       color={color}

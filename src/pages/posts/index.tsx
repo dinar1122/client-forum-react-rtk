@@ -6,8 +6,7 @@ import { Card } from '../../components/card'
 
 export default function Posts() {
   const { data } = useGetAllPostsQuery()
-  console.log(data)
-
+  
   return (
     <>
       <CreatePost></CreatePost>
@@ -28,6 +27,7 @@ export default function Posts() {
           likesCount={postData.likes.length}
           dislikesCount={postData.dislikes.length}
           topicData={postData.topic}
+          categoryData={postData.category}
           />
         }) : <></>
       }

@@ -15,6 +15,9 @@ import Subs from "./pages/subs"
 import Followers from "./pages/followers"
 import { AuthGuard } from "./features/authGuard"
 import Topic from "./pages/topic"
+import Categories from "./pages/categories"
+import CurrentCategory from "./pages/current-category"
+import CurrentTopic from "./pages/current-topic"
 
 const container = document.getElementById("root")
 
@@ -40,7 +43,7 @@ const router = createBrowserRouter([
         element: <Profile />,
       },
       {
-        path: "subs",
+        path: "subs/:id",
         element: <Subs />,
       },
       {
@@ -48,8 +51,16 @@ const router = createBrowserRouter([
         element: <Followers />,
       },
       {
-        path: "topic",
-        element: <Topic />,
+        path: "categories",
+        element: <Categories />,
+      },
+      {
+        path: "categories/:id",
+        element: <CurrentCategory />,
+      },
+      {
+        path: "categories/:id/topic/:id",
+        element: <CurrentTopic />,
       }
     ],
   },

@@ -12,6 +12,8 @@ const Layout = () => {
     const isAuthenticated = useSelector(selectIsAuthenticated)
     const user = useSelector(selectUser)
     const navigate = useNavigate()
+
+    
   
     useEffect(() => {
       if (!isAuthenticated) {

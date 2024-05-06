@@ -41,7 +41,8 @@ type CardProps = {
   cardFor: "comment" | "post" | "current-post"
   likedByUser?: boolean
   dislikedByUser?: boolean,
-  topicData?: any
+  topicData?: any,
+  categoryData?: any
 }
 
 export const Card = ({
@@ -58,7 +59,8 @@ export const Card = ({
   dislikedByUser = false,
   createdAt,
   commentId = "",
-  topicData = ''
+  topicData = '',
+  categoryData = ''
 }: CardProps) => {
 
   const [likePost] = useCreateLikeMutation()
@@ -146,7 +148,7 @@ export const Card = ({
 
   return (
 
-    <div style={{ width: '770px' }} className=''><NextUICard className='mb-4 mt-4 max-w-full mx-auto' >
+    <div  className=''><NextUICard className='mb-4 mt-4 max-w-[770px] mx-auto' >
       <CardHeader className="justify-between items-center bg-transparent">
         <div><Link href={`/users/${authorId}`}>
           <User
@@ -156,11 +158,16 @@ export const Card = ({
             description={createdAt && formatToClientDate(createdAt)}
           />
         </Link>
-          {cardFor !== 'comment' && (<div className='flex items-center gap-2 cursor-pointer'><p className='font-semibold text-default-400 text-l'>В теме:</p>
-            <Link className='text-primary-400 text-md'>{topicData.name}</Link>
-            </div>)}
-          
-          </div>
+          {cardFor !== 'comment' && 
+          (<div>
+              <div className='flex items-center gap-2 cursor-pointer'><p className='font-semibold text-default-400 text-l'>Категория:</p>
+                <Link href={`categories/${categoryData?.id}`} className='text-primary-400 text-md'>{categoryData?.name}</Link>
+                  </div><div className='flex items-center gap-2 cursor-pointer'><p className='font-semibold text-default-400 text-l'>В теме:</p>
+                <Link className='text-primary-400 text-md'>{topicData.name}</Link>
+             </div>
+          </div>)}
+
+        </div>
 
         {authorId === currentUser?.id && (
           <div className="cursor-pointer" onClick={handleDelete}>

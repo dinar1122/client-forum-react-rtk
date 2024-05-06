@@ -11,21 +11,26 @@ import { topicApi } from "../../app/services/topicApi"
 import { useDispatch, useSelector } from "react-redux"
 import { selectGeneralData, setData } from "../../features/GeneralSlice"
 import { useEffect, useState } from "react"
+import { categoryApi } from "../../app/services/categoryApi"
 
 export const CreatePost = () => {
   const [createPost] = useCreatePostMutation()
   const [triggerGetAllPosts] = useLazyGetAllPostsQuery()
-  const { data } = topicApi.useGetTopicListQuery()
-  const [selectedValue, setSelectedValue] = useState('');
+ /*  const { data } = topicApi.useGetTopicListQuery() */
+  const categoryList = (categoryApi.useGetCategoryListQuery()).data
+  const [selectedTopicValue, setSelectedTopicValue] = useState('');
+  const [selectedCategoryValue, setSelectedCategoryValue] = useState('');
 
+  const [topics, setTopics] = useState([]);
+  const topicsByCategoryId = topicApi.useGetTopicListByCategoryIdQuery(selectedCategoryValue);
 
   const dispatch = useDispatch();
-
-  useEffect(() => {
+  
+  /* useEffect(() => {
     if (data) {
       dispatch(setData(data))
     }
-  }, [data, dispatch])
+  }, [data, dispatch]) */
   const {
     handleSubmit,
     control,
@@ -35,7 +40,7 @@ export const CreatePost = () => {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await createPost({ content: data.post, topicId: selectedValue }).unwrap()
+      await createPost({ content: data.post, topicId: selectedTopicValue, categoryId: selectedCategoryValue }).unwrap()
       setValue("post", "")
       await triggerGetAllPosts().unwrap()
     } catch (error) {
@@ -43,7 +48,12 @@ export const CreatePost = () => {
     }
   })
   const handleSelectChange = (event: any) => {
-    setSelectedValue(event.target.value);
+    setSelectedTopicValue(event.target.value);
+  };
+  const handleSelectCategoryChange = (event: any) => {
+    const categoryId = event.target.value;
+    setSelectedCategoryValue(categoryId);
+    setSelectedTopicValue('')
   };
   const error = errors?.post?.message as string
 
@@ -66,18 +76,31 @@ export const CreatePost = () => {
         )}
       />
       {errors && <ErrorMessage error={error} />}
-      <div className="flex "><Select
-        label="Выберите тему"
+      <div className="flex ">
+      <Select
+        label="Выберите категорию"
         className="max-w-40 mr-4 "
-        onChange={handleSelectChange}
-        value={selectedValue}
+        onChange={handleSelectCategoryChange}
+        value={selectedCategoryValue}
       >
-        {data?.map((topic: any) => (
-          <SelectItem key={topic.id} value={topic.name}>
-            {topic.name}
+        {categoryList?.map((category: any) => (
+          <SelectItem key={category.id} value={category.id}>
+            {category.name}
           </SelectItem>
         ))}
       </Select>
+      {selectedCategoryValue && <Select
+        label="Выберите тему"
+        className="max-w-40 mr-4 "
+        onChange={handleSelectChange}
+        value={selectedTopicValue}
+      >
+        {topicsByCategoryId?.data?.map((topic: any) => (
+          <SelectItem key={topic.id} value={topic.id}>
+            {topic.name}
+          </SelectItem>
+        ))}
+      </Select>}  
         <CustomButton
           color="default"
           className="flex bg-blue-200"
