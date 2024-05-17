@@ -1,4 +1,4 @@
-import { Button, Select, SelectItem, Textarea } from "@nextui-org/react"
+import { Button, Link, Select, SelectItem, Textarea } from "@nextui-org/react"
 import {
   useCreatePostMutation,
   useLazyGetAllPostsQuery,
@@ -9,28 +9,18 @@ import { CgAdd } from "react-icons/cg"
 import { CustomButton } from "../UI/custom-button"
 import { topicApi } from "../../app/services/topicApi"
 import { useDispatch, useSelector } from "react-redux"
-import { selectGeneralData, setData } from "../../features/GeneralSlice"
+
 import { useEffect, useState } from "react"
 import { categoryApi } from "../../app/services/categoryApi"
+import Selector from "../selector"
 
 export const CreatePost = () => {
   const [createPost] = useCreatePostMutation()
   const [triggerGetAllPosts] = useLazyGetAllPostsQuery()
- /*  const { data } = topicApi.useGetTopicListQuery() */
-  const categoryList = (categoryApi.useGetCategoryListQuery()).data
   const [selectedTopicValue, setSelectedTopicValue] = useState('');
   const [selectedCategoryValue, setSelectedCategoryValue] = useState('');
 
-  const [topics, setTopics] = useState([]);
-  const topicsByCategoryId = topicApi.useGetTopicListByCategoryIdQuery(selectedCategoryValue);
 
-  const dispatch = useDispatch();
-  
-  /* useEffect(() => {
-    if (data) {
-      dispatch(setData(data))
-    }
-  }, [data, dispatch]) */
   const {
     handleSubmit,
     control,
@@ -76,39 +66,29 @@ export const CreatePost = () => {
         )}
       />
       {errors && <ErrorMessage error={error} />}
-      <div className="flex ">
-      <Select
-        label="Выберите категорию"
-        className="max-w-40 mr-4 "
-        onChange={handleSelectCategoryChange}
-        value={selectedCategoryValue}
-      >
-        {categoryList?.map((category: any) => (
-          <SelectItem key={category.id} value={category.id}>
-            {category.name}
-          </SelectItem>
-        ))}
-      </Select>
-      {selectedCategoryValue && <Select
-        label="Выберите тему"
-        className="max-w-40 mr-4 "
-        onChange={handleSelectChange}
-        value={selectedTopicValue}
-      >
-        {topicsByCategoryId?.data?.map((topic: any) => (
-          <SelectItem key={topic.id} value={topic.id}>
-            {topic.name}
-          </SelectItem>
-        ))}
-      </Select>}  
-        <CustomButton
+      <div className="flex justify-between">
+        <Selector setFirst={setSelectedCategoryValue} setSecond={setSelectedTopicValue}></Selector>
+        <div className="h-100 flex items-center">
+          <Button
           color="default"
-          className="flex bg-blue-200"
+          className="flex bg-blue-200 "
           endContent={<CgAdd />}
           type="submit"
         >
           Создать пост
-        </CustomButton></div>
+        </Button>
+          <Link className="h-max" href='/create'>
+            <Button
+            color="default"
+            type="button"
+            className="font-semibold default flex bg-blue-200 ml-4 rounded-xl"
+          >
+            редактор
+          </Button>
+          </Link>
+        </div>
+
+      </div>
     </form>
   )
 }

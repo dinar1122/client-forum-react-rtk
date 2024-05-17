@@ -5,6 +5,7 @@ import { Card, CardBody } from '@nextui-org/react';
 import CategoryHeader from '../../components/category-header';
 import { formatToClientDate } from '../../utils/format-to-client-date';
 import { MdKeyboardDoubleArrowDown } from 'react-icons/md';
+import { FaFire } from 'react-icons/fa';
 
 const CurrentCategory = () => {
   const { id = '' } = useParams<{ id: string }>();
@@ -26,8 +27,9 @@ const CurrentCategory = () => {
         return <div key={topic.id}>
           <Card className='text-xl font-semibold text-gray-700'>
             <Link to={`topic/${topic.id}`} className='flex-row justify-end'>
-              <CardBody>Тема: {topic.name} описание темы: {topic.description}</CardBody> 
-              <CardBody className='max-w-[max-content] text-gray-400'>постов в теме: {topic.posts.length}</CardBody> 
+              <CardBody>Тема: {topic.name} </CardBody> 
+              
+              <CardBody className='max-w-[max-content] text-gray-400'>постов в теме: {topic.posts.length} </CardBody> 
               <CardBody className='max-w-[max-content] m-[auto]'><MdKeyboardDoubleArrowDown type='button'/></CardBody>
             </Link>
           </Card>

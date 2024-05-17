@@ -11,21 +11,31 @@ import {
   import { useDispatch, useSelector } from "react-redux"
   import { CiLogout } from "react-icons/ci"
   import { useNavigate } from "react-router-dom"
-  import { useContext } from "react"
+  import { useContext, useEffect } from "react"
 import { logout, selectIsAuthenticated } from "../../features/UserSlice"
 import { CustomButton } from "../UI/custom-button"
+import { useGetCategoryListQuery } from "../../app/services/categoryApi"
+import { setCategories } from "../../features/GeneralSlice"
   
   export const Header = () => {
     const isAuthenticated = useSelector(selectIsAuthenticated)
     const dispatch = useDispatch()
     const navigate = useNavigate()
-  
+    const { data: categoriesData, isSuccess } = useGetCategoryListQuery();
+
+    useEffect(() => {
+        if (isSuccess) {
+            dispatch(setCategories(categoriesData)); 
+        }
+    }, [dispatch, categoriesData, isSuccess]);
+   
+
     const hadleLogout = () => {
       dispatch(logout())
       localStorage.removeItem('token')
       navigate("/auth")
     }
-  
+    
     return (
       <Navbar className="bg-gradient-to-r from-cyan-200 to-blue-300">
         <NavbarBrand>

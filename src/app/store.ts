@@ -3,12 +3,12 @@ import { combineSlices, configureStore } from "@reduxjs/toolkit"
 import { setupListeners } from "@reduxjs/toolkit/query"
 import { api } from "./services/api"
 import user from '../features/UserSlice'
-import GeneralSlice from "../features/GeneralSlice"
+import categorySlice from "../features/GeneralSlice"
 import { listenerMiddleware } from "../middleware/auth"
 
 
 export const store = configureStore({
-  reducer: { [api.reducerPath]: api.reducer, user, GeneralSlice},
+  reducer: { [api.reducerPath]: api.reducer, user, categorySlice},
   middleware: getDefaultMiddleware => {
     return getDefaultMiddleware()
     .concat(api.middleware)

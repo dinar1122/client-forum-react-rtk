@@ -4,14 +4,15 @@ import { BASE_URL } from '../../constants'
 
 
 const FollowingWrapper = ({ followingList }: any) => {
+    console.log(followingList)
     return (
         <>
             <div className="gap-5 flex flex-col w-1/3">
             <div className='text-2xl font-semibold text-gray-700 mr-2 '>Пользователи</div>
                 {followingList.map((listItem: any) => (
-                    <Card key={listItem.followingId}><CardBody>
+                    <Card key={listItem.followingId} className='h-[115px]'><CardBody>
                         <User
-                        className=''
+                        className='justify-start'
                         name={listItem.following.email}
                         description={(
                             <Link href={`/users/${listItem.followingId}`} size="sm" >
@@ -21,7 +22,9 @@ const FollowingWrapper = ({ followingList }: any) => {
                         avatarProps={{
                             src: `${BASE_URL}${listItem.following.avatarUrl}`
                         }}
+                        
                     />
+                    <div className='text-gray-600  mt-0'>{listItem.following.bio}</div>
                     </CardBody>
                     </Card>
 

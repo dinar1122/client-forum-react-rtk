@@ -26,6 +26,8 @@ import { BiArrowFromTop, BiArrowToBottom } from 'react-icons/bi'
 import { BsArrowDown } from 'react-icons/bs'
 import { existErrorField } from '../../utils/exist-error-field'
 import { useCreateDislikeMutation, useDeleteDislikeMutation } from '../../app/services/dislikesApi'
+import BlockQuote from '../UI/block-quote'
+import CurrentPostBody from '../current-post-body'
 
 type CardProps = {
   avatarUrl?: string
@@ -146,9 +148,12 @@ export const Card = ({
     }
   }
 
+
+  
+
   return (
 
-    <div  className=''><NextUICard className='mb-4 mt-4 max-w-[770px] mx-auto' >
+    <div className=''><NextUICard className='mb-4 mt-4 max-w-[770px] mx-auto' >
       <CardHeader className="justify-between items-center bg-transparent">
         <div><Link href={`/users/${authorId}`}>
           <User
@@ -158,14 +163,14 @@ export const Card = ({
             description={createdAt && formatToClientDate(createdAt)}
           />
         </Link>
-          {cardFor !== 'comment' && 
-          (<div>
+          {cardFor !== 'comment' &&
+            (<div>
               <div className='flex items-center gap-2 cursor-pointer'><p className='font-semibold text-default-400 text-l'>Категория:</p>
                 <Link href={`categories/${categoryData?.id}`} className='text-primary-400 text-md'>{categoryData?.name}</Link>
-                  </div><div className='flex items-center gap-2 cursor-pointer'><p className='font-semibold text-default-400 text-l'>В теме:</p>
+              </div><div className='flex items-center gap-2 cursor-pointer'><p className='font-semibold text-default-400 text-l'>В теме:</p>
                 <Link className='text-primary-400 text-md'>{topicData.name}</Link>
-             </div>
-          </div>)}
+              </div>
+            </div>)}
 
         </div>
 
@@ -180,7 +185,8 @@ export const Card = ({
         )}
       </CardHeader>
       <CardBody className="px-3 py-2 mb-5">
-        <TextContent>{content}</TextContent>
+        
+        {cardFor === 'current-post' ? <CurrentPostBody content={JSON.parse(content)}/> : <TextContent>{content}</TextContent>}
       </CardBody>
       {cardFor !== "comment" && (
         <CardFooter className="gap-3">

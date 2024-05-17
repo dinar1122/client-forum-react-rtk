@@ -1,7 +1,6 @@
 import React from "react"
 import { createRoot } from "react-dom/client"
 import { Provider } from "react-redux"
-import App from "./App"
 import { store } from "./app/store"
 import "./index.css"
 import { NextUIProvider } from "@nextui-org/react";
@@ -18,13 +17,14 @@ import Topic from "./pages/topic"
 import Categories from "./pages/categories"
 import CurrentCategory from "./pages/current-category"
 import CurrentTopic from "./pages/current-topic"
+import AdvancedCreator from "./components/advanced-post-creator"
 
 const container = document.getElementById("root")
 
 const router = createBrowserRouter([
   {
     path: "/auth",
-    element: <Auth/>,
+    element: <Auth />,
   },
   {
     path: "/",
@@ -62,6 +62,11 @@ const router = createBrowserRouter([
         path: "categories/:id/topic/:id",
         element: <CurrentTopic />,
       }
+      ,
+      {
+        path: "create",
+        element: <AdvancedCreator />,
+      }
     ],
   },
 ])
@@ -72,12 +77,10 @@ if (container) {
   root.render(
     <React.StrictMode>
       <Provider store={store}>
-
         <NextUIProvider>
-          
-        <AuthGuard>
-          <RouterProvider router={router} />
-        </AuthGuard>
+          <AuthGuard>
+            <RouterProvider router={router} />
+          </AuthGuard>
         </NextUIProvider>
       </Provider>
     </React.StrictMode>,

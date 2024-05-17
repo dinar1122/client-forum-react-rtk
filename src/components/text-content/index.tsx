@@ -6,5 +6,5 @@ type Props = {
 }
 
 export const TextContent: React.FC<Props> = ({ children, size = "text-xl" }) => {
-  return <p className={`${size}`}>{children}</p>
+  return <p className={`${size} mt-3`}>{children}</p>
 }
