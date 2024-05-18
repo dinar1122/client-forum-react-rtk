@@ -149,12 +149,10 @@ export const Card = ({
   }
 
 
-  
-
   return (
 
-    <div className=''><NextUICard className='mb-4 mt-4 max-w-[770px] mx-auto' >
-      <CardHeader className="justify-between items-center bg-transparent">
+    <div className=''><NextUICard className='mb-4 mt-4 max-w-[770px] mx-auto pl-8 pt-4 pr-8' >
+      <CardHeader className="justify-between items-center bg-transparent ">
         <div><Link href={`/users/${authorId}`}>
           <User
             username={name}
@@ -173,9 +171,8 @@ export const Card = ({
             </div>)}
 
         </div>
-
-        {authorId === currentUser?.id && (
-          <div className="cursor-pointer" onClick={handleDelete}>
+        {(authorId === currentUser?.id) && (
+          <div className="cursor-pointer text-2xl" onClick={handleDelete}>
             {deletePostStatus.isLoading || deleteCommentStatus.isLoading ? (
               <Spinner />
             ) : (
@@ -183,10 +180,14 @@ export const Card = ({
             )}
           </div>
         )}
+
       </CardHeader>
       <CardBody className="px-3 py-2 mb-5">
-        
-        {cardFor === 'current-post' ? <CurrentPostBody content={JSON.parse(content)}/> : <TextContent>{content}</TextContent>}
+
+        {(cardFor === 'current-post') ?
+          <CurrentPostBody content={JSON.parse(content)} /> : (cardFor === 'comment') ?
+            <TextContent>{content}</TextContent> :
+            <CurrentPostBody content={[JSON.parse(content)[0]]}></CurrentPostBody>}
       </CardBody>
       {cardFor !== "comment" && (
         <CardFooter className="gap-3">

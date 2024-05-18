@@ -1,4 +1,4 @@
-import { Button, Link, Select, SelectItem, Textarea } from "@nextui-org/react"
+import { Button, Card, Link, Select, SelectItem, Textarea } from "@nextui-org/react"
 import {
   useCreatePostMutation,
   useLazyGetAllPostsQuery,
@@ -30,26 +30,21 @@ export const CreatePost = () => {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await createPost({ content: data.post, topicId: selectedTopicValue, categoryId: selectedCategoryValue }).unwrap()
+      const content = { component: 'TextContent', componentText: data.post }
+      await createPost({ content: JSON.stringify([content]), topicId: selectedTopicValue, categoryId: selectedCategoryValue }).unwrap()
       setValue("post", "")
       await triggerGetAllPosts().unwrap()
     } catch (error) {
       console.log("err", error)
     }
   })
-  const handleSelectChange = (event: any) => {
-    setSelectedTopicValue(event.target.value);
-  };
-  const handleSelectCategoryChange = (event: any) => {
-    const categoryId = event.target.value;
-    setSelectedCategoryValue(categoryId);
-    setSelectedTopicValue('')
-  };
   const error = errors?.post?.message as string
 
   return (
-    <form className="flex-grow" onSubmit={onSubmit}>
-      <Controller
+    <form className="flex-grow " onSubmit={onSubmit}>
+      <Card className="p-5">
+
+        <Controller
         name="post"
         control={control}
         defaultValue=""
@@ -61,27 +56,27 @@ export const CreatePost = () => {
             {...field}
             labelPlacement="outside"
             placeholder="Что хотите написать?"
-            className="mb-5"
+            className="m"
           />
         )}
       />
       {errors && <ErrorMessage error={error} />}
-      <div className="flex justify-between">
-        <Selector setFirst={setSelectedCategoryValue} setSecond={setSelectedTopicValue}></Selector>
+      <div className="flex justify-between mt-3">
+        <div className="flex-row w-[60%]"><Selector setFirst={setSelectedCategoryValue} setSecond={setSelectedTopicValue}></Selector></div>
         <div className="h-100 flex items-center">
           <Button
           color="default"
-          className="flex bg-blue-200 "
+          className="flex bg-blue-200 h-full"
           endContent={<CgAdd />}
           type="submit"
         >
           Создать пост
         </Button>
-          <Link className="h-max" href='/create'>
+          <Link className="h-full" href='/create'>
             <Button
             color="default"
             type="button"
-            className="font-semibold default flex bg-blue-200 ml-4 rounded-xl"
+            className="font-semibold default flex bg-blue-200 ml-3 rounded-xl h-full "
           >
             редактор
           </Button>
@@ -89,6 +84,8 @@ export const CreatePost = () => {
         </div>
 
       </div>
+      </Card>
+      
     </form>
   )
 }

@@ -1,6 +1,11 @@
-export const formatToClientDate = (date?: Date) => {
+export const formatToClientDate = (date?: Date, withHourAndMinutes: boolean = false) => {
     if(!date) {
         return ''
     }
-    return new Date(date).toLocaleDateString()
+
+    if (withHourAndMinutes) {
+        return new Date(date).toLocaleString();
+    } else {
+        return new Date(date).toLocaleDateString();
+    }
 }

@@ -30,7 +30,7 @@ const Selector = ({setFirst,setSecond }: any) => {
     
           {dataCategory.categories && <Select
             label="Выберите категорию"
-            className="max-w-xs m-2"
+            className="max-w-xs mr-3"
             size='sm'
             value={selectedCategoryValue}
             onChange={handleSelectCategoryChange}
@@ -44,7 +44,7 @@ const Selector = ({setFirst,setSecond }: any) => {
         
           {dataCategory.categories && selectedCategoryValue && <Select
             label="Выберите тему"
-            className="max-w-xs m-2"
+            className="max-w-xs m-"
             size='sm'
             onChange={handleSelectChangeTopic}
             value={selectedTopicValue}

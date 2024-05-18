@@ -8,7 +8,7 @@ import BlockCode from '../UI/block-code';
 
 const CurrentPostBody = ({content}:any) => {
     return (
-        <div className='pl-8 pr-8'>
+        <div className=''>
           {content.map((item:any, index: number) => {
             switch (item.component) {
                 case "BlockQuote":

@@ -12,7 +12,7 @@ const CurrentPost = () => {
   if(!data) {
     return <h2>Запись не найдена</h2>
   }
-
+  
   const {content,
     id,
     authorId,
@@ -23,9 +23,10 @@ const CurrentPost = () => {
     likedByUser,
     dislikedByUser,
     createdAt,
-    topic
+    topic,
+    category
   } = data
-
+  
   return (
     <>
     <BackButton></BackButton>
@@ -43,6 +44,7 @@ const CurrentPost = () => {
         dislikedByUser={dislikedByUser}
         createdAt={createdAt}
         topicData={topic}
+        categoryData={category}
       />
       <div className="mt-10">
         <CommentCreator />

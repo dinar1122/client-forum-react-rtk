@@ -2,7 +2,7 @@ import React from 'react'
 
 const BlockTitle = ({titleText}:any) => {
   return (
-    <div className='text-3xl font-semibold'>{titleText}</div>
+    <div className='text-2xl font-semibold'>{titleText}</div>
   )
 }
 

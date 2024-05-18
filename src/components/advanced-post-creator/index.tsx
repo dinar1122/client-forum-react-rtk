@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import MarkdownIt from 'markdown-it';
 import { Button, Card, CardBody, Select, SelectItem, Textarea } from '@nextui-org/react';
-import { AiOutlinePlusCircle } from 'react-icons/ai';
+import { AiOutlineMinusCircle, AiOutlinePlusCircle } from 'react-icons/ai';
 import BlockQuote from '../UI/block-quote';
 import { useCreatePostMutation } from '../../app/services/postsApi';
 import { TextContent } from '../text-content';
@@ -9,7 +9,7 @@ import BlockImage from '../UI/block-image';
 import BlockTitle from '../UI/block-title';
 import CurrentPostBody from '../current-post-body';
 import BlockList from '../UI/block-list';
-import { CiTextAlignLeft } from 'react-icons/ci';
+import { CiCircleMinus, CiTextAlignLeft } from 'react-icons/ci';
 import { IoImageOutline } from 'react-icons/io5';
 import { FaCode, FaImage, FaListUl, FaQuoteLeft } from 'react-icons/fa';
 import { MdOutlineDeleteSweep, MdTitle } from 'react-icons/md';
@@ -35,11 +35,11 @@ const AdvancedCreator = () => {
   const [selectedTopicValue, setSelectedTopicValue1] = useState('');
   const [selectedCategoryValue, setSelectedCategoryValue1] = useState('6635a9e1437ba5c877eacbdf');
 
-  
+
   const mdParser = new MarkdownIt();
 
 
-  
+
 
 
 
@@ -114,7 +114,8 @@ const AdvancedCreator = () => {
       <Card className='mt-3'>
         <CardBody>
           <div className="w-full flex">
-            <button className='mr-2 text-gray-400 hover:text-gray-800' onClick={() => setoptionsFlag(!optionsFlag)}><AiOutlinePlusCircle className='text-3xl' /></button>
+            
+            <button className='mr-2 text-gray-400 hover:text-gray-800' onClick={() => setoptionsFlag(!optionsFlag)}> {!optionsFlag ? <AiOutlinePlusCircle className='text-3xl' /> : <AiOutlineMinusCircle className='text-3xl' />}  </button>
             <div className="flex flex-col gap-2 mr-2 ">
               {optionsFlag && <Select
                 labelPlacement='outside'
@@ -142,8 +143,8 @@ const AdvancedCreator = () => {
                 input: "resize-y min-h-[70px] ",
               }}
             />
-            <div><div className='m-2 mt-0 '><Button onClick={handleSaveBlock}>Добавить блок</Button></div>
-              <div className='m-2 mb-0 flex justify-between'>
+            <div><div className='m-2 mr-0 mt-0 '><Button onClick={handleSaveBlock}>Добавить блок</Button></div>
+              <div className='m-2 mb-0 mr-0 flex justify-between'>
                 <Button isIconOnly startContent={<IoMdArrowDropdown className='text-2xl' />} >
                 </Button>
                 <Button isIconOnly startContent={<IoMdArrowDropup className='text-2xl' />} >
@@ -162,12 +163,16 @@ const AdvancedCreator = () => {
       {/* <textarea value={input} onChange={handleInputChange} />
       <div  className='text-none' dangerouslySetInnerHTML={{ __html: renderedMarkdown }} /> */}
 
-      <Card className='mt-3 grid grid-cols-3 '>
-
-        <Selector setFirst={setSelectedCategoryValue1} setSecond={setSelectedTopicValue1}></Selector>
-        
-        <CardBody>
-          {textContentToSend.length > 0 && <div className='flex justify-end mr-2 '><Button onClick={handleCreatePost}>Опубликовать</Button></div>}
+      <Card className='mt-3 flex-row justify-between'>
+        <CardBody className='flex-row w-full'>
+          <Selector setFirst={setSelectedCategoryValue1} setSecond={setSelectedTopicValue1} />
+        </CardBody>
+        <CardBody className='w-[min-content]'>
+          {textContentToSend.length > 0 && (
+            <div className='flex justify-end h-full'>
+              <Button className='h-full' onClick={handleCreatePost}>Опубликовать</Button>
+            </div>
+          )}
         </CardBody>
       </Card>
 
