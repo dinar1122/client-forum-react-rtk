@@ -8,9 +8,18 @@ export const notificationsApi = api.injectEndpoints({
                 method: 'GET',
             })
         }),
+        ReadNotifications: builder.mutation<any, any>({
+            query: (req) => ({
+                url: `/notifications`,
+                method: 'POST',
+                body: req
+            })
+        }),
     })
 })
 
 export const {
     useGetNotificationsByUserIdQuery,
-    useLazyGetNotificationsByUserIdQuery} = notificationsApi
+    useLazyGetNotificationsByUserIdQuery,
+    useReadNotificationsMutation
+} = notificationsApi

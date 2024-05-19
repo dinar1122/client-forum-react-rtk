@@ -36,6 +36,7 @@ const AdvancedCreator = () => {
   const [selectedCategoryValue, setSelectedCategoryValue1] = useState('6635a9e1437ba5c877eacbdf');
 
 
+
   const mdParser = new MarkdownIt();
 
 
@@ -48,7 +49,7 @@ const AdvancedCreator = () => {
   const handleSaveBlock = () => {
     setTextContent(prevContent => [
       ...prevContent,
-      { component: selectedComponent?.type.name, componentText: input }
+      { component: selectedComponent?.type.name, componentText: input, isShowed: false }
     ]);
     console.log(textContentToSend)
     setInput('')
@@ -108,7 +109,7 @@ const AdvancedCreator = () => {
     <div>
       <Card>
         <CardBody>
-          {<CurrentPostBody content={textContentToSend}></CurrentPostBody>}
+          {<CurrentPostBody content={textContentToSend} editor={true}></CurrentPostBody>}
         </CardBody>
       </Card>
       <Card className='mt-3'>

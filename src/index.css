@@ -21,3 +21,30 @@ code {
   height: 100px;
   position: absolute;
 }
+#alert-1 {
+  position: fixed;
+  bottom: 1rem;
+  left: 1rem;
+  z-index: 9999; 
+}
+.notification-enter {
+  opacity: 0;
+  transform: translateY(50%);
+}
+
+.notification-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 500ms, transform 500ms;
+}
+
+.notification-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.notification-exit-active {
+  opacity: 0;
+  transform: translateY(-50%);
+  transition: opacity 500ms, transform 500ms;
+}

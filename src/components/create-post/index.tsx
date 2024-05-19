@@ -30,7 +30,7 @@ export const CreatePost = () => {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      const content = { component: 'TextContent', componentText: data.post }
+      const content = { component: 'TextContent', componentText: data.post, isShowed: true }
       await createPost({ content: JSON.stringify([content]), topicId: selectedTopicValue, categoryId: selectedCategoryValue }).unwrap()
       setValue("post", "")
       await triggerGetAllPosts().unwrap()

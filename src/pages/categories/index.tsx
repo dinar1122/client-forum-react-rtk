@@ -11,7 +11,7 @@ const Categories = () => {
         return null
     }
     return (
-        <div>
+        <div className=''>
             {data.map((item: any)=>{
                 return <CategoryCard key={item.id} name={item.name} topics={item.topics} isSubscribedCategory={item.isSubscribed} categoryId={item.id}/>
             })}

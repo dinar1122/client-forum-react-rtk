@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useCreateLikeMutation, useDeleteLikeMutation } from '../../app/services/likesApi'
 import { useDeletePostByIdMutation, useGetAllPostsQuery, useLazyGetAllPostsQuery, useLazyGetPostByIdQuery } from '../../app/services/postsApi'
 import { useDeleteCommentMutation } from '../../app/services/commentsApi'
@@ -76,6 +76,12 @@ export const Card = ({
   const [error, setError] = useState("")
   const navigate = useNavigate()
   const currentUser = useSelector(selectCurrent)
+  let filteredBlocks: any[] = [];
+
+  if (cardFor === 'post') {
+    filteredBlocks = JSON.parse(content).filter((item: any) => item.isShowed);
+  }
+
 
   const refetchPosts = async () => {
     switch (cardFor) {
@@ -151,7 +157,7 @@ export const Card = ({
 
   return (
 
-    <div className=''><NextUICard className='mb-4 mt-4 max-w-[770px] mx-auto pl-8 pt-4 pr-8' >
+    <div className=''><NextUICard className='mb-4 mt-4 max-w-[770px] mx-auto pl-6 pt-4 pr-6' >
       <CardHeader className="justify-between items-center bg-transparent ">
         <div><Link href={`/users/${authorId}`}>
           <User
@@ -187,7 +193,7 @@ export const Card = ({
         {(cardFor === 'current-post') ?
           <CurrentPostBody content={JSON.parse(content)} /> : (cardFor === 'comment') ?
             <TextContent>{content}</TextContent> :
-            <CurrentPostBody content={[JSON.parse(content)[0]]}></CurrentPostBody>}
+            <CurrentPostBody content={filteredBlocks}></CurrentPostBody>}
       </CardBody>
       {cardFor !== "comment" && (
         <CardFooter className="gap-3">

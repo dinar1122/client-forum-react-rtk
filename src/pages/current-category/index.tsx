@@ -10,7 +10,7 @@ import { FaFire } from 'react-icons/fa';
 const CurrentCategory = () => {
   const { id = '' } = useParams<{ id: string }>();
   const { data: category = '', isLoading, isError } = useGetCategoryByIdQuery(id);
-  console.log(category)
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -21,8 +21,9 @@ const CurrentCategory = () => {
 
   return (
 
-    <div className="gap-5 flex flex-col justify-between ">
+    <div className="gap-5 flex flex-col justify-between max-w-[770px]">
       <CategoryHeader description={category.description} name={category.name} avatarUrl={category.avatarUrl} isSubscribed={category.isSubscribed} categoryId={category.id} />
+      <Card><CardBody>Create</CardBody></Card>
       {category.topics.map((topic: any) => {
         return <div key={topic.id}>
           <Card className='text-xl font-semibold text-gray-700'>
@@ -36,7 +37,7 @@ const CurrentCategory = () => {
           {topic.posts.map((post: any) => {
             return <Link key={post.id} to={`/posts/${post.id}`}>
               <Card className='m-2 ml-5 mr-0 hover:scale-[104%] transition hover:bg-sky-200 flex-row justify-end' >
-                <CardBody className='font-semibold'>{post.content}</CardBody>
+                <CardBody className='font-semibold'>{JSON.parse(post.content)[0].componentText}</CardBody>
                 <CardBody className='max-w-[max-content] font-semibold'>{post.author.username}</CardBody>
                 <CardBody className='max-w-[max-content] font-semibold text-gray-500'>{formatToClientDate(post.createdAt)}</CardBody>
               </Card>
