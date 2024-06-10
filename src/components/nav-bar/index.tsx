@@ -33,7 +33,7 @@ export const NavBar: React.FC = () => {
             Мой профиль
           </NavButton>
         </li>
-        <li className="bg-gradient-to-r from-cyan-200 to-blue-300 rounded-xl">
+        <li className="">
           <NavButton href="categories" icon={<FaUsers />}>
             Разделы
           </NavButton>

@@ -11,9 +11,9 @@ const Profile = () => {
   if(!currentData) {
     return null
   }
-
   const { username, avatarUrl, email, id } = currentData
   return (
+   <>
     <Card className="py-4 w-[202px] shadow-md">
       <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
         <Image
@@ -33,6 +33,7 @@ const Profile = () => {
         </p>
       </CardBody>
     </Card>
+    </>
   )
 }
 

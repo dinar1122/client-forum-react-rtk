@@ -1,4 +1,4 @@
-import { Button, Card, Link, Select, SelectItem, Textarea } from "@nextui-org/react"
+import { Button, Card, Link, Textarea } from "@nextui-org/react"
 import {
   useCreatePostMutation,
   useLazyGetAllPostsQuery,
@@ -6,13 +6,11 @@ import {
 import { useForm, Controller } from "react-hook-form"
 import { ErrorMessage } from "../error-message"
 import { CgAdd } from "react-icons/cg"
-import { CustomButton } from "../UI/custom-button"
-import { topicApi } from "../../app/services/topicApi"
-import { useDispatch, useSelector } from "react-redux"
 
-import { useEffect, useState } from "react"
-import { categoryApi } from "../../app/services/categoryApi"
+import { useState } from "react"
+
 import Selector from "../selector"
+import { FaEdit } from "react-icons/fa"
 
 export const CreatePost = () => {
   const [createPost] = useCreatePostMutation()
@@ -33,7 +31,7 @@ export const CreatePost = () => {
       const content = { component: 'TextContent', componentText: data.post, isShowed: true }
       await createPost({ content: JSON.stringify([content]), topicId: selectedTopicValue, categoryId: selectedCategoryValue }).unwrap()
       setValue("post", "")
-      await triggerGetAllPosts().unwrap()
+      await triggerGetAllPosts({page:1}).unwrap()
     } catch (error) {
       console.log("err", error)
     }
@@ -66,17 +64,18 @@ export const CreatePost = () => {
         <div className="h-100 flex items-center">
           <Button
           color="default"
-          className="flex bg-blue-200 h-full"
-          endContent={<CgAdd />}
+          className="flex bg-blue-200 h-full font-semibold text-gray-700"
+          startContent={<CgAdd />}
           type="submit"
         >
           Создать пост
         </Button>
           <Link className="h-full" href='/create'>
             <Button
+            startContent={<FaEdit />}
             color="default"
             type="button"
-            className="font-semibold default flex bg-blue-200 ml-3 rounded-xl h-full "
+            className="font-semibold text-gray-700 default flex bg-blue-200 ml-3 rounded-xl h-full "
           >
             редактор
           </Button>

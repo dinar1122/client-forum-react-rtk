@@ -1,22 +1,20 @@
-import { Card, useDisclosure, Image, Button } from '@nextui-org/react'
-import React, { useEffect } from 'react'
+import { useDisclosure, Image, Button, Tabs, Tab, Card } from '@nextui-org/react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { resetUser, selectCurrent } from '../../features/UserSlice'
 import { useGetUserByIdQuery, useLazyCurrentQuery, useLazyGetUserByIdQuery } from '../../app/services/userApi'
 import { useDeleteFollowOnUserMutation, useFollowOnUserMutation } from '../../app/services/followsApi'
-import { useLazyGetPostByIdQuery } from '../../app/services/postsApi'
 import { BackButton } from '../../components/UI/back-button'
 import { BASE_URL } from '../../constants'
 import { CiEdit } from 'react-icons/ci'
 import { MdOutlinePersonAddAlt1, MdOutlinePersonAddDisabled } from 'react-icons/md'
 import { formatToClientDate } from '../../utils/format-to-client-date'
 import { EditProfile } from '../../components/edit-profile'
-
-
+import { Card as CardPost } from '../../components/card'
+import { CommentCard } from '../../components/card-comment'
 
 const Profile = () => {
-
   const { id } = useParams<{ id: string }>()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const currentUser = useSelector(selectCurrent)
@@ -33,19 +31,21 @@ const Profile = () => {
     () => () => {
       dispatch(resetUser())
     },
-    [],
+    [dispatch]
   )
+
+  console.log(data)
 
   const handleFollow = async () => {
     try {
       if (id) {
-        if (data?.isFollowing) { await unfollowUser(id).unwrap() }
-        else { console.log({ followingId: id })
-           await followUser(id).unwrap() 
-          }
+        if (data?.isFollowing) {
+          await unfollowUser(id).unwrap()
+        } else {
+          await followUser(id).unwrap()
+        }
 
         await triggerGetUserByIdQuery(id)
-
         await triggerCurrentQuery()
       }
     } catch (error) {
@@ -68,9 +68,10 @@ const Profile = () => {
   if (!data) {
     return null
   }
+
   return (
     <>
-      <BackButton></BackButton>
+      <BackButton />
       <div className="flex items-stretch gap-4">
         <Card className="flex flex-col items-center text-center space-y-4 p-5 flex-2">
           <Image
@@ -99,10 +100,7 @@ const Profile = () => {
                 {data?.isFollowing ? 'Отписаться' : 'Подписаться'}
               </Button>
             ) : (
-              <Button
-                endContent={<CiEdit />}
-                onClick={() => onOpen()}
-              >
+              <Button endContent={<CiEdit />} onClick={onOpen}>
                 Редактировать
               </Button>
             )}
@@ -134,6 +132,50 @@ const Profile = () => {
           <EditProfile isOpen={isOpen} onClose={handleClose} user={data} />
         </Card>
       </div>
+
+      <Tabs className="mt-8" variant="light" color='primary' size='lg'>
+        <Tab key="posts" title="Посты">
+          <div className="flex flex-col ">
+            {data.posts.map((post:any) => (
+              <CardPost 
+              key={post.id} 
+              content={post.content} 
+              cardFor='post'
+              authorId={post.authorId}
+              avatarUrl={data.avatarUrl}
+              name={data.username}
+              id={post.id}
+              createdAt={post.createdAt}
+              likedByUser={post.likedByUser}
+              likesCount={post.likes.length}
+              dislikesCount={post.dislikes.length}
+              dislikedByUser={post.dislikedByUser}
+              commentsCount={post.comments.length}
+              categoryData={post.category}
+              topicData={post.topic}
+              tagsData={post.postTags}
+              
+               >
+              </CardPost>
+            ))}
+          </div>
+        </Tab>
+        <Tab key="comments" title="Комментарии">
+          <div className="flex flex-col space-y-4">
+            {data.comments.map((comment:any) => (
+              <CommentCard 
+              key={comment.id}
+              content={comment.content}
+              name={data.username}
+              avatarUrl={data.avatarUrl}
+              createdAt={comment.createdAt}
+              authorId={comment.userId}
+               >
+              </CommentCard>
+            ))}
+          </div>
+        </Tab>
+      </Tabs>
     </>
   )
 }

@@ -3,7 +3,7 @@ import { combineSlices, configureStore } from "@reduxjs/toolkit"
 import { setupListeners } from "@reduxjs/toolkit/query"
 import { api } from "./services/api"
 import user from '../features/UserSlice'
-import categorySlice from "../features/GeneralSlice"
+import categorySlice from "../features/CategorySlice"
 import { listenerMiddleware } from "../middleware/auth"
 
 

@@ -19,6 +19,7 @@ import CurrentCategory from "./pages/current-category"
 import CurrentTopic from "./pages/current-topic"
 import AdvancedCreator from "./components/advanced-post-creator"
 import Notifications from "./pages/notifications"
+import PostEditor from "./pages/post-editor"
 
 const container = document.getElementById("root")
 
@@ -67,8 +68,11 @@ const router = createBrowserRouter([
       {
         path: "create",
         element: <AdvancedCreator />,
-      }
-      ,
+      },
+      {
+        path: "post-edit/:id",
+        element: <PostEditor />,
+      },
       {
         path: "notifications",
         element: <Notifications />,

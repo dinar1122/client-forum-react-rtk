@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Link, Outlet, useNavigate } from "react-router-dom"
+import { Outlet, useNavigate } from "react-router-dom"
 import { Header } from '../header'
 import Container from '../container'
 import { NavBar } from '../nav-bar'
@@ -28,7 +28,7 @@ const Layout = () => {
                 <div className="flex-2 p-4">
                     <NavBar />
                 </div>
-                <div className="flex-1 p-4">
+                <div className="flex-1 p-4 max-w-[806px]">
                     <Outlet />
                 </div>
                 <div className="flex-2 p-4">

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { topicApi } from '../../app/services/topicApi'
 import { Button, Card, CardBody } from '@nextui-org/react'
 import { useDispatch, useSelector } from 'react-redux'
-import { selectGeneralData, setData } from '../../features/GeneralSlice'
+import selectGeneralData from "../../features/CategorySlice"
 
 const Topic = () => {
 

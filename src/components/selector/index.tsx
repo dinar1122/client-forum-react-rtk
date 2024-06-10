@@ -3,9 +3,9 @@ import { setFips } from 'crypto';
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux';
 
-const Selector = ({setFirst,setSecond }: any) => {
-    const [selectedTopicValue, setSelectedTopicValue] = useState('');
-    const [selectedCategoryValue, setSelectedCategoryValue] = useState('');
+const Selector = ({setFirst,setSecond, valueFirst = '', valueSecond = '' }: any) => {
+    const [selectedTopicValue, setSelectedTopicValue] = useState(valueSecond);
+    const [selectedCategoryValue, setSelectedCategoryValue] = useState(valueFirst);
     const dataCategory = useSelector((state: any) => state.categorySlice);
   let dataTopicsbyCategory = null
 
@@ -30,7 +30,7 @@ const Selector = ({setFirst,setSecond }: any) => {
     
           {dataCategory.categories && <Select
             label="Выберите категорию"
-            className="max-w-xs mr-3"
+            className="max-w-xs mr-3 "
             size='sm'
             value={selectedCategoryValue}
             onChange={handleSelectCategoryChange}
@@ -44,7 +44,7 @@ const Selector = ({setFirst,setSecond }: any) => {
         
           {dataCategory.categories && selectedCategoryValue && <Select
             label="Выберите тему"
-            className="max-w-xs m-"
+            className="max-w-xs  "
             size='sm'
             onChange={handleSelectChangeTopic}
             value={selectedTopicValue}

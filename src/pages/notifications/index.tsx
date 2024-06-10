@@ -46,10 +46,10 @@ const Notifications = () => {
 
         <>
             <div className='flex justify-between '>
-                <Button startContent={<BiRefresh className='text-2xl' />} onClick={handleUpdateNotif} className='font-semibold text-gray-600'>Обновить уведомления</Button>
+                <Button startContent={<BiRefresh className='text-2xl' />} onClick={handleUpdateNotif} className='font-semibold text-gray-700'>Обновить уведомления</Button>
                 <div className='flex '>
-                    <Button startContent={<LuSettings className='text-xl ' />}></Button>
-                    <Button className='ml-2 font-semibold text-gray-600' onClick={handleWipeNotifications}>Прочитать все уведомления</Button>
+                    <Button startContent={<LuSettings className='text-xl  text-gray-700' />}></Button>
+                    <Button className='ml-2 font-semibold text-gray-700' onClick={handleWipeNotifications}>Прочитать все уведомления</Button>
                 </div>
             </div>
             {data.post?.map((elem: any) => {

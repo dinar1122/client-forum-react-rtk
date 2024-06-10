@@ -4,7 +4,7 @@ import { RootState } from "../app/store"
 import { User } from "../app/types"
 
 
-interface InitialState {
+type InitialState = {
   user: User | null
   isAuthenticated: boolean
   users: User[] | null

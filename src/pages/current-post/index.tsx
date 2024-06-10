@@ -4,15 +4,24 @@ import { useGetPostByIdQuery } from '../../app/services/postsApi'
 import { Card } from '../../components/card'
 import { BackButton } from '../../components/UI/back-button'
 import { CommentCreator } from '../../components/comment-creator'
+import { CommentCard } from '../../components/card-comment'
 
 const CurrentPost = () => {
   const params = useParams<{id: string}>()
-  const {data} = useGetPostByIdQuery(params?.id ?? '')
+  const {data, isLoading, isError} = useGetPostByIdQuery(params?.id ?? '')
 
-  if(!data) {
-    return <h2>Запись не найдена</h2>
-  }
-  
+  if(isLoading) {
+    return <h2>Загрузка ...</h2>
+    }
+    
+
+  if(isError) {
+    return <h2>{isError}</h2>
+    }
+    
+    if(!data) {
+      return <h2>Запись не найдена</h2>
+    }
   const {content,
     id,
     authorId,
@@ -24,7 +33,8 @@ const CurrentPost = () => {
     dislikedByUser,
     createdAt,
     topic,
-    category
+    category,
+    postTags
   } = data
   
   return (
@@ -45,6 +55,7 @@ const CurrentPost = () => {
         createdAt={createdAt}
         topicData={topic}
         categoryData={category}
+        tagsData={postTags}
       />
       <div className="mt-10">
         <CommentCreator />
@@ -52,16 +63,31 @@ const CurrentPost = () => {
       <div className="mt-10">
         {data.comments
           ? data.comments.map((comment) => (
-              <Card
-                cardFor="comment"
+              
+              (!comment.replyToCommentId && <div key={comment.id}><CommentCard
+                comment={comment}
                 key={comment.id}
                 avatarUrl={comment.user.avatarUrl ?? ""}
                 content={comment.content}
                 name={comment.user.username ?? ""}
                 authorId={comment.userId}
                 commentId={comment.id}
+                createdAt={comment.createdAt}
                 id={id}
               />
+              {comment.replies.map((replied:any) => {
+                return <CommentCard 
+                key={replied.id}
+                reply={true}
+                comment={replied} 
+                commentId={replied.id}
+                name={replied.user.username ?? ""}  
+                avatarUrl={replied.user.avatarUrl ?? ""} 
+                content={replied.content} 
+                authorId={replied.user.id}
+                createdAt={replied.createdAt}
+                />
+              })}</div>)
             ))
           : null}
       </div>

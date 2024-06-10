@@ -35,6 +35,12 @@ export const userApi = api.injectEndpoints({
                 method: 'GET'
             })
         }),
+        getUsersByUsername: builder.query<any, string>({
+            query: (username) => ({
+                url: `/users/search/${username}`,
+                method: 'GET'
+            })
+        }),
         updateUser: builder.mutation<User, { userData: any, id: string }>({
             query: ({ userData, id }) => ({
                 url: `/users/${id}`,
@@ -52,9 +58,11 @@ export const {
     useUpdateUserMutation, 
     useGetUserByIdQuery, 
     useLazyGetUserByIdQuery, 
-    useLoginMutation 
+    useLoginMutation,
+    useGetUsersByUsernameQuery,
+    useLazyGetUsersByUsernameQuery
 } = userApi
 
 export const {
-    endpoints: { login, register, current, getUserById, updateUser },
+    endpoints: { login, register, current, getUserById, updateUser, getUsersByUsername },
   } = userApi

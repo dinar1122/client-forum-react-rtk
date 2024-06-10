@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useCreateLikeMutation, useDeleteLikeMutation } from '../../app/services/likesApi'
 import { useDeletePostByIdMutation, useGetAllPostsQuery, useLazyGetAllPostsQuery, useLazyGetPostByIdQuery } from '../../app/services/postsApi'
 import { useDeleteCommentMutation } from '../../app/services/commentsApi'
@@ -12,28 +12,29 @@ import {
   CardFooter,
   Link,
   Spinner,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
 } from "@nextui-org/react"
 import { User } from '../user'
 import { formatToClientDate } from '../../utils/format-to-client-date'
 import { RiDeleteBinLine } from 'react-icons/ri'
 import { TextContent } from '../text-content'
 import { MetaData } from '../meta-data'
-import { FcDislike } from 'react-icons/fc'
-import { MdKeyboardArrowDown, MdKeyboardArrowUp, MdOutlineFavoriteBorder, MdOutlineKeyboardArrowUp } from 'react-icons/md'
+import { MdInsertLink, MdKeyboardArrowDown, MdKeyboardArrowUp } from 'react-icons/md'
 import { FaRegComment } from 'react-icons/fa'
 import { ErrorMessage } from '../error-message'
-import { BiArrowFromTop, BiArrowToBottom } from 'react-icons/bi'
-import { BsArrowDown } from 'react-icons/bs'
 import { existErrorField } from '../../utils/exist-error-field'
 import { useCreateDislikeMutation, useDeleteDislikeMutation } from '../../app/services/dislikesApi'
-import BlockQuote from '../UI/block-quote'
 import CurrentPostBody from '../current-post-body'
+import { BiRepost } from 'react-icons/bi'
+import { HiPencil } from 'react-icons/hi'
 
 type CardProps = {
   avatarUrl?: string
   name?: string
-  authorId: string
-  content: string
+  authorId?: string
+  content?: string
   commentId?: string
   likesCount?: number
   dislikesCount?: number
@@ -44,7 +45,8 @@ type CardProps = {
   likedByUser?: boolean
   dislikedByUser?: boolean,
   topicData?: any,
-  categoryData?: any
+  categoryData?: any,
+  tagsData?: any,
 }
 
 export const Card = ({
@@ -62,7 +64,8 @@ export const Card = ({
   createdAt,
   commentId = "",
   topicData = '',
-  categoryData = ''
+  categoryData = '',
+  tagsData = ''
 }: CardProps) => {
 
   const [likePost] = useCreateLikeMutation()
@@ -71,6 +74,10 @@ export const Card = ({
   const [unDislikePost] = useDeleteDislikeMutation()
   const [triggerGetAllPosts] = useLazyGetAllPostsQuery()
   const [triggerGetPostById] = useLazyGetPostByIdQuery()
+  const [likedByUserState, setLikedByUserState] = useState(likedByUser)
+  const [likesCountState, setLikesCountState] = useState(likesCount)
+  const [dislikedByUserState, setDislikedByUserState] = useState(dislikedByUser)
+  const [dislikesCountState, setDislikesCountState] = useState(dislikesCount)
   const [deletePost, deletePostStatus] = useDeletePostByIdMutation()
   const [deleteComment, deleteCommentStatus] = useDeleteCommentMutation()
   const [error, setError] = useState("")
@@ -86,7 +93,7 @@ export const Card = ({
   const refetchPosts = async () => {
     switch (cardFor) {
       case "post":
-        await triggerGetAllPosts().unwrap()
+        await triggerGetAllPosts({ page: 1 }).unwrap()
         break
       case "current-post":
         await triggerGetPostById(id).unwrap()
@@ -103,19 +110,29 @@ export const Card = ({
     try {
       switch (likeOrDislike) {
         case 'like': {
-          likedByUser
-            ? await unlikePost(id).unwrap()
-            : await likePost(id).unwrap()
-          break
+          if (likedByUserState) {
+            await unlikePost(id).unwrap();
+            setLikesCountState(likesCountState - 1);
+          } else {
+            await likePost(id).unwrap();
+            setLikesCountState(likesCountState + 1);
+          }
+          setLikedByUserState(!likedByUserState)
+          break;
         }
         case 'dislike': {
-          dislikedByUser
-            ? await unDislikePost(id).unwrap()
-            : await dislikePost(id).unwrap()
-        }
+          if (dislikedByUserState) {
+            await unDislikePost(id).unwrap();
+            setDislikesCountState(dislikesCountState - 1);
+          } else {
+            await dislikePost(id).unwrap();
+            setDislikesCountState(dislikesCountState + 1);
+          }
+          setDislikedByUserState(!dislikedByUserState);
+          break;
+        };
       }
-
-      await refetchPosts()
+      
     } catch (err) {
       if (existErrorField(err)) {
         setError(err.data.error)
@@ -154,7 +171,6 @@ export const Card = ({
     }
   }
 
-
   return (
 
     <div className=''><NextUICard className='mb-4 mt-4 max-w-[770px] mx-auto pl-6 pt-4 pr-6' >
@@ -170,7 +186,7 @@ export const Card = ({
           {cardFor !== 'comment' &&
             (<div>
               <div className='flex items-center gap-2 cursor-pointer'><p className='font-semibold text-default-400 text-l'>Категория:</p>
-                <Link href={`categories/${categoryData?.id}`} className='text-primary-400 text-md'>{categoryData?.name}</Link>
+                <Link href={`/categories/${categoryData?.id}`} className='text-primary-400 text-md'>{categoryData?.name}</Link>
               </div><div className='flex items-center gap-2 cursor-pointer'><p className='font-semibold text-default-400 text-l'>В теме:</p>
                 <Link className='text-primary-400 text-md'>{topicData.name}</Link>
               </div>
@@ -178,13 +194,21 @@ export const Card = ({
 
         </div>
         {(authorId === currentUser?.id) && (
-          <div className="cursor-pointer text-2xl" onClick={handleDelete}>
-            {deletePostStatus.isLoading || deleteCommentStatus.isLoading ? (
-              <Spinner />
-            ) : (
-              <RiDeleteBinLine />
-            )}
-          </div>
+          <>
+            <div className='flex gap-4'>
+            <Link href={`/post-edit/${id}`}>
+            <HiPencil className="cursor-pointer text-2xl" />
+          </Link>
+              <div className="cursor-pointer text-2xl" onClick={handleDelete}>
+                {deletePostStatus.isLoading || deleteCommentStatus.isLoading ? (
+                  <Spinner />
+                ) : (
+                  <RiDeleteBinLine />
+                )}
+              </div></div>
+          </>
+
+
         )}
 
       </CardHeader>
@@ -195,27 +219,45 @@ export const Card = ({
             <TextContent>{content}</TextContent> :
             <CurrentPostBody content={filteredBlocks}></CurrentPostBody>}
       </CardBody>
+      <div className='flex gap-1 ml-4'>
+        {tagsData && <>{tagsData?.map((el: any) => {
+          return <Popover key={el.id} placement="right">
+            <PopoverTrigger>
+              <button><span className='bg-gray-400 max-w-[max-content] px-2 py-1 rounded-2xl text-white hover:bg-gray-600'>{el.tag.name}</span></button>
+            </PopoverTrigger>
+            <PopoverContent>
+              <div className="px-1 py-2">
+                <div className=""><Link>Искать посты с этим тегом</Link></div>
+                <div className=""><Link>Подписаться на тег</Link></div>
+              </div>
+            </PopoverContent>
+          </Popover>
+
+        })}</>}
+
+      </div>
       {cardFor !== "comment" && (
         <CardFooter className="gap-3">
           <div className="flex gap-5 items-center">
-            <div onClick={() => handleClick('like')}>
+            <div className='bg-blue-200 p-2 rounded-full' onClick={() => handleClick('like')}>
               <MetaData
-                count={likesCount}
-                color={likedByUser ? 'green' : ''}
-                Icon={likedByUser ? MdKeyboardArrowUp : MdKeyboardArrowUp}
+                count={likesCountState}
+                color={likedByUserState ? 'green' : ''}
+                Icon={likedByUserState ? MdKeyboardArrowUp : MdKeyboardArrowUp}
               />
             </div>
-            <div onClick={() => handleClick('dislike')}>
+            <div className='bg-blue-200 p-2 rounded-full' onClick={() => handleClick('dislike')}>
               <MetaData
-                count={dislikesCount}
-                color={dislikedByUser ? 'red' : ''}
-                Icon={dislikedByUser ? MdKeyboardArrowDown : MdKeyboardArrowDown}
+                count={dislikesCountState}
+                color={dislikedByUserState ? 'red' : ''}
+                Icon={dislikedByUserState ? MdKeyboardArrowDown : MdKeyboardArrowDown}
               />
             </div>
-            <Link href={`/posts/${id}`}>
+            <Link href={`/posts/${id}`} >
               <MetaData count={commentsCount} Icon={FaRegComment} />
             </Link>
           </div>
+          <CardBody className='flex-row gap-4'><BiRepost className='text-2xl text-gray-400' /><MdInsertLink className='text-2xl text-gray-400' /></CardBody>
           <ErrorMessage error={error} />
         </CardFooter>
       )}

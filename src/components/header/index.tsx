@@ -3,11 +3,8 @@ import {
     NavbarBrand,
     NavbarContent,
     NavbarItem,
-    Button,
     Input,
   } from "@nextui-org/react"
-  import { LuSunMedium } from "react-icons/lu"
-  import { FaRegMoon } from "react-icons/fa"
   import { useDispatch, useSelector } from "react-redux"
   import { CiLogout } from "react-icons/ci"
   import { useNavigate } from "react-router-dom"
@@ -15,7 +12,7 @@ import {
 import { logout, selectIsAuthenticated } from "../../features/UserSlice"
 import { CustomButton } from "../UI/custom-button"
 import { useGetCategoryListQuery } from "../../app/services/categoryApi"
-import { setCategories } from "../../features/GeneralSlice"
+import { setCategories } from "../../features/CategorySlice"
   
   export const Header = () => {
     const isAuthenticated = useSelector(selectIsAuthenticated)

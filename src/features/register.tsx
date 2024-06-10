@@ -46,7 +46,7 @@ const Register = ({ setSelected }: Props)  => {
         }
     }
   return (
-    <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
+    <form className="flex flex-col gap-4 " onSubmit={handleSubmit(onSubmit)}>
         <ErrorMessage error={error} />
       <CustomInput
         control={control}

@@ -39,8 +39,16 @@ export type User = {
     updatedAt: Date
     topic: Topic[]
     category: Category 
+    postTags: any
   }
   
+  export type PostMetaData = {
+    posts: Post[],
+    totalPosts: number,
+    totalPages: number,
+    currentPage: number
+  }
+
   export type Like = {
     id: string
     user: User
@@ -75,4 +83,7 @@ export type User = {
     userId: string
     post: Post
     postId: string
+    replies: Comment[]
+    replyToCommentId: string
+    createdAt: Date
   }
