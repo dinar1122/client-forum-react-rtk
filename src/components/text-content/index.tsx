@@ -14,7 +14,7 @@ type Quote = {
 type LinkType = {
   display: string;
   url: string;
-};
+}
 
 type Props = {
   children: string;

@@ -5,6 +5,8 @@ import { Card } from '../../components/card'
 import { Pagination, Card as CardNext, CardBody, Button, Select, SelectItem } from '@nextui-org/react'
 import { useSearchParams } from 'react-router-dom'
 import { TbArrowsSort } from 'react-icons/tb'
+import { useSelector } from 'react-redux'
+import { selectCurrentTagsSubs } from '../../features/UserSlice'
 
 
 export default function Posts() {
@@ -22,7 +24,9 @@ export default function Posts() {
   const pageParam = searchParams.get("page");
   const page = pageParam ? parseInt(pageParam, 10) : 1;
   const { data, isLoading, isError } = useGetAllPostsQuery({ page });
-
+  const dataUserTagsSubs = useSelector(selectCurrentTagsSubs)
+  const subscribedTagIds = new Set(dataUserTagsSubs?.map((sub:any) => sub.tagId));
+  console.log(subscribedTagIds)
 
   const handleSelectPage = (selectedPage:any) => {
     setSearchParams({ page: selectedPage });
@@ -75,6 +79,7 @@ export default function Posts() {
             topicData={postData.topic}
             categoryData={postData.category}
             tagsData={postData.postTags}
+            subscribedTagIds={subscribedTagIds}
           />
         }) : <></>
       }

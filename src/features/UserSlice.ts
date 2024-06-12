@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit"
 import { userApi } from "../app/services/userApi"
 import { RootState } from "../app/store"
 import { User } from "../app/types"
+import { tagsApi } from "../app/services/tagsApi"
 
 
 type InitialState = {
@@ -38,6 +39,15 @@ const slice = createSlice({
         state.isAuthenticated = true
         state.current = action.payload
       })
+      .addMatcher(tagsApi.endpoints.createSub.matchFulfilled, (state, action) => {
+        if(state.current !== null)
+        state.current.userTags = [ ...state.current.userTags,{ ...action.payload}]
+      })
+      .addMatcher(tagsApi.endpoints.deleteSub.matchFulfilled, (state, action) => {
+        if (state.current !== null) {
+          state.current.userTags = state.current.userTags.filter(tag => tag.id !== action.payload.id);
+        }
+      })
       .addMatcher(userApi.endpoints.getUserById.matchFulfilled,(state, action) => {
           state.user = action.payload
         },
@@ -52,6 +62,8 @@ export const selectIsAuthenticated = (state: RootState) =>
   state.user.isAuthenticated
 
 export const selectCurrent = (state: RootState) => state.user.current
+
+export const selectCurrentTagsSubs = (state: RootState) => state.user.current?.userTags
 
 export const selectUsers = (state: RootState) => state.user.users
 

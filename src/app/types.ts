@@ -10,6 +10,7 @@ export type User = {
     bio?: string
     location?: string
     posts: Post[]
+    userTags: Tag[]
     following: Follows[]
     followers: Follows[]
     likes: Like[]
@@ -23,6 +24,13 @@ export type User = {
     followerId: string
     following: User
     followingId: string
+  }
+
+  export type Tag = {
+    id: string
+    name: string
+    postTags: any
+    userTag:any
   }
   
   export type Post = {

@@ -5,10 +5,15 @@ import { Card } from '../../components/card'
 import { BackButton } from '../../components/UI/back-button'
 import { CommentCreator } from '../../components/comment-creator'
 import { CommentCard } from '../../components/card-comment'
+import { useSelector } from 'react-redux'
+import { selectCurrentTagsSubs } from '../../features/UserSlice'
 
 const CurrentPost = () => {
   const params = useParams<{id: string}>()
   const {data, isLoading, isError} = useGetPostByIdQuery(params?.id ?? '')
+  const dataUserTagsSubs = useSelector(selectCurrentTagsSubs)
+  const subscribedTagIds = new Set(dataUserTagsSubs?.map((sub:any) => sub.tagId));
+  console.log(subscribedTagIds)
 
   if(isLoading) {
     return <h2>Загрузка ...</h2>
@@ -56,6 +61,7 @@ const CurrentPost = () => {
         topicData={topic}
         categoryData={category}
         tagsData={postTags}
+        subscribedTagIds={subscribedTagIds}
       />
       <div className="mt-10">
         <CommentCreator />

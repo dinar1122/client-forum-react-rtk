@@ -2,9 +2,9 @@ import React, { useState } from 'react'
 import { useCreateLikeMutation, useDeleteLikeMutation } from '../../app/services/likesApi'
 import { useDeletePostByIdMutation, useGetAllPostsQuery, useLazyGetAllPostsQuery, useLazyGetPostByIdQuery } from '../../app/services/postsApi'
 import { useDeleteCommentMutation } from '../../app/services/commentsApi'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link as LinkRouter} from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import { selectCurrent } from '../../features/UserSlice'
+import { selectCurrent, selectCurrentTagsSubs } from '../../features/UserSlice'
 import {
   Card as NextUICard,
   CardHeader,
@@ -12,9 +12,6 @@ import {
   CardFooter,
   Link,
   Spinner,
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
 } from "@nextui-org/react"
 import { User } from '../user'
 import { formatToClientDate } from '../../utils/format-to-client-date'
@@ -29,6 +26,7 @@ import { useCreateDislikeMutation, useDeleteDislikeMutation } from '../../app/se
 import CurrentPostBody from '../current-post-body'
 import { BiRepost } from 'react-icons/bi'
 import { HiPencil } from 'react-icons/hi'
+import TagItem from '../tag-item'
 
 type CardProps = {
   avatarUrl?: string
@@ -47,6 +45,7 @@ type CardProps = {
   topicData?: any,
   categoryData?: any,
   tagsData?: any,
+  subscribedTagIds?: any
 }
 
 export const Card = ({
@@ -65,9 +64,10 @@ export const Card = ({
   commentId = "",
   topicData = '',
   categoryData = '',
-  tagsData = ''
+  tagsData = '',
+  subscribedTagIds = {}
 }: CardProps) => {
-
+  tagsData = tagsData.map((tag: any) => tag.tag )
   const [likePost] = useCreateLikeMutation()
   const [unlikePost] = useDeleteLikeMutation()
   const [dislikePost] = useCreateDislikeMutation()
@@ -88,8 +88,13 @@ export const Card = ({
   if (cardFor === 'post') {
     filteredBlocks = JSON.parse(content).filter((item: any) => item.isShowed);
   }
+  
 
-
+  const updatedTagsData = tagsData.map((tag:any) => ({
+    ...tag,
+    isSubscribed: subscribedTagIds.has(tag.id)
+  }));
+  
   const refetchPosts = async () => {
     switch (cardFor) {
       case "post":
@@ -106,27 +111,27 @@ export const Card = ({
     }
   }
 
-  const handleClick = async (likeOrDislike: string) => {
+  const handleClick = (likeOrDislike: string) => {
     try {
       switch (likeOrDislike) {
         case 'like': {
           if (likedByUserState) {
-            await unlikePost(id).unwrap();
             setLikesCountState(likesCountState - 1);
+            unlikePost(id).unwrap();
           } else {
-            await likePost(id).unwrap();
             setLikesCountState(likesCountState + 1);
+            likePost(id).unwrap();
           }
           setLikedByUserState(!likedByUserState)
           break;
         }
         case 'dislike': {
           if (dislikedByUserState) {
-            await unDislikePost(id).unwrap();
             setDislikesCountState(dislikesCountState - 1);
+            unDislikePost(id).unwrap();
           } else {
-            await dislikePost(id).unwrap();
             setDislikesCountState(dislikesCountState + 1);
+            dislikePost(id).unwrap();
           }
           setDislikedByUserState(!dislikedByUserState);
           break;
@@ -173,7 +178,7 @@ export const Card = ({
 
   return (
 
-    <div className=''><NextUICard className='mb-4 mt-4 max-w-[770px] mx-auto pl-6 pt-4 pr-6' >
+    <div className=''><NextUICard className='mb-4 mt-4 mx-auto pl-6 pt-4 pr-6' >
       <CardHeader className="justify-between items-center bg-transparent ">
         <div><Link href={`/users/${authorId}`}>
           <User
@@ -220,18 +225,9 @@ export const Card = ({
             <CurrentPostBody content={filteredBlocks}></CurrentPostBody>}
       </CardBody>
       <div className='flex gap-1 ml-4'>
-        {tagsData && <>{tagsData?.map((el: any) => {
-          return <Popover key={el.id} placement="right">
-            <PopoverTrigger>
-              <button><span className='bg-gray-400 max-w-[max-content] px-2 py-1 rounded-2xl text-white hover:bg-gray-600'>{el.tag.name}</span></button>
-            </PopoverTrigger>
-            <PopoverContent>
-              <div className="px-1 py-2">
-                <div className=""><Link>Искать посты с этим тегом</Link></div>
-                <div className=""><Link>Подписаться на тег</Link></div>
-              </div>
-            </PopoverContent>
-          </Popover>
+        {updatedTagsData && <>{updatedTagsData?.map((tag: any) => {
+          /* let isSubscibed = (dataUserTagsSubs?.values) */
+          return <TagItem key={tag.id} tag={tag} />
 
         })}</>}
 
@@ -253,9 +249,9 @@ export const Card = ({
                 Icon={dislikedByUserState ? MdKeyboardArrowDown : MdKeyboardArrowDown}
               />
             </div>
-            <Link href={`/posts/${id}`} >
+            <LinkRouter to={`/posts/${id}`} >
               <MetaData count={commentsCount} Icon={FaRegComment} />
-            </Link>
+            </LinkRouter>
           </div>
           <CardBody className='flex-row gap-4'><BiRepost className='text-2xl text-gray-400' /><MdInsertLink className='text-2xl text-gray-400' /></CardBody>
           <ErrorMessage error={error} />

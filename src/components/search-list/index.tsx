@@ -1,7 +1,7 @@
-import { Input, Listbox, ListboxItem } from '@nextui-org/react';
+import { Button, Input, Listbox, ListboxItem } from '@nextui-org/react';
 import React, { useState } from 'react';
 
-const SearchList = ({ list, onSearchResult }: any) => {
+const SearchList = ({ list, onSearchResult, methodIfEmpty }: any) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredItems, setFilteredItems] = useState(list);
 
@@ -25,11 +25,12 @@ const SearchList = ({ list, onSearchResult }: any) => {
                 value={searchTerm}
                 onChange={handleSearchChange}
             />
-            <Listbox aria-label="Элементы" onAction={(key) => handleAction(filteredItems.find((item: any) => item.id === key))}>
+            <Listbox className='p-auto ' emptyContent={``} aria-label="Элементы" onAction={(key) => handleAction(filteredItems.find((item: any) => item.id === key))}>
                 {filteredItems.slice(0, 1).map((item: any, index: any) => (
-                    <ListboxItem key={item.id} id={item.id}>{item.name}</ListboxItem>
+                    <ListboxItem className='' key={item.id} id={item.id}>{item.name}</ListboxItem>
                 ))}
             </Listbox>
+            {filteredItems.length === 0 && <Button onClick={()=> {methodIfEmpty(searchTerm)}}>Создать</Button>}
         </>
     );
 };

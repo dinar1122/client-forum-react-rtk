@@ -14,18 +14,22 @@ import Selector from '../selector';
 import { useNavigate } from 'react-router-dom';
 import { BiRepost } from 'react-icons/bi';
 import { TbTools, TbToolsOff } from 'react-icons/tb';
-import { useLazyGetAllTagsQuery } from '../../app/services/tagsApi';
+import { useCreateTagMutation, useLazyGetAllTagsQuery } from '../../app/services/tagsApi';
 import SearchList from '../search-list';
+import TagItem from '../tag-item';
 
 
 const AdvancedCreator = ({ data = null }: any) => {
+  console.log(data)
   const navigate = useNavigate()
   const [createPost] = useCreatePostMutation()
   const [updatePost] = useUpdatePostByIdMutation()
 
   const [getTags] = useLazyGetAllTagsQuery()
   const [tagList, setTagList] = useState();
-  const [selectionTags, setSelectionTags] = useState([]);
+  const [selectionTags, setSelectionTags] = useState<any>([]);
+  const [selectionTagsClosed, setSelectionTagsClosed] = useState(true);
+  const [createTag] = useCreateTagMutation()
 
 
   const [input, setInput] = useState('');
@@ -52,7 +56,7 @@ const AdvancedCreator = ({ data = null }: any) => {
     { id: 8, name: 'Видео', icon: <MdOutlineOndemandVideo className='text-2xl mr-2' /> },
 
   ];
-  const componentMap = {
+  const componentMap: { [key: string]: string } = {
     1: 'TextContent',
     2: 'BlockImage',
     3: 'BlockTitle',
@@ -66,22 +70,32 @@ const AdvancedCreator = ({ data = null }: any) => {
   useEffect(() => {
     if (data) {
       setTextContent(JSON.parse(data?.content));
-      setIsUpdating(true)
+      setIsUpdating(true) 
+      const existingTags = data.postTags.map((tag: any) => tag.tag )
+      setSelectionTags(existingTags)
       setSelectedCategoryValue(data.categoryId)
       setSelectedTopicValue(data.topicId)
     }
   }, [data]);
 
+  const createTagNRefetch = (name) => {
+    createTag(name)
+    handleGetTags()
+  }
+
   const handleGetTags = async () => {
     const { data } = await getTags()
     setTagList(data)
-    console.log(data)
+    setSelectionTagsClosed(false)
   }
-
-  const handleAddTag = (newTag) => {
+  const handleRemoveTag = (tagId: number) => {
+    setSelectionTags(selectionTags.filter((tag:any) => tag.id !== tagId));
+    setError('');
+  };
+  const handleAddTag = (newTag:any) => {
     console.log(newTag)
 
-    if (!selectionTags.some(tag => tag.id === newTag.id)) {
+    if (!selectionTags.some((tag:any) => tag.id === newTag.id)) {
       setSelectionTags([
         ...selectionTags,
         newTag
@@ -90,7 +104,7 @@ const AdvancedCreator = ({ data = null }: any) => {
     } else {
       setError('Вы уже добавили этот тег')
     }
-    
+
   };
   const handleSaveBlock = () => {
 
@@ -142,12 +156,6 @@ const AdvancedCreator = ({ data = null }: any) => {
       setError('');
     }
 
-   /*  const postRegex = /^http:\/\/localhost:5173\/posts\/[a-z0-9]+$/i;
-
-    if (postRegex.exec(value.trim())) {
-      setSelectedComponent(componentMap[7]);
-    }
- */
   }
   const handleSelectChange = (value: any) => {
     const optionId = value.target.value
@@ -165,7 +173,12 @@ const AdvancedCreator = ({ data = null }: any) => {
       <Card>
         <CardBody>
           {<CurrentPostBody content={textContentToSend} editor={editor} onUpdateContent={setTextContent}></CurrentPostBody>}
+
         </CardBody>
+        <CardBody className='flex-row gap-1'>{(selectionTags).map((tag:any) => {
+          return <TagItem key={tag.name} tag={tag} deleteMethod={handleRemoveTag}></TagItem>
+        })}</CardBody>
+
       </Card>
       <Card className='mt-3'>
         <CardBody>
@@ -210,12 +223,15 @@ const AdvancedCreator = ({ data = null }: any) => {
           <CardBody className='p-0 flex-row justify-between gap-2'>
 
             <div>
-              <Button onClick={handleGetTags}>Добавить теги</Button>
-              {(selectionTags).map((tag) => {
-                return <button key={tag.name}><span className='bg-gray-400 max-w-[max-content] px-2 py-1 rounded-2xl text-white hover:bg-gray-600'>{tag.name}</span></button>
-              })}
-              {tagList && <SearchList list={tagList} onSearchResult={handleAddTag}></SearchList>}
-              
+              {selectionTagsClosed ? <Button onClick={handleGetTags}>Добавить теги</Button> : 
+              <>{tagList && 
+                <div className='flex-row gap-3 '><Button isIconOnly onClick={() => { setSelectionTagsClosed(!selectionTagsClosed) }}>X</Button>
+                <SearchList methodIfEmpty={createTagNRefetch} list={tagList} onSearchResult={handleAddTag}></SearchList>
+                </div>}
+              </>}
+
+
+
             </div>
             <div className='py-0 flex-row justify-end gap-2'>
               <Button onClick={handleSaveBlock}>Добавить блок</Button>
