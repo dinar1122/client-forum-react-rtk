@@ -2,11 +2,10 @@ import React, { useState } from 'react'
 import { CreatePost } from '../../components/create-post'
 import { useGetAllPostsQuery } from '../../app/services/postsApi'
 import { Card } from '../../components/card'
-import { Pagination, Card as CardNext, CardBody, Button, Select, SelectItem } from '@nextui-org/react'
+import { Pagination, Card as CardNext, CardBody, Button, Select, SelectItem, Spinner } from '@nextui-org/react'
 import { useSearchParams } from 'react-router-dom'
 import { TbArrowsSort } from 'react-icons/tb'
-import { useSelector } from 'react-redux'
-import { selectCurrentTagsSubs } from '../../features/UserSlice'
+import { subscribedData } from '../../utils/subscribed-data'
 
 
 export default function Posts() {
@@ -23,10 +22,8 @@ export default function Posts() {
   const [searchParams, setSearchParams] = useSearchParams();
   const pageParam = searchParams.get("page");
   const page = pageParam ? parseInt(pageParam, 10) : 1;
-  const { data, isLoading, isError } = useGetAllPostsQuery({ page });
-  const dataUserTagsSubs = useSelector(selectCurrentTagsSubs)
-  const subscribedTagIds = new Set(dataUserTagsSubs?.map((sub:any) => sub.tagId));
-  console.log(subscribedTagIds)
+  const { data, isFetching,  isError } = useGetAllPostsQuery({ page });
+  const { subscribedTagIds } = subscribedData()
 
   const handleSelectPage = (selectedPage:any) => {
     setSearchParams({ page: selectedPage });
@@ -35,8 +32,8 @@ export default function Posts() {
   const handleSelectPostsOption = (e:any) => {
     setSelectedPostsOPtion(e.target.value)
   } 
-  if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Error loading posts</div>;
+  if (isFetching) return <Spinner/>;
+  if (isError) return <div>Ошибка загрузки постов</div>;
   return (
     <>
       <CreatePost></CreatePost>

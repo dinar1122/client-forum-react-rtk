@@ -1,28 +1,41 @@
 import React, { useState } from 'react';
-import { useGetUserByIdQuery } from '../../app/services/userApi';
-import { useParams } from 'react-router-dom';
-import FollowingWrapper from '../../components/following-wrapper';
-import FollowingCategoryWrapper from '../../components/following-category-wrapper';
-import FollowingTopicWrapper from '../../components/following-topic-wrapper';
 import { Tab, Tabs } from '@nextui-org/react';
-import FollowingTagsWrapper from '../../components/following-tags-wrapper';
+import { subscribedCategoryNTopics } from '../../utils/subscribed-data';
+import { selectCurrent } from '../../features/UserSlice';
+import { useSelector } from 'react-redux';
+import FollowingTopic from '../../components/following-topic';
 
 export default function Subs() {
   const [selectedTab, setSelectedTab] = useState('topics');
-  const { id = '' } = useParams<{ id: string }>();
-  const { data: user, isLoading, isError } = useGetUserByIdQuery(id);
+  
+  /* const { data: user, isLoading, isError } = useGetUserByIdQuery(id); */
+  const {subscribedCategoryNTopicsData} = subscribedCategoryNTopics()
+
+  const currentUserData = useSelector(selectCurrent)
+
+
+  const topicWithLiked = currentUserData?.topics.map((topicItem: any) => {
+    const isLiked = currentUserData.likes.some((el: any) => el.topicId === topicItem.topicId);
+    return {
+        ...topicItem,
+        isLiked
+    };
+});
+console.log(topicWithLiked)
+  const formattedData = {...currentUserData, topics: topicWithLiked}
+
 
   const handleChangeTab = (key: any) => {
     setSelectedTab(key);
   };
 
-  if (isLoading) {
+  /* if (isLoading) {
     return <div>Loading...</div>;
   }
 
   if (isError) {
     return <div>Error fetching user data</div>;
-  }
+  } */
   return (
     <div className="">
     <div className="flex w-full flex-col">
@@ -53,9 +66,9 @@ export default function Subs() {
       </Tabs>
     </div>
     {selectedTab === 'topics' && (
-      <FollowingTopicWrapper followingList={user.topics} isSubsPage={true} />
+      <FollowingTopic followingList={topicWithLiked}/>
     )}
-    {selectedTab === 'categories' && (
+    {/* {selectedTab === 'categories' && (
       <FollowingCategoryWrapper followingList={user.category} />
     )}
     {selectedTab === 'users' && (
@@ -63,7 +76,7 @@ export default function Subs() {
     )}
     {selectedTab === 'tags' && (
       <FollowingTagsWrapper />
-    )}
+    )} */}
   </div>
   );
 }

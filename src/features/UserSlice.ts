@@ -1,8 +1,10 @@
-import { createSlice } from "@reduxjs/toolkit"
+import { createSelector, createSlice } from "@reduxjs/toolkit"
 import { userApi } from "../app/services/userApi"
 import { RootState } from "../app/store"
 import { User } from "../app/types"
 import { tagsApi } from "../app/services/tagsApi"
+import { categoryApi } from "../app/services/categoryApi"
+import { topicApi } from "../app/services/topicApi"
 
 
 type InitialState = {
@@ -43,6 +45,22 @@ const slice = createSlice({
         if(state.current !== null)
         state.current.userTags = [ ...state.current.userTags,{ ...action.payload}]
       })
+      .addMatcher(categoryApi.endpoints.createSubscriptionCategory.matchFulfilled, (state, action) => {
+        if(state.current !== null)
+        state.current.category = [ ...state.current.category , action.payload]
+      })
+      .addMatcher(categoryApi.endpoints.deleteSubscriptionCategory.matchFulfilled, (state, action: any) => {
+        if(state.current !== null)
+        state.current.category = state.current.category.filter(category => category.categoryId !== action.payload.categoryId);
+      })
+      .addMatcher(topicApi.endpoints.createSubcription.matchFulfilled, (state, action) => {
+        if(state.current !== null)
+        state.current.topics = [ ...state.current.topics , action.payload]
+      })
+      .addMatcher(topicApi.endpoints.deleteSubcription.matchFulfilled, (state, action: any) => {
+        if(state.current !== null)
+        state.current.topics = state.current.topics.filter(topic => topic.topicId !== action.payload.topicId);
+      })
       .addMatcher(tagsApi.endpoints.deleteSub.matchFulfilled, (state, action) => {
         if (state.current !== null) {
           state.current.userTags = state.current.userTags.filter(tag => tag.id !== action.payload.id);
@@ -64,6 +82,14 @@ export const selectIsAuthenticated = (state: RootState) =>
 export const selectCurrent = (state: RootState) => state.user.current
 
 export const selectCurrentTagsSubs = (state: RootState) => state.user.current?.userTags
+
+export const selectCurrentSubscribedTopicsNCategories = createSelector(
+  (state: RootState) => state.user.current,
+  (current) => ({
+    category: current?.category,
+    topic: current?.topics,
+  })
+);
 
 export const selectUsers = (state: RootState) => state.user.users
 

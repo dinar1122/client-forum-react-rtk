@@ -11,6 +11,8 @@ export type User = {
     location?: string
     posts: Post[]
     userTags: Tag[]
+    category: any[]
+    topics: any[]
     following: Follows[]
     followers: Follows[]
     likes: Like[]
@@ -48,6 +50,7 @@ export type User = {
     topic: Topic[]
     category: Category 
     postTags: any
+    _count: any
   }
   
   export type PostMetaData = {

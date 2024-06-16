@@ -1,25 +1,19 @@
 import { Button, Card, CardBody, CardFooter, CardHeader, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Select, SelectItem } from '@nextui-org/react'
 import React, { useState } from 'react'
-import { MdKeyboardDoubleArrowDown, MdKeyboardDoubleArrowUp } from 'react-icons/md'
-import { Link } from 'react-router-dom'
-import { formatToClientDate } from '../../utils/format-to-client-date'
-import { IoArrowUpSharp } from 'react-icons/io5'
-import useSubscriptionActions from '../../features/SubscribeActions'
-import useVotesActions from '../../features/VotesActions'
+import TopicItem from '../topic-item';
 
-const FollowingTopicWrapper = ({ followingList, isNested = false, isSubsPage = false }: any) => {
-  const [expandedTopics, setExpandedTopics] = useState<{ [key: string]: boolean }>({})
-  const { handleSubscribeTopic } = useSubscriptionActions()
-  const { handleLikeTopic} = useVotesActions()
-  const [sortBy, setSortBy] = useState<'posts' | 'rating'>('rating'); 
+
+const TopicWrapper = ({ followingList, isNested = true, subscribedCategoryNTopicsData = {}}: any) => {
   
-  const toggleTopic = (topicId: string) => {
-    setExpandedTopics(prev => ({
-      ...prev,
-      [topicId]: !prev[topicId]
-    }))
-  }
-  console.log(followingList)
+  const [sortBy, setSortBy] = useState<'posts' | 'rating'>('rating'); 
+ 
+  followingList = followingList.map((topicItem: any) => {
+    const isSubscribed = subscribedCategoryNTopicsData.topic.some((el: any) => el.topicId == topicItem.id);
+    return {
+        ...topicItem,
+        isSubscribed
+    };
+});
   const sortedFollowingList = [...followingList].sort((a: any, b: any) => {
     const aTopic = isNested ? a : a.topic;
     const bTopic = isNested ? b : b.topic;
@@ -57,68 +51,18 @@ const FollowingTopicWrapper = ({ followingList, isNested = false, isSubsPage = f
 
         </Card>
         {sortedFollowingList.map((item: any) => {
-          const topic = !isNested ? item.topic : item
-          const isExpanded = expandedTopics[topic.id]
-
           return (
-            <Card key={topic.id} className="">
-              <CardHeader className="flex justify-between items-center cursor-pointer" onClick={() => toggleTopic(topic.id)}>
-                <div className="flex items-center gap-3">
-                  <span className="font-semibold text-lg">Тема: {topic.name}</span>
-                  <p className="text-sm text-gray-600">Рейтинг: {topic.rating}</p>
-                  <span className="text-sm text-gray-400">Постов: {topic.posts.length}</span>
-                </div>
-                <div className="text-gray-500">
-                  {isExpanded ? <MdKeyboardDoubleArrowUp /> : <MdKeyboardDoubleArrowDown />}
-                </div>
-              </CardHeader>
-              {isExpanded && (
-                <CardBody>
-                  <div className="flex flex-wrap gap-3 mb-4">
-                    {topic.posts.map((post: any) => (
-                      <Link key={post.id} to={`/posts/${post.id}`} className="w-full">
-                        <Card className="hover:bg-gray-50 transition p-3">
-                          <CardBody className="p-0">
-                            <p className="font-semibold">{JSON.parse(post.content)[0]?.componentText || 'No content available'}</p>
-                          </CardBody>
-                          <CardFooter className="flex justify-between text-sm text-gray-500 p-1 mt-2">
-                            <span>{post.author.username}</span>
-                            <span>{formatToClientDate(post.createdAt)}</span>
-                          </CardFooter>
-                        </Card>
-                      </Link>
-                    ))}
-                    <Button
-                    size='sm'
-                  className="text-sm px-9 rounded-xl m-auto"
-                  color={topic.isSubscribed ? "default" : "primary"}
-                  onClick={() => toggleTopic(topic.id)}
-                >
-                  {isExpanded ? 'Свернуть' : ''}
-                </Button>
-                  </div>
-                </CardBody>
-              )}
-              <CardFooter className="flex justify-between">
-                <Button
-                  className="text-sm"
-                  color={topic.isSubscribed ? "default" : "primary"}
-                  onClick={() => handleSubscribeTopic(topic.isSubscribed, topic.id, topic.categoryId, isSubsPage)}
-                >
-                  {topic.isSubscribed ? 'Отписаться' : 'Подписаться'}
-                </Button>
-                <Button
-                  isDisabled={topic.isLiked}
-                  variant='ghost'
-                  startContent={<IoArrowUpSharp />}
-                  className="text-sm"
-                  color="primary"
-                  onClick={() => handleLikeTopic(false, topic.id, topic.categoryId, isSubsPage )}
-                >
-                  {topic.isLiked ? 'голос засчитан' : 'проголосовать за тему'}
-                </Button>
-              </CardFooter>
-            </Card>
+            <TopicItem 
+            key={item.id} 
+            name={item.name} 
+            description={item.description}
+            rating={item.rating} 
+            posts={item.posts} 
+            isSubscribed={item.isSubscribed}
+            isLiked={item.isLiked}
+            categoryId={item.categoryId}
+            id={item.id}
+            postsCount={item?._count?.posts}/>
           )
         })}
       </div>
@@ -126,4 +70,4 @@ const FollowingTopicWrapper = ({ followingList, isNested = false, isSubsPage = f
   )
 }
 
-export default FollowingTopicWrapper
+export default TopicWrapper

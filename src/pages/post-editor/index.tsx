@@ -10,7 +10,6 @@ const PostEditor = () => {
     if(!data) {
         return <div>Нет данных</div>
     }
-
   return (
     <>
     <AdvancedCreator data={data}/>

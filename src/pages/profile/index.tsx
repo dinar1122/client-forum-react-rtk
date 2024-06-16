@@ -2,7 +2,7 @@ import { useDisclosure, Image, Button, Tabs, Tab, Card } from '@nextui-org/react
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
-import { resetUser, selectCurrent } from '../../features/UserSlice'
+import { resetUser, selectCurrent, selectCurrentTagsSubs } from '../../features/UserSlice'
 import { useGetUserByIdQuery, useLazyCurrentQuery, useLazyGetUserByIdQuery } from '../../app/services/userApi'
 import { useDeleteFollowOnUserMutation, useFollowOnUserMutation } from '../../app/services/followsApi'
 import { BackButton } from '../../components/UI/back-button'
@@ -13,6 +13,7 @@ import { formatToClientDate } from '../../utils/format-to-client-date'
 import { EditProfile } from '../../components/edit-profile'
 import { Card as CardPost } from '../../components/card'
 import { CommentCard } from '../../components/card-comment'
+import { subscribedData } from '../../utils/subscribed-data'
 
 const Profile = () => {
   const { id } = useParams<{ id: string }>()
@@ -25,6 +26,8 @@ const Profile = () => {
   const [triggerGetUserByIdQuery] = useLazyGetUserByIdQuery()
   const [triggerCurrentQuery] = useLazyCurrentQuery()
 
+  const { subscribedTagIds } = subscribedData()
+
   const dispatch = useDispatch()
 
   useEffect(
@@ -33,8 +36,6 @@ const Profile = () => {
     },
     [dispatch]
   )
-
-  console.log(data)
 
   const handleFollow = async () => {
     try {
@@ -154,6 +155,7 @@ const Profile = () => {
               categoryData={post.category}
               topicData={post.topic}
               tagsData={post.postTags}
+              subscribedTagIds={subscribedTagIds}
               
                >
               </CardPost>

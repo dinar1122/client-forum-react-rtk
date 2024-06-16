@@ -17,17 +17,18 @@ import { TbTools, TbToolsOff } from 'react-icons/tb';
 import { useCreateTagMutation, useLazyGetAllTagsQuery } from '../../app/services/tagsApi';
 import SearchList from '../search-list';
 import TagItem from '../tag-item';
+import useTags from '../../features/useTags';
+import { ErrorMessage } from '../error-message';
 
 
 const AdvancedCreator = ({ data = null }: any) => {
-  console.log(data)
   const navigate = useNavigate()
   const [createPost] = useCreatePostMutation()
   const [updatePost] = useUpdatePostByIdMutation()
 
   const [getTags] = useLazyGetAllTagsQuery()
   const [tagList, setTagList] = useState();
-  const [selectionTags, setSelectionTags] = useState<any>([]);
+  const { selectionTags, error, handleAddTag, handleRemoveTag, setSelectionTags, setError } = useTags();
   const [selectionTagsClosed, setSelectionTagsClosed] = useState(true);
   const [createTag] = useCreateTagMutation()
 
@@ -35,7 +36,6 @@ const AdvancedCreator = ({ data = null }: any) => {
   const [input, setInput] = useState('');
   const [optionsFlag, setoptionsFlag] = useState(false);
   const [selectedOption, setSelectedOption] = useState(1)
-  const [error, setError] = useState('');
   const [editor, setEditor] = useState(true)
   const [isUpdating, setIsUpdating] = useState(false)
 
@@ -56,7 +56,7 @@ const AdvancedCreator = ({ data = null }: any) => {
     { id: 8, name: 'Видео', icon: <MdOutlineOndemandVideo className='text-2xl mr-2' /> },
 
   ];
-  const componentMap: { [key: string]: string } = {
+  const componentMap: { [key: number]: string } = {
     1: 'TextContent',
     2: 'BlockImage',
     3: 'BlockTitle',
@@ -70,15 +70,15 @@ const AdvancedCreator = ({ data = null }: any) => {
   useEffect(() => {
     if (data) {
       setTextContent(JSON.parse(data?.content));
-      setIsUpdating(true) 
-      const existingTags = data.postTags.map((tag: any) => tag.tag )
+      setIsUpdating(true)
+      const existingTags = data.postTags.map((tag: any) => tag.tag)
       setSelectionTags(existingTags)
       setSelectedCategoryValue(data.categoryId)
       setSelectedTopicValue(data.topicId)
     }
   }, [data]);
 
-  const createTagNRefetch = (name) => {
+  const createTagNRefetch = (name: string) => {
     createTag(name)
     handleGetTags()
   }
@@ -88,24 +88,7 @@ const AdvancedCreator = ({ data = null }: any) => {
     setTagList(data)
     setSelectionTagsClosed(false)
   }
-  const handleRemoveTag = (tagId: number) => {
-    setSelectionTags(selectionTags.filter((tag:any) => tag.id !== tagId));
-    setError('');
-  };
-  const handleAddTag = (newTag:any) => {
-    console.log(newTag)
 
-    if (!selectionTags.some((tag:any) => tag.id === newTag.id)) {
-      setSelectionTags([
-        ...selectionTags,
-        newTag
-      ]);
-      setError('')
-    } else {
-      setError('Вы уже добавили этот тег')
-    }
-
-  };
   const handleSaveBlock = () => {
 
     if (input.trim() === '') {
@@ -125,7 +108,6 @@ const AdvancedCreator = ({ data = null }: any) => {
         { component: selectedComponent || 'TextContent', componentText: modifiedInput, isShowed: false, spoiler: false },
       ]);
       setInput('');
-      console.log(textContentToSend);
     }
 
   };
@@ -134,13 +116,11 @@ const AdvancedCreator = ({ data = null }: any) => {
     if (selectedCategoryValue == '' || selectedTopicValue == '') {
       setError(`Выберите категорию и тему`)
     } else {
-      console.log(textContentToSend)
       await createPost({ content: JSON.stringify(textContentToSend), topicId: selectedTopicValue, categoryId: selectedCategoryValue, postTags: selectionTags })
       navigate('/')
     }
   }
   const handleUpdatePost = async () => {
-    console.log(textContentToSend)
     await updatePost({ postId: data.id, content: JSON.stringify(textContentToSend), topicId: selectedTopicValue, categoryId: selectedCategoryValue, postTags: selectionTags })
     navigate('/')
   }
@@ -175,7 +155,7 @@ const AdvancedCreator = ({ data = null }: any) => {
           {<CurrentPostBody content={textContentToSend} editor={editor} onUpdateContent={setTextContent}></CurrentPostBody>}
 
         </CardBody>
-        <CardBody className='flex-row gap-1'>{(selectionTags).map((tag:any) => {
+        <CardBody className='flex-row gap-1'>{(selectionTags).map((tag: any) => {
           return <TagItem key={tag.name} tag={tag} deleteMethod={handleRemoveTag}></TagItem>
         })}</CardBody>
 
@@ -217,21 +197,21 @@ const AdvancedCreator = ({ data = null }: any) => {
               }}
             />
           </div>
-          {error && <div className="text-red-500 m-auto">{error}</div>}
+          {<ErrorMessage error={error} />}
         </CardBody>
         <CardFooter className='pt-0'>
           <CardBody className='p-0 flex-row justify-between gap-2'>
 
-            <div>
-              {selectionTagsClosed ? <Button onClick={handleGetTags}>Добавить теги</Button> : 
-              <>{tagList && 
-                <div className='flex-row gap-3 '><Button isIconOnly onClick={() => { setSelectionTagsClosed(!selectionTagsClosed) }}>X</Button>
-                <SearchList methodIfEmpty={createTagNRefetch} list={tagList} onSearchResult={handleAddTag}></SearchList>
-                </div>}
-              </>}
-
-
-
+            <div className='w-full' >
+              {selectionTagsClosed ? <Button onClick={handleGetTags}>Добавить теги</Button> :
+                <>{tagList &&
+                  <div className='flex-row gap-2'>
+                    <div className='w-full'>
+                      <SearchList methodIfEmpty={createTagNRefetch} list={tagList} onSearchResult={handleAddTag}></SearchList>
+                    </div>
+                    <Button isIconOnly onClick={() => { setSelectionTagsClosed(!selectionTagsClosed) }}>X</Button>
+                  </div>}
+                </>}
             </div>
             <div className='py-0 flex-row justify-end gap-2'>
               <Button onClick={handleSaveBlock}>Добавить блок</Button>

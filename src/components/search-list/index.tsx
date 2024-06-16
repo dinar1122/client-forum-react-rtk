@@ -1,9 +1,17 @@
 import { Button, Input, Listbox, ListboxItem } from '@nextui-org/react';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const SearchList = ({ list, onSearchResult, methodIfEmpty }: any) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredItems, setFilteredItems] = useState(list);
+    const [isSortedAsc, setIsSortedAsc] = useState(true);
+
+    useEffect(() => {
+        setFilteredItems(list);
+        const sortedItems = [...filteredItems].sort((a: any, b: any) => {
+            return b._count.postTags - a._count.postTags });
+            setFilteredItems(sortedItems);
+    }, [list]);
 
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value;
@@ -17,6 +25,7 @@ const SearchList = ({ list, onSearchResult, methodIfEmpty }: any) => {
     const handleAction = (item: any) => {
         onSearchResult({ id: item.id, name: item.name });
     };
+    
 
     return (
         <>
@@ -25,12 +34,25 @@ const SearchList = ({ list, onSearchResult, methodIfEmpty }: any) => {
                 value={searchTerm}
                 onChange={handleSearchChange}
             />
-            <Listbox className='p-auto ' emptyContent={``} aria-label="Элементы" onAction={(key) => handleAction(filteredItems.find((item: any) => item.id === key))}>
-                {filteredItems.slice(0, 1).map((item: any, index: any) => (
-                    <ListboxItem className='' key={item.id} id={item.id}>{item.name}</ListboxItem>
+            <Listbox className="p-auto" aria-label="Элементы" onAction={(key) => handleAction(filteredItems.find((item: any) => item.id === key))}>
+                {filteredItems.slice(0, 5).map((item: any) => (
+                    <ListboxItem
+                        className="bg-gray-100 my-1"
+                        key={item.id}
+                        id={item.id}
+                        textValue={item.name}
+                    >
+                        <div className="flex justify-between items-center">
+                            <span>{item.name}</span>
+                            <div className="text-sm text-gray-600">
+                                <span>Подписчиков: {item._count.userTags}</span>
+                                <span className="ml-2">Упоминаний: {item._count.postTags}</span>
+                            </div>
+                        </div>
+                    </ListboxItem>
                 ))}
             </Listbox>
-            {filteredItems.length === 0 && <Button onClick={()=> {methodIfEmpty(searchTerm)}}>Создать</Button>}
+            {filteredItems.length === 0 && methodIfEmpty && <Button onClick={() => { methodIfEmpty(searchTerm) }}>Создать</Button>}
         </>
     );
 };

@@ -3,7 +3,7 @@ import { Button, Card, CardBody, CardFooter, CardHeader, Image } from '@nextui-o
 import { topicApi } from '../../app/services/topicApi';
 import { categoryApi, useLazyGetCategoryListQuery } from '../../app/services/categoryApi';
 import { IoArrowUpSharp } from 'react-icons/io5';
-import FollowingTopicWrapper from '../following-topic-wrapper';
+import TopicWrapper from '../following-topic-wrapper';
 import useSubscriptionActions from '../../features/SubscribeActions';
 import { Link } from 'react-router-dom';
 
@@ -20,19 +20,17 @@ type Props = {
   categoryId: string;
   topics: Topic[];
   isSubscribedCategory: boolean;
-  description: string
+  description: string,
+  subscribedCategoryNTopicsData: any
 };
 
 
-const CategoryCard = ({ name, isSubscribedCategory, categoryId, topics, description}: Props) => {
+const CategoryCard = ({ name, categoryId, topics, description, subscribedCategoryNTopicsData}: Props) => {
   const [showMore, setShowMore] = useState(true);
-  const { handleUnSubscribeCategory } = useSubscriptionActions()
+  const { handleSubscribeCategory } = useSubscriptionActions()
 
-  const toggleShowMore = () => {
-    setShowMore(!showMore);
-  };
-
-
+const isSubscribedCategory = subscribedCategoryNTopicsData.category.some((el:any) => el.categoryId == categoryId)
+console.log(subscribedCategoryNTopicsData)
   return (
     <div className="flex flex-col p-4 rounded-md">
       <Card className="flex flex-col sm:flex-row w-full h-auto shadow-lg">
@@ -51,14 +49,14 @@ const CategoryCard = ({ name, isSubscribedCategory, categoryId, topics, descript
             color={isSubscribedCategory ? "default" : "primary"}
             radius="full"
             size="sm"
-            onClick={() => handleUnSubscribeCategory(isSubscribedCategory, categoryId)}
+            onClick={() => handleSubscribeCategory(isSubscribedCategory, categoryId)}
           >
             {isSubscribedCategory ? 'Отписаться' : 'Подписаться'}
           </Button>
         </CardFooter>
       </Card>
 
-      <FollowingTopicWrapper followingList={topics} isNested={true} ></FollowingTopicWrapper>
+      <TopicWrapper followingList={topics} isNested={true} subscribedCategoryNTopicsData={subscribedCategoryNTopicsData}></TopicWrapper>
     </div>
   );
 };

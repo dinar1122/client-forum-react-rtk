@@ -20,6 +20,7 @@ import CurrentTopic from "./pages/current-topic"
 import AdvancedCreator from "./components/advanced-post-creator"
 import Notifications from "./pages/notifications"
 import PostEditor from "./pages/post-editor"
+import SearchPage from "./pages/search-page"
 
 const container = document.getElementById("root")
 
@@ -76,6 +77,10 @@ const router = createBrowserRouter([
       {
         path: "notifications",
         element: <Notifications />,
+      },
+      {
+        path: "search",
+        element: <SearchPage />,
       }
     ],
   },

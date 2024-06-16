@@ -2,10 +2,13 @@ import React from "react";
 import {Card, CardHeader, CardBody, CardFooter, Divider, Link, Image, Button} from "@nextui-org/react";
 import useSubscriptionActions from "../../features/SubscribeActions";
 
-export default function CategoryHeader({description, avatarUrl ='', name, isSubscribed = false, categoryId, followers }: any) {
+export default function CategoryHeader({description, avatarUrl ='', name, categoryId, followers, subscribedCategoryNTopicsData }: any) {
 
-    const { handleUnSubscribeCategory } = useSubscriptionActions();
-    console.log(categoryId)
+    const { handleSubscribeCategory } = useSubscriptionActions();
+
+      const isSubscribed = subscribedCategoryNTopicsData.category.some((el: any) => el.categoryId == categoryId);
+      
+  
   return (
     <Card>
       <CardHeader className="flex gap-3 pl-0 pt-0 pb-0">
@@ -29,7 +32,7 @@ export default function CategoryHeader({description, avatarUrl ='', name, isSubs
       <Divider/>
       <CardFooter>
         
-        <Button  onClick={() => handleUnSubscribeCategory(isSubscribed,categoryId)}>
+        <Button  color={isSubscribed ? 'default' : 'primary'} onClick={() => handleSubscribeCategory(isSubscribed,categoryId)}>
             {isSubscribed ? 'Отписаться' : 'Подписаться'}
         </Button>
       </CardFooter>

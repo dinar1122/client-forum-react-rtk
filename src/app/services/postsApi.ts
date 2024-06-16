@@ -11,7 +11,7 @@ export const postApi = api.injectEndpoints({
                 body: postData
             })
         }),
-        updatePostById: builder.mutation<Post, {postId: string, content: string, topicId: string, categoryId: string, postTags: object }>({
+        updatePostById: builder.mutation<Post, { postId: string, content: string, topicId: string, categoryId: string, postTags: object }>({
             query: (postData) => ({
                 url: `/posts/${postData.postId}`,
                 method: 'PUT',
@@ -20,11 +20,25 @@ export const postApi = api.injectEndpoints({
         }),
         getAllPosts: builder.query<PostMetaData, { page: number }>({
             query: ({ page }) => ({
-              url: `/posts`,
-              method: 'GET',
-              params: { page },
+                url: `/posts`,
+                method: 'GET',
+                params: { page },
             }),
-          }),
+        }),
+        getPostsByQuery: builder.query<PostMetaData, any>({
+            query: (queryData) => ({
+                url: `/posts/search`,
+                method: 'GET',
+                params: queryData
+            }),
+        }),
+        getPostsByTopic: builder.query<PostMetaData, any>({
+            query: ({id, limit}) => ({
+                url: `/posts/topic/${id}`,
+                method: 'GET',
+                params: {limit}
+            }),
+        }),
         getPostById: builder.query<Post, string>({
             query: (postId) => ({
                 url: `/posts/${postId}`,
@@ -47,9 +61,20 @@ export const {
     useUpdatePostByIdMutation,
     useDeletePostByIdMutation,
     useGetAllPostsQuery,
+    useGetPostsByQueryQuery,
+    useLazyGetPostsByQueryQuery,
     useGetPostByIdQuery,
     useLazyGetAllPostsQuery,
-    useLazyGetPostByIdQuery
+    useLazyGetPostByIdQuery,
+    useGetPostsByTopicQuery,
+    useLazyGetPostsByTopicQuery
 } = postApi
 
-export const { endpoints: { createPost, getAllPosts, getPostById, deletePostById, updatePostById } } = postApi
+export const { endpoints: { 
+    createPost, 
+    getAllPosts, 
+    getPostById, 
+    deletePostById, 
+    updatePostById, 
+    getPostsByQuery, 
+    getPostsByTopic } } = postApi
