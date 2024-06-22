@@ -7,24 +7,17 @@ import {
   } from "@nextui-org/react"
   import { useDispatch, useSelector } from "react-redux"
   import { CiLogout } from "react-icons/ci"
-  import { useNavigate } from "react-router-dom"
+  import { Link, useNavigate } from "react-router-dom"
   import { useContext, useEffect } from "react"
 import { logout, selectIsAuthenticated } from "../../features/UserSlice"
 import { CustomButton } from "../UI/custom-button"
 import { useGetCategoryListQuery } from "../../app/services/categoryApi"
-import { setCategories } from "../../features/CategorySlice"
   
   export const Header = () => {
     const isAuthenticated = useSelector(selectIsAuthenticated)
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    const { data: categoriesData, isSuccess } = useGetCategoryListQuery();
-
-    useEffect(() => {
-        if (isSuccess) {
-            dispatch(setCategories(categoriesData)); 
-        }
-    }, [dispatch, categoriesData, isSuccess]);
+    const { data } = useGetCategoryListQuery();
    
 
     const hadleLogout = () => {
@@ -36,7 +29,7 @@ import { setCategories } from "../../features/CategorySlice"
     return (
       <Navbar className="bg-gradient-to-r from-cyan-200 to-blue-300">
         <NavbarBrand>
-          <p className="font-bold text-inherit">TechLogic</p>
+          <Link to={`/`}><p className="font-bold text-inherit text-xl bg-gradient-to-r from-gray-100 to-gray-200 p-2 rounded-xl">Tech/Logic</p></Link>
         </NavbarBrand>
   
         <NavbarContent justify="end">

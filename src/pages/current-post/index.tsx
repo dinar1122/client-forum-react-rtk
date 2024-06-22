@@ -4,30 +4,30 @@ import { useGetPostByIdQuery } from '../../app/services/postsApi'
 import { Card } from '../../components/card'
 import { BackButton } from '../../components/UI/back-button'
 import { CommentCreator } from '../../components/comment-creator'
-import { CommentCard } from '../../components/card-comment'
 import { useSelector } from 'react-redux'
 import { selectCurrentTagsSubs } from '../../features/UserSlice'
+import { CommentTree } from '../../components/comment-tree'
 
 const CurrentPost = () => {
-  const params = useParams<{id: string}>()
-  const {data, isLoading, isError} = useGetPostByIdQuery(params?.id ?? '')
+  const params = useParams<{ id: string }>()
+  const { data, isLoading, isError } = useGetPostByIdQuery(params?.id ?? '')
   const dataUserTagsSubs = useSelector(selectCurrentTagsSubs)
-  const subscribedTagIds = new Set(dataUserTagsSubs?.map((sub:any) => sub.tagId));
-  console.log(subscribedTagIds)
+  const subscribedTagIds = new Set(dataUserTagsSubs?.map((sub: any) => sub.tagId));
 
-  if(isLoading) {
+
+  if (isLoading) {
     return <h2>Загрузка ...</h2>
-    }
-    
+  }
 
-  if(isError) {
+
+  if (isError) {
     return <h2>{isError}</h2>
-    }
-    
-    if(!data) {
-      return <h2>Запись не найдена</h2>
-    }
-  const {content,
+  }
+
+  if (!data) {
+    return <h2>Запись не найдена</h2>
+  }
+  const { content,
     id,
     authorId,
     comments,
@@ -39,20 +39,21 @@ const CurrentPost = () => {
     createdAt,
     topic,
     category,
+    _count,
     postTags
   } = data
-  
+  console.log(comments)
   return (
     <>
-    <BackButton></BackButton>
-    <Card
+      <BackButton></BackButton>
+      <Card
         cardFor="current-post"
         avatarUrl={author?.avatarUrl ?? ""}
         content={content}
         name={author?.username ?? ""}
         likesCount={likes?.length}
         dislikesCount={dislikes?.length}
-        commentsCount={comments?.length}
+        commentsCount={_count.comments}
         authorId={authorId}
         id={id}
         likedByUser={likedByUser}
@@ -67,36 +68,10 @@ const CurrentPost = () => {
         <CommentCreator />
       </div>
       <div className="mt-10">
-        {data.comments
-          ? data.comments.map((comment) => (
-              
-              (!comment.replyToCommentId && <div key={comment.id}><CommentCard
-                comment={comment}
-                key={comment.id}
-                avatarUrl={comment.user.avatarUrl ?? ""}
-                content={comment.content}
-                name={comment.user.username ?? ""}
-                authorId={comment.userId}
-                commentId={comment.id}
-                createdAt={comment.createdAt}
-                id={id}
-              />
-              {comment.replies.map((replied:any) => {
-                return <CommentCard 
-                key={replied.id}
-                reply={true}
-                comment={replied} 
-                commentId={replied.id}
-                name={replied.user.username ?? ""}  
-                avatarUrl={replied.user.avatarUrl ?? ""} 
-                content={replied.content} 
-                authorId={replied.user.id}
-                createdAt={replied.createdAt}
-                />
-              })}</div>)
-            ))
-          : null}
-      </div>
+      {data.comments
+        && <CommentTree comments={data.comments} id={id} />
+        }
+    </div>
     </>
   )
 }

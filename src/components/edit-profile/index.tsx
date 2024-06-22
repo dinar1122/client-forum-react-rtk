@@ -54,27 +54,23 @@ import {
     const onSubmit = async (data: User) => {
       if (id) {
         try {
-          const formData = new FormData()
-          data.username && formData.append("username", data.username)
-          data.email && data.email !== user?.email && formData.append("email", data.email)
-          data.dateOfBirth &&
-            formData.append(
-              "dateOfBirth",
-              new Date(data.dateOfBirth).toISOString(),
-            )
-          data.bio && formData.append("bio", data.bio)
-          data.location && formData.append("location", data.location)
-          selectedFile && formData.append("file", selectedFile)
-            console.log({ userData: formData, id })
-            const formDataEntries = [...formData.entries()];
-        const formDataObject = Object.fromEntries(formDataEntries);
-        console.log(formDataObject.file);
-          await updateUser({ userData: formDataObject, id }).unwrap()
-          onClose()
+          const formData = new FormData();
+          data.username && formData.append("username", data.username);
+          data.email && data.email !== user?.email && formData.append("email", data.email);
+          data.dateOfBirth && formData.append("dateOfBirth", new Date(data.dateOfBirth).toISOString());
+          data.bio && formData.append("bio", data.bio);
+          data.location && formData.append("location", data.location);
+          selectedFile && formData.append("file", selectedFile);
+    
+          console.log({ selectedFile, id });
+    
+          // Directly use FormData without converting to a plain object
+          await updateUser({ userData: formData, id }).unwrap();
+          onClose();
         } catch (err) {
-          console.log(err)
+          console.log(err);
           if (existErrorField(err)) {
-            setError(err.data.error)
+            setError(err.data.error);
           }
         }
       }

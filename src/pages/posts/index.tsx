@@ -32,7 +32,7 @@ export default function Posts() {
   const handleSelectPostsOption = (e:any) => {
     setSelectedPostsOPtion(e.target.value)
   } 
-  if (isFetching) return <Spinner/>;
+  
   if (isError) return <div>Ошибка загрузки постов</div>;
   return (
     <>
@@ -57,7 +57,7 @@ export default function Posts() {
           </div>
         </CardBody>
       </CardNext>
-      {
+      {isFetching ? <><Spinner size='lg'></Spinner></> : <>{
         data ? data.posts.map((postData) => {
           return <Card
             key={postData.id}
@@ -79,7 +79,8 @@ export default function Posts() {
             subscribedTagIds={subscribedTagIds}
           />
         }) : <></>
-      }
+      }</> }
+      
     </>
   )
 }

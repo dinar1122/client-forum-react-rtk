@@ -27,6 +27,7 @@ import { PiArrowBendLeftUpBold } from 'react-icons/pi'
 
 type CardProps = {
     reply?: boolean,
+    replyComment: any,
     comment?: any,
     avatarUrl?: string
     name?: string
@@ -39,7 +40,7 @@ type CardProps = {
 
 export const CommentCard = ({
     reply = false,
-
+    replyComment = null,
     avatarUrl = "",
     name = "",
     content = "",
@@ -50,11 +51,19 @@ export const CommentCard = ({
 }: CardProps) => {
 
     const [triggerGetPostById] = useLazyGetPostByIdQuery()
-    const [deletePost, deletePostStatus] = useDeletePostByIdMutation()
     const [deleteComment, deleteCommentStatus] = useDeleteCommentMutation()
     const currentUser = useSelector(selectCurrent)
     const [isReplying, setIsReplying] = useState(false);
-    const width = reply ? 'max-w-[700px] ml-[auto] ' : 'max-w-[770px]'
+
+    const [selectedText, setSelectedText] = useState('')
+
+    const handleMouseUp = () => {
+        const text = window.getSelection()?.toString()
+        if (text) {
+          setSelectedText(text)
+        }
+      };
+   
 
 
     const refetchPosts = async () => {
@@ -71,23 +80,30 @@ export const CommentCard = ({
     return (
 
         <div >
-            {/* {reply && <div className="reply-line"></div>} */}
-            <NextUICard className={`${width} mt-4 pl-3 pt-3 pb-3 pr-6 z-10 `} >
-                <CardHeader className="justify-between items-center bg-transparent pb-0">
-                    <div><Link href={`/users/${authorId}`}>
-                        <User
-                            username={name}
-                            className="text-small font-semibold leading-none text-default-600"
-                            avatarUrl={avatarUrl}
-                            description={formatToClientDate(createdAt, true)}
-                        />
-                    </Link>
 
-                        {reply && <div className='flex gap-3 mt-3'><PiArrowBendLeftUpBold className='text-2xl'/><div>Ответ на комментарий</div></div>}
+            <NextUICard className={`mt-4 p-3 z-10 `} >
+                <CardHeader className="justify-between items-center bg-transparent pb-0">
+                    <div>
+                        <div className='flex-row'><Link href={`/users/${authorId}`}>
+                            <User
+                                username={name}
+                                className="text-small font-semibold leading-none text-default-600"
+                                avatarUrl={avatarUrl}
+                                description={formatToClientDate(createdAt, true)}
+                            />
+                        </Link>
+                            {reply && <div className='flex-row ml-3 bg-gray-200 p-2 px-3 rounded-xl font-semibold'>
+                                <PiArrowBendLeftUpBold className='text-2xl' />
+                                <div>Ответ на комментарий { JSON.stringify(replyComment.id)}</div>
+                            </div>}
+                        </div>
+
+                        
                     </div>
+                    
                     {(authorId === currentUser?.id) && (
                         <div className="cursor-pointer text-2xl" onClick={handleDelete}>
-                            {deletePostStatus.isLoading || deleteCommentStatus.isLoading ? (
+                            {deleteCommentStatus.isLoading ? (
                                 <Spinner />
                             ) : (
                                 <RiDeleteBinLine />
@@ -95,19 +111,24 @@ export const CommentCard = ({
                         </div>
                     )}
                 </CardHeader>
-                <CardBody >
+                {reply &&
+                            <div className='flex-col gap-3 m-3 mb-0 '>
+
+                                <div className='bg-gray-200 p-1 px-3 rounded-lg font-semibold italic text-gray-600'>« {replyComment.content} »</div>
+                            </div>}
+                <CardBody onMouseUp={handleMouseUp} >
                     <TextContent>{content}</TextContent>
                 </CardBody>
                 <CardFooter className='gap-3'>
-                    <Button 
-                    onClick={() => setIsReplying(!isReplying)}
-                    size='sm'
-                    variant='ghost'>Ответить</Button>
-                     <button><SlOptions /></button>
+                    <Button
+                        onClick={() => setIsReplying(!isReplying)}
+                        size='sm'
+                        variant='ghost'>Ответить</Button>
+                    <button><SlOptions /></button>
                 </CardFooter>
             </NextUICard>
-            {isReplying && <CommentCreator replyId={commentId} width={width} setIsReplying={setIsReplying} />}
-            </div>
+            {isReplying && <CommentCreator  replyId={commentId} setIsReplying={setIsReplying} quotedText={selectedText} />}
+        </div>
 
     )
 }

@@ -46,7 +46,7 @@ const router = createBrowserRouter([
         element: <Profile />,
       },
       {
-        path: "subs/:id",
+        path: "subs",
         element: <Subs />,
       },
       {
@@ -62,7 +62,7 @@ const router = createBrowserRouter([
         element: <CurrentCategory />,
       },
       {
-        path: "categories/:id/topic/:id",
+        path: "categories/topic/:id",
         element: <CurrentTopic />,
       }
       ,

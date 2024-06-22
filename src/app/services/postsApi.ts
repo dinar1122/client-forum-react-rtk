@@ -4,7 +4,7 @@ import { api } from "./api";
 
 export const postApi = api.injectEndpoints({
     endpoints: (builder) => ({
-        createPost: builder.mutation<Post, { content: string, topicId: string, categoryId: string, postTags: object }>({
+        createPost: builder.mutation<Post, { content: string, topicId: string, categoryId: string, postTags?: object }>({
             query: (postData) => ({
                 url: '/posts',
                 method: 'POST',
@@ -43,7 +43,6 @@ export const postApi = api.injectEndpoints({
             query: (postId) => ({
                 url: `/posts/${postId}`,
                 method: 'GET',
-
             })
         }),
         deletePostById: builder.mutation<void, string>({

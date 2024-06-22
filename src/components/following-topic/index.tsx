@@ -2,13 +2,13 @@ import { useState } from 'react';
 import { Card, Button, Badge, CardFooter, CardHeader, CardBody } from '@nextui-org/react';
 import TopicItem from '../topic-item';
 
-const FollowingTopic = ({ followingList, handleUnsubscribe, handleLike }: any) => {
+const FollowingTopic = ({ followingList }: any) => {
     console.log(followingList)
     if(!followingList) {
         return <>Нет данных</>
     }
     return (
-        <div className="flex flex-col gap-4 mt-3">
+        <div className="flex flex-col gap-4 mt-5">
             {followingList && followingList.map((topicItem: any) => {
                 return <TopicItem
                 key={topicItem.id} 
@@ -18,6 +18,7 @@ const FollowingTopic = ({ followingList, handleUnsubscribe, handleLike }: any) =
                 isSubscribed={true}
                 isLiked={topicItem.isLiked}
                 categoryId={topicItem.topic?.categoryId}
+                category={topicItem?.topic?.category.name}
                 id={topicItem.topic?.id}
                 postsCount={topicItem.topic?._count.posts} />
             })}

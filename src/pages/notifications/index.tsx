@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useGetNotificationsByUserIdQuery, useLazyGetNotificationsByUserIdQuery, useReadNotificationsMutation } from '../../app/services/notificationsApi'
-import { Button, Card, CardBody, Link, Spinner } from '@nextui-org/react';
+import { Button, Card, CardBody, Spinner } from '@nextui-org/react';
 import { formatToClientDate } from '../../utils/format-to-client-date';
 import { MdOutlineQuestionAnswer, MdPostAdd } from 'react-icons/md';
 import index from '../../index.css'
@@ -8,12 +8,13 @@ import { BiRefresh } from 'react-icons/bi';
 import { FaUserPlus } from 'react-icons/fa';
 import { LuSettings } from 'react-icons/lu';
 import Alert from '../../components/UI/alert';
+import { Link } from 'react-router-dom';
 
 const Notifications = () => {
 
     const [triggerGetNewNotifications] = useLazyGetNotificationsByUserIdQuery()
     const [setIsReadNotif] = useReadNotificationsMutation()
-    const { data, isLoading = true } = useGetNotificationsByUserIdQuery();
+    const { data, isLoading = true, isError } = useGetNotificationsByUserIdQuery();
     const [message, setMessage] = useState('')
 
     const handleCloseAlert = () => {
@@ -41,6 +42,11 @@ const Notifications = () => {
             <Spinner />
         )
     }
+    if (isError) {
+        return (
+            <Spinner />
+        )
+    }
     console.log(data)
     return (
 
@@ -56,8 +62,8 @@ const Notifications = () => {
                 return <Card key={elem.id} className='mt-3'>
                     {!elem.isRead && <div className='notification-indicator'></div>}
                     <CardBody className='flex-row justify-between font-semibold text-gray-600 '><div className='w-[95%]'>
-                        В {formatToClientDate(elem.post.createdAt, true)} был опубликован <Link href={`/posts/${elem.postId}`}>
-                            Пост</Link> в теме <Link href={`/categories/${elem.post.categoryId}/topic/${elem.post.topic.id}`}>{elem.post.topic.name}</Link> на которую вы подписаны </div><MdPostAdd className='text-2xl' /></CardBody>
+                        В {formatToClientDate(elem.post?.createdAt, true)} был опубликован <Link  to={`/posts/${elem.postId}`}>
+                            Пост</Link> в теме <Link to={`/categories/topic/${elem.post.topic.id}`}>{elem.post?.topic.name}</Link> на которую вы подписаны </div><MdPostAdd className='text-2xl' /></CardBody>
                 </Card>
             })}
             {data.topic?.map((elem: any) => {
@@ -65,7 +71,7 @@ const Notifications = () => {
                     {!elem.isRead && <div className='notification-indicator'></div>}
                     <CardBody className='flex-row justify-between font-semibold text-gray-600'>
 
-                        <div className='w-[95%]'>В разделе <Link >{elem.topic.category.name}</Link>, на который вы подписаны была создана тема <Link>{elem.topic.name}</Link> в {formatToClientDate(elem.timestamp, true)}
+                        <div className='w-[95%]'>В разделе <Link to={`/categories/${elem.post?.categoryId}`} >{elem?.topic.category.name}</Link>, на который вы подписаны была создана тема <Link>{elem.topic.name}</Link> в {formatToClientDate(elem.timestamp, true)}
                         </div> <MdOutlineQuestionAnswer className='text-2xl' /></CardBody>
                 </Card>
             })}
@@ -73,7 +79,7 @@ const Notifications = () => {
                 return <Card key={elem.id} className='mt-3'>
                     {!elem.isRead && <div className='notification-indicator'></div>}
                     <CardBody className='flex-row justify-between font-semibold text-gray-600'>
-                        <div>В {formatToClientDate(elem.timestamp, true)} на вас подписался пользователь <Link href={`/users/${elem.follows.follower.id}`}>{elem.follows.follower.username}</Link></div>
+                        <div>В {formatToClientDate(elem.timestamp, true)} на вас подписался пользователь <Link to={`/users/${elem.follows?.follower.id}`}>{elem.follows?.follower.username}</Link></div>
                         <FaUserPlus className='text-2xl' />
                     </CardBody>
                 </Card>

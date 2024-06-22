@@ -11,7 +11,7 @@ import RePost from '../re-post';
 import Spoiler from '../UI/spoiler'
 import { TbNews, TbNewsOff } from 'react-icons/tb';
 
-const EditForm = ({ item, onSave, onCancel }:any) => {
+const EditForm = ({ item, onSave, onCancel }: any) => {
   const [text, setText] = useState(item.componentText);
 
   const handleSave = () => {
@@ -20,18 +20,18 @@ const EditForm = ({ item, onSave, onCancel }:any) => {
 
   return (
     <div className="p-2 bg-gray-100 rounded-xl">
-      
+
       <Textarea
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-              variant="bordered"
-              labelPlacement="outside"
-              placeholder="Enter your description"
-              classNames={{
-                base: "col-span-12 md:col-span-6 mb-6 md:mb-0 ",
-                input: "resize-y min-h-[70px] ",
-              }}
-            />
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+        variant="bordered"
+        labelPlacement="outside"
+        placeholder="Enter your description"
+        classNames={{
+          base: "col-span-12 md:col-span-6 mb-6 md:mb-0 ",
+          input: "resize-y min-h-[70px] ",
+        }}
+      />
       <div className="flex justify-end mt-2">
         <Button className="mx-1" onClick={handleSave}>Сохранить</Button>
         <Button className="mx-1" onClick={onCancel}>Отмена</Button>
@@ -46,45 +46,45 @@ const CurrentPostBody = ({ content, editor = false, onUpdateContent = '', spoile
   const [spoilerIndex, setSpoilerIndex] = useState([]);
 
   const handleSave = (item: any, newText: any) => {
-    item.componentText = newText;
-    setEditingIndex(-1);
-    onUpdateContent([...content]);
-  };
+    item.componentText = newText
+    setEditingIndex(-1)
+    onUpdateContent([...content])
+  }
 
   const moveBlock = (index: any, direction: any) => {
-    const newContent = [...content];
-    const targetIndex = direction === 'up' ? index - 1 : index + 1;
+    const newContent = [...content]
+    const targetIndex = direction === 'up' ? index - 1 : index + 1
 
     if (targetIndex >= 0 && targetIndex < newContent.length) {
-      const [removed] = newContent.splice(index, 1);
-      newContent.splice(targetIndex, 0, removed);
-      onUpdateContent(newContent);
+      const [removed] = newContent.splice(index, 1)
+      newContent.splice(targetIndex, 0, removed)
+      onUpdateContent(newContent)
     }
-  };
+  }
 
   const deleteBlock = (index: any) => {
-    const newContent = content.filter((_:any, i:any) => i !== index);
-    onUpdateContent(newContent);
-  };
+    const newContent = content.filter((_: any, i: any) => i !== index)
+    onUpdateContent(newContent)
+  }
 
   const toggleShowed = (index: any, component: any) => {
     setShowedIndex((prev: any) => (
       prev.includes(index) ? prev.filter((i: any) => i !== index) : [...prev, index]
     ));
     component.isShowed = !component.isShowed;
-  };
+  }
   const toggleSpoiler = (index: any, component: any) => {
     setSpoilerIndex((prev: any) => (
       prev.includes(index) ? prev.filter((i: any) => i !== index) : [...prev, index]
-    ));
-    component.spoiler = !component.spoiler;
-  };
+    ))
+    component.spoiler = !component.spoiler
+  }
 
   const renderBlock = (item: any, index: any, isEditing: any, isShowed: any, shouldUseSpoiler: any) => (
     <div key={index} className={`flex flex-col py-2 px-1 myTextClass ${editor && `hover:bg-blue-100 rounded-xl transition duration-250 ease-in-out`}`}>
       {isEditing ? (
         <EditForm
-          
+
           item={item}
           onSave={handleSave}
           onCancel={() => setEditingIndex(-1)}
@@ -98,7 +98,7 @@ const CurrentPostBody = ({ content, editor = false, onUpdateContent = '', spoile
             <TextContent>{item.componentText}</TextContent>
           )}
           {item.component === 'BlockImage' && (
-            <div className='justify-center w-full'><BlockImage imageSource={item.componentText} /></div>
+            <BlockImage imageSource={item.componentText} />
           )}
           {item.component === 'BlockTitle' && (
             <BlockTitle titleText={item.componentText} />
@@ -146,22 +146,22 @@ const CurrentPostBody = ({ content, editor = false, onUpdateContent = '', spoile
 
   return (
     <div className=''>
-  {content.map((item: any, index: any) => {
-    const isEditing = editingIndex === index;
-    if(item.isShowed)
-      {showedIndex.push(index)}
-    const isShowed = showedIndex.includes(index);
-    const shouldUseSpoiler = item.spoiler === true;
+      {content.map((item: any, index: any) => {
+        if (item.isShowed) 
+          { showedIndex.push(index) }
+        const isEditing = editingIndex === index
+        const isShowed = showedIndex.includes(index)
+        const shouldUseSpoiler = item.spoiler === true
 
-    return shouldUseSpoiler ? (
-      <Spoiler key={index} title={spoilerTitle} content={renderBlock(item, index, isEditing, isShowed, shouldUseSpoiler)} />
-    ) : (
-      renderBlock(item, index, isEditing, isShowed, shouldUseSpoiler)
-    );
-  })}
-</div>
+        return shouldUseSpoiler ? (
+          <Spoiler key={index} title={spoilerTitle} content={renderBlock(item, index, isEditing, isShowed, shouldUseSpoiler)} />
+        ) : (
+          renderBlock(item, index, isEditing, isShowed, shouldUseSpoiler)
+        )
+      })}
+    </div>
 
-  );
+  )
 }
 
 export default CurrentPostBody;

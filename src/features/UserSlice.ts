@@ -5,6 +5,8 @@ import { User } from "../app/types"
 import { tagsApi } from "../app/services/tagsApi"
 import { categoryApi } from "../app/services/categoryApi"
 import { topicApi } from "../app/services/topicApi"
+import { likesApi } from "../app/services/likesApi"
+import { followsApi } from "../app/services/followsApi"
 
 
 type InitialState = {
@@ -41,6 +43,16 @@ const slice = createSlice({
         state.isAuthenticated = true
         state.current = action.payload
       })
+      .addMatcher(followsApi.endpoints.followOnUser.matchFulfilled, (state, action) => {
+        if (state.current !== null && state.current.following ) {
+          state.current.following = [ ...state.current.following,{ ...action.payload}];
+        }
+      })
+      .addMatcher(followsApi.endpoints.deleteFollowOnUser.matchFulfilled, (state, action) => {
+        if (state.current !== null && state.current.following ) {
+          state.current.following = state.current.following.filter(following => following.followingId !== action.payload.followingId);
+        }
+      })
       .addMatcher(tagsApi.endpoints.createSub.matchFulfilled, (state, action) => {
         if(state.current !== null)
         state.current.userTags = [ ...state.current.userTags,{ ...action.payload}]
@@ -56,6 +68,10 @@ const slice = createSlice({
       .addMatcher(topicApi.endpoints.createSubcription.matchFulfilled, (state, action) => {
         if(state.current !== null)
         state.current.topics = [ ...state.current.topics , action.payload]
+      })
+      .addMatcher(likesApi.endpoints.createLikeOnTopic.matchFulfilled, (state, action) => {
+        if(state.current !== null)
+        state.current.likes = [ ...state.current.likes , { ...action.payload}]
       })
       .addMatcher(topicApi.endpoints.deleteSubcription.matchFulfilled, (state, action: any) => {
         if(state.current !== null)
@@ -90,6 +106,11 @@ export const selectCurrentSubscribedTopicsNCategories = createSelector(
     topic: current?.topics,
   })
 );
+
+export const selectCurrentUserFollows = (state: RootState) => state.user.current?.following
+
+export const selectUserLike = (state: RootState) => state.user.current?.likes
+
 
 export const selectUsers = (state: RootState) => state.user.users
 

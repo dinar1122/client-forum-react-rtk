@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
 import { Tab, Tabs } from '@nextui-org/react';
-import { subscribedCategoryNTopics } from '../../utils/subscribed-data';
 import { selectCurrent } from '../../features/UserSlice';
 import { useSelector } from 'react-redux';
 import FollowingTopic from '../../components/following-topic';
+import FollowingCategoryWrapper from '../../components/following-category-wrapper';
+import FollowingWrapper from '../../components/following-wrapper';
+import FollowingTagsWrapper from '../../components/following-tags-wrapper';
 
 export default function Subs() {
   const [selectedTab, setSelectedTab] = useState('topics');
   
   /* const { data: user, isLoading, isError } = useGetUserByIdQuery(id); */
-  const {subscribedCategoryNTopicsData} = subscribedCategoryNTopics()
+
 
   const currentUserData = useSelector(selectCurrent)
 
@@ -21,7 +23,10 @@ export default function Subs() {
         isLiked
     };
 });
-console.log(topicWithLiked)
+  const categoriesByUser = currentUserData?.category
+  const followingByUser = currentUserData?.following
+  const userTags = currentUserData?.userTags
+console.log(userTags)
   const formattedData = {...currentUserData, topics: topicWithLiked}
 
 
@@ -68,15 +73,15 @@ console.log(topicWithLiked)
     {selectedTab === 'topics' && (
       <FollowingTopic followingList={topicWithLiked}/>
     )}
-    {/* {selectedTab === 'categories' && (
-      <FollowingCategoryWrapper followingList={user.category} />
+    {selectedTab === 'categories' && (
+      <FollowingCategoryWrapper followingList={categoriesByUser} />
     )}
     {selectedTab === 'users' && (
-      <FollowingWrapper followingList={user.following} />
+      <FollowingWrapper followingList={followingByUser} />
     )}
     {selectedTab === 'tags' && (
-      <FollowingTagsWrapper />
-    )} */}
+      <FollowingTagsWrapper followingTags={userTags}/>
+    )}
   </div>
   );
 }

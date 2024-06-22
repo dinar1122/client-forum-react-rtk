@@ -1,12 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../app/store';
 import { PayloadAction } from '@reduxjs/toolkit';
+import { categoryApi } from '../app/services/categoryApi';
 
 interface Category {
   id: number;
   name: string;
   description: string;
-  // Добавьте другие поля, если необходимо
 }
 
 interface CategoryState {
@@ -28,6 +28,12 @@ const categorySlice = createSlice({
       state.categories = null;
     },
   },
+  extraReducers: (builder) => {
+    builder
+      .addMatcher(categoryApi.endpoints.getCategoryList.matchFulfilled, (state, action) => {
+        state.categories = action.payload
+      })
+  }
 });
 
 export const { setCategories, clearCategories } = categorySlice.actions;

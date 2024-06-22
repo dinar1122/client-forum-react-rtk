@@ -19,14 +19,9 @@ export const NavBar: React.FC = () => {
             Посты
           </NavButton>
         </li>
-        <li>
-          <NavButton href={`subs/${currentUser?.id}`} icon={<FiUsers />} >
+        <li className="">
+          <NavButton href={`subs`} icon={<FiUsers />} >
             Подписки
-          </NavButton>
-        </li>
-        <li>
-          <NavButton href="followers" icon={<FaUsers />}>
-            Подписчики
           </NavButton>
         </li>
         <li>
@@ -44,11 +39,7 @@ export const NavBar: React.FC = () => {
             Обзор
           </NavButton>
         </li>
-        <li className="">
-          <NavButton href="notifications" icon={<IoMdNotificationsOutline />}>
-            Уведомления
-          </NavButton>
-        </li>
+        
       </ul>
     </nav>
   )

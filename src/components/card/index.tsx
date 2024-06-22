@@ -65,7 +65,7 @@ export const Card = ({
   topicData = '',
   categoryData = '',
   tagsData = '',
-  subscribedTagIds = {}
+  subscribedTagIds = ''
 }: CardProps) => {
   tagsData = tagsData.map((tag: any) => tag.tag )
   const [likePost] = useCreateLikeMutation()
@@ -88,12 +88,14 @@ export const Card = ({
   if (cardFor === 'post') {
     filteredBlocks = JSON.parse(content).filter((item: any) => item.isShowed);
   }
-  
+  let updatedTagsData
 
-  const updatedTagsData = tagsData.map((tag:any) => ({
-    ...tag,
-    isSubscribed: subscribedTagIds.has(tag.id)
-  }));
+  if (subscribedTagIds) {
+      updatedTagsData = tagsData.map((tag: any) => ({
+          ...tag,
+          isSubscribed: subscribedTagIds.has(tag.id)
+      }));
+  }
   
   const refetchPosts = async () => {
     switch (cardFor) {
@@ -193,7 +195,7 @@ export const Card = ({
               <div className='flex items-center gap-2 cursor-pointer'><p className='font-semibold text-default-400 text-l'>Категория:</p>
                 <Link href={`/categories/${categoryData?.id}`} className='text-primary-400 text-md'>{categoryData?.name}</Link>
               </div><div className='flex items-center gap-2 cursor-pointer'><p className='font-semibold text-default-400 text-l'>В теме:</p>
-                <Link className='text-primary-400 text-md'>{topicData.name}</Link>
+                <Link href={`/categories/topic/${topicData?.id}`} className='text-primary-400 text-md'>{topicData.name}</Link>
               </div>
             </div>)}
 
@@ -217,6 +219,7 @@ export const Card = ({
         )}
 
       </CardHeader>
+      
       <CardBody className="px-3 py-2 mb-5">
 
         {(cardFor === 'current-post') ?

@@ -40,7 +40,7 @@ export const CreatePost = () => {
 
   return (
     <form className="flex-grow " onSubmit={onSubmit}>
-      <Card className="p-5">
+      <Card className="p-3">
 
         <Controller
         name="post"

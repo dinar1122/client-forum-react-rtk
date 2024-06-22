@@ -93,23 +93,23 @@ code {
   border: none;
   outline: none;
   background: transparent;
-  padding: 1rem; /* Adjust this value to increase the padding */
+  padding: 1rem;
   margin: 0;
 }
 .mentions__suggestions {
-  border: 1px solid #d1d5db;  /* Light border similar to NextUI */
-  background-color: #ffffff;  /* White background */
+  border: 1px solid #d1d5db;  
+  background-color: #ffffff;  
   list-style-type: none;
   margin: 0;
   padding: 0;
   position: relative;
   z-index: 10;
-  border-radius: 8px;  /* Slightly rounded corners */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  /* Soft shadow for depth */
-  max-height: 200px;  /* Increased height for more items */
+  border-radius: 8px; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  
+  max-height: 200px;  
   overflow-y: auto;
-  width: min-content;  /* Slightly wider suggestion box */
-   top: calc(100% + 100px);  /* Смещает выпадающий список вниз на 8 пикселей ниже родительского элемента */
+  width: min-content;  
+   top: calc(100% + 100px); 
 }
 
 .mentions__suggestions__item {
@@ -151,8 +151,58 @@ code {
   max-height: 0;
   opacity: 0;
 }
+.form-enter {
+  max-height: 0;
+  opacity: 0;
+}
+.form-enter-active {
+  max-height: 500px; 
+  opacity: 1;
+  transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out;
+}
+.form-exit {
+  max-height: 400px;
+  opacity: 1;
+}
+.form-exit-active {
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out;
+}
+.comment-container {
+  position: relative;
+  margin-left: 20px;
+  padding-left: 20px;
+}
 
+.reply-line {
+  position: absolute;
+  width: 40px;
+  height: 20px;
+  border-left: 3px solid #ccc;
+  border-bottom-left-radius: 25px;
+  border-bottom: 3px solid #ccc;
+  left: -20px;
+  top: 30px;
+}
 
+.vertical-line {
+  position: absolute;
+  width: 3px;
+  height: 110%;
+  background-color: #ccc;
+  left: -20px;
+  top: -25px;
+}
 
-
-
+.vertical-line-short {
+  position: absolute;
+  width: 3px;
+  height: 60px; 
+  background-color: #ccc;
+  left: -20px;
+  top: -30px;
+}
+.glowing-line {
+  background-color: #49adf4;
+}
