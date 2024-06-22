@@ -13,7 +13,7 @@ export const NavBar: React.FC = () => {
   const currentUser = useSelector(selectCurrent)
   return (
     <nav>
-      <ul className="flex flex-col gap-5 ">
+      <ul className="flex flex-col gap-3 ">
         <li>
           <NavButton href="/" icon={<BsPostcard />} >
             Посты

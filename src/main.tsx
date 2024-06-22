@@ -11,9 +11,7 @@ import Posts from "./pages/posts"
 import CurrentPost from "./pages/current-post"
 import Profile from "./pages/profile"
 import Subs from "./pages/subs"
-import Followers from "./pages/followers"
 import { AuthGuard } from "./features/authGuard"
-import Topic from "./pages/topic"
 import Categories from "./pages/categories"
 import CurrentCategory from "./pages/current-category"
 import CurrentTopic from "./pages/current-topic"
@@ -49,10 +47,7 @@ const router = createBrowserRouter([
         path: "subs",
         element: <Subs />,
       },
-      {
-        path: "followers",
-        element: <Followers />,
-      },
+      
       {
         path: "categories",
         element: <Categories />,

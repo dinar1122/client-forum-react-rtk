@@ -34,12 +34,12 @@ const Layout = () => {
                     <Outlet />
                 </div>
                 <div className="flex-col p-4 gap-2">
-                    <div className="flex-col flex gap-5">{!user && <Profile />}<NavButton href="notifications" icon={<IoMdNotificationsOutline />}>
+                    <div className="flex-col flex gap-5">
+                        {!user && <Profile />}
+                        <NavButton href="notifications" icon={<IoMdNotificationsOutline />}>
                         Уведомления
-                    </NavButton></div>
-
-                    
-
+                    </NavButton>
+                    </div>
                 </div>
 
             </Container>

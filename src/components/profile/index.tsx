@@ -14,7 +14,7 @@ const Profile = () => {
   const { username, avatarUrl, email, id } = currentData
   return (
    <>
-    <Card className="py-4 w-[202px] shadow-md">
+    <Card className="py-4 shadow-sm">
       <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
         <Image
           alt="Card background"

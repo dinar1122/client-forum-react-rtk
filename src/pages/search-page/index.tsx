@@ -1,7 +1,7 @@
-import { Button, Card as CardNextUI, CardBody, Input, Switch, CardFooter, CardHeader, Spinner } from '@nextui-org/react';
+import { Button, Card as CardNextUI, CardBody, Input, Switch,  CardHeader, Spinner, Pagination } from '@nextui-org/react';
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { useLazyGetPostsByQueryQuery } from '../../app/services/postsApi';
+import { useLazyGetAllPostsQuery } from '../../app/services/postsApi';
 import { Card } from '../../components/card';
 import { useLazyGetAllTagsQuery } from '../../app/services/tagsApi';
 import TagItem from '../../components/tag-item';
@@ -12,10 +12,13 @@ import { subscribedData } from '../../utils/subscribed-data';
 const SearchPage = () => {
   const [query, setQuery] = useState('');
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const [getPostsByQuery, { data, isFetching }] = useLazyGetPostsByQueryQuery();
+  const [getPostsByQuery, { data, isFetching }] = useLazyGetAllPostsQuery()
   const { selectionTags, error, handleAddTag, handleRemoveTag, setSelectionTags } = useTags();
-  const { subscribedTagIds } = subscribedData()
+  const { subscribedTagIds } = subscribedData() 
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const pageParam = searchParams.get("page");
+  const page = pageParam ? parseInt(pageParam, 10) : 1;
 
 
   const [getTags] = useLazyGetAllTagsQuery()
@@ -44,23 +47,27 @@ const SearchPage = () => {
     
   }, []);
   useEffect(() => {
-
     const tagsQuery = selectionTags.map((tag: any) => tag.id).join(',');
-    const newQuery = `${encodeURIComponent(query)}&tags=${encodeURIComponent(tagsQuery)}`;
+    const newQuery = `${encodeURIComponent(query)}&tags=${encodeURIComponent(tagsQuery)}&page=${page}`;
     navigate(`/search?q=${newQuery}`);
+  }, [query, navigate, selectionTags, page]);
 
-  }, [query, navigate, selectionTags]);
+  useEffect(()=> {
+    handleSearchSubmit()
+  }, [page])
 
   const handleSearchChange = (event: any) => {
     setQuery(event.target.value);
   };
-
+  const handleSelectPage = (selectedPage:any) => {
+    setSearchParams({ page: selectedPage });
+  }
   const handleSearchSubmit = () => {
     if (query.trim() || selectionTags) {
       if(!tagsSearchMode) {
-        getPostsByQuery({ q: query });
+        getPostsByQuery({ q: query, page });
       } else {
-        getPostsByQuery({ q: query, tags: selectionTags.map((tag: any) => tag.id) });
+        getPostsByQuery({ q: query, tags: selectionTags.map((tag: any) => tag.id), page });
       }
       
     }
@@ -68,8 +75,8 @@ const SearchPage = () => {
 
 
   return (
-    <div className="">
-      <CardNextUI className="flex flex-row gap-2 mb-4 w-full rounded-2xl p-0">
+    <div className="gap-3">
+      <CardNextUI className="flex flex-row gap-2 mb-3 w-full rounded-2xl p-0 shadow-sm">
         <CardHeader className='gap-3 '>
           <Input
             type="text"
@@ -94,19 +101,24 @@ const SearchPage = () => {
           </Switch>
         </CardHeader>
       </CardNextUI>
-      {error && <div className='text-red-600 mb-4'>{error}</div>}
-      {tagsSearchMode && <CardNextUI>
-        <CardBody className='flex-row gap-2 flex-wrap	pb-0'>
+      {error && <div className='text-red-600 mb-3'>{error}</div>}
+      {tagsSearchMode && <CardNextUI className='shadow-sm mb-3'>
+        <CardBody className='flex-row gap-2 flex-wrap	pb-0 '>
           {(selectionTags).map((tag: any) => {
             return <TagItem key={tag.name} tag={tag} deleteMethod={handleRemoveTag}></TagItem>
           })}
         </CardBody>
-        <CardBody className='gap-2'>
+        <CardBody className='gap-2 '>
           <SearchList list={tagList} onSearchResult={handleAddTag}></SearchList>
         </CardBody>
       </CardNextUI>}
-
-      <div className="mt-4 w-full">
+      <CardNextUI className='flex-row shadow-sm justify-between p-3'>
+        <div>
+          <Pagination onChange={handleSelectPage} size='lg' variant='flat' showControls total={data?.totalPages || 1} initialPage={1} />
+        </div>
+        <div className='my-auto text-xl my-auto font-semibold bg-gray-100 p-1 px-3 rounded-xl'>Найдено записей: {data?.totalPosts}</div>
+      </CardNextUI>
+      <div className="mt-3 w-full ">
         {isFetching && <Spinner size='lg' />}
         {data?.posts.map((postData) => (
           <Card

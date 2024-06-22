@@ -4,6 +4,7 @@ import { selectCurrentSubscribedTopicsNCategories, selectCurrentTagsSubs, select
 export const subscribedData = () => {
     const dataUserTagsSubs = useSelector(selectCurrentTagsSubs)
     const subscribedTagIds = new Set(dataUserTagsSubs?.map((sub: any) => sub.tagId));
+    
 
     return {subscribedTagIds}
 }

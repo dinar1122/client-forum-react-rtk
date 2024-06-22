@@ -1,20 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-type Mention = {
-  display: string;
-  id: string;
-};
 
-type Quote = {
-  display: string;
-  id: string;
-};
-
-type LinkType = {
-  display: string;
-  url: string;
-}
 
 type Props = {
   children: string;

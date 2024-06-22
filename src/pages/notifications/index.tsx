@@ -3,7 +3,6 @@ import { useGetNotificationsByUserIdQuery, useLazyGetNotificationsByUserIdQuery,
 import { Button, Card, CardBody, Spinner } from '@nextui-org/react';
 import { formatToClientDate } from '../../utils/format-to-client-date';
 import { MdOutlineQuestionAnswer, MdPostAdd } from 'react-icons/md';
-import index from '../../index.css'
 import { BiRefresh } from 'react-icons/bi';
 import { FaUserPlus } from 'react-icons/fa';
 import { LuSettings } from 'react-icons/lu';

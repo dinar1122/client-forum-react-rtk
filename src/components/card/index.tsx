@@ -46,6 +46,7 @@ type CardProps = {
   categoryData?: any,
   tagsData?: any,
   subscribedTagIds?: any
+  page?: any
 }
 
 export const Card = ({
@@ -65,7 +66,8 @@ export const Card = ({
   topicData = '',
   categoryData = '',
   tagsData = '',
-  subscribedTagIds = ''
+  subscribedTagIds = '',
+  page=''
 }: CardProps) => {
   tagsData = tagsData.map((tag: any) => tag.tag )
   const [likePost] = useCreateLikeMutation()
@@ -100,7 +102,7 @@ export const Card = ({
   const refetchPosts = async () => {
     switch (cardFor) {
       case "post":
-        await triggerGetAllPosts({ page: 1 }).unwrap()
+        await triggerGetAllPosts({ page: page, tags: [], timeframe: '' }).unwrap()
         break
       case "current-post":
         await triggerGetPostById(id).unwrap()
@@ -180,7 +182,7 @@ export const Card = ({
 
   return (
 
-    <div className=''><NextUICard className='mb-4 mt-4 mx-auto pl-6 pt-4 pr-6' >
+    <div className=''><NextUICard className='mb-4 mt-4 mx-auto pl-6 pt-4 pr-6 shadow-sm' >
       <CardHeader className="justify-between items-center bg-transparent ">
         <div><Link href={`/users/${authorId}`}>
           <User
@@ -229,7 +231,6 @@ export const Card = ({
       </CardBody>
       <div className='flex gap-1 ml-4'>
         {updatedTagsData && <>{updatedTagsData?.map((tag: any) => {
-          /* let isSubscibed = (dataUserTagsSubs?.values) */
           return <TagItem key={tag.id} tag={tag} />
 
         })}</>}

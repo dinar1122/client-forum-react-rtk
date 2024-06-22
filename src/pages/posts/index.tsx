@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { CreatePost } from '../../components/create-post'
 import { useGetAllPostsQuery } from '../../app/services/postsApi'
 import { Card } from '../../components/card'
@@ -10,43 +10,68 @@ import { subscribedData } from '../../utils/subscribed-data'
 
 export default function Posts() {
 
+
   const postsOptions = [
-    { id: 1, name: 'Популярное', icon: null },
-    { id: 2, name: 'Ваша лента ', icon: null},
+    { id: 1, name: 'Популярное за последние 7 дней', icon: null },
+    { id: 2, name: 'Популярное за последний месяц ', icon: null},
     { id: 3, name: 'Свежее', icon: null},
     { id: 4, name: 'Ваши теги', icon: null},
 
   ];
-  const [selectedPostsOption, setSelectedPostsOPtion] = useState(postsOptions[0]?.name)
-
+  const { subscribedTagIds } = subscribedData();
+  const [selectedPostsOption, setSelectedPostsOption] = useState(postsOptions[2]?.id);
+  const [tagsArray, setTagsArray] = useState([]);
+  const [timeFrame, setTimeFrame] = useState('');
   const [searchParams, setSearchParams] = useSearchParams();
   const pageParam = searchParams.get("page");
   const page = pageParam ? parseInt(pageParam, 10) : 1;
-  const { data, isFetching,  isError } = useGetAllPostsQuery({ page });
-  const { subscribedTagIds } = subscribedData()
+
+  const queryParams = { page, tags: tagsArray, timeframe: timeFrame };
+  const { data, isFetching, isError } = useGetAllPostsQuery(queryParams);
+
+  useEffect(() => {
+    let newTagsArray:any = [];
+    switch (selectedPostsOption) {
+      case 1:
+        setTimeFrame('7')
+        break;
+      case 2:
+        setTimeFrame('30')
+        break;
+      case 3:
+        setTimeFrame('')
+        break;
+      case 4:
+        newTagsArray = [...subscribedTagIds];
+        break;
+      default:
+        break;
+    }
+    setTagsArray(newTagsArray);
+  }, [selectedPostsOption]);
 
   const handleSelectPage = (selectedPage:any) => {
     setSearchParams({ page: selectedPage });
   };
 
   const handleSelectPostsOption = (e:any) => {
-    setSelectedPostsOPtion(e.target.value)
-  } 
+    setSelectedPostsOption(Number(e.target.value));
+  };
+
   
   if (isError) return <div>Ошибка загрузки постов</div>;
   return (
     <>
       <CreatePost></CreatePost>
-      <CardNext className='mt-3 '>
-        <CardBody className='flex-row justify-between'>
-          <Pagination onChange={handleSelectPage} size='lg' variant='bordered' showControls total={data?.totalPages || 1} initialPage={1} />
+      <CardNext className='mt-3 shadow-sm'>
+        <CardBody className='flex-row justify-between gap-2'>
+          <Pagination onChange={handleSelectPage} size='lg' variant='flat' showControls total={data?.totalPages || 1} initialPage={1} />
           <div className='flex gap-2'>
-            
             <Select
               aria-label="Популярное"
               size='md'
               placeholder="Популярное"
-              className="max-w-xl w-[250px]" 
+              className="max-w-xl w-[300px]" 
               value={selectedPostsOption} 
               onChange={handleSelectPostsOption} >
             {postsOptions.map((el:any) => {
@@ -77,6 +102,7 @@ export default function Posts() {
             categoryData={postData.category}
             tagsData={postData.postTags}
             subscribedTagIds={subscribedTagIds}
+            page={page}
           />
         }) : <></>
       }</> }

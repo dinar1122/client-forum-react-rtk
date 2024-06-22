@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 const SearchList = ({ list, onSearchResult, methodIfEmpty }: any) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredItems, setFilteredItems] = useState(list);
-    const [isSortedAsc, setIsSortedAsc] = useState(true);
 
     useEffect(() => {
         setFilteredItems(list);

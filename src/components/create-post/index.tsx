@@ -1,4 +1,4 @@
-import { Button, Card, Link, Textarea } from "@nextui-org/react"
+import { Button, Card, Textarea } from "@nextui-org/react"
 import {
   useCreatePostMutation,
   useLazyGetAllPostsQuery,
@@ -11,6 +11,7 @@ import { useState } from "react"
 
 import Selector from "../selector"
 import { FaEdit } from "react-icons/fa"
+import { Link } from "react-router-dom"
 
 export const CreatePost = () => {
   const [createPost] = useCreatePostMutation()
@@ -31,7 +32,7 @@ export const CreatePost = () => {
       const content = { component: 'TextContent', componentText: data.post, isShowed: true }
       await createPost({ content: JSON.stringify([content]), topicId: selectedTopicValue, categoryId: selectedCategoryValue }).unwrap()
       setValue("post", "")
-      await triggerGetAllPosts({page:1}).unwrap()
+      await triggerGetAllPosts({page:1, tags: [], timeframe: ''}).unwrap()
     } catch (error) {
       console.log("err", error)
     }
@@ -39,8 +40,8 @@ export const CreatePost = () => {
   const error = errors?.post?.message as string
 
   return (
-    <form className="flex-grow " onSubmit={onSubmit}>
-      <Card className="p-3">
+    <form className="flex-grow  " onSubmit={onSubmit}>
+      <Card className="p-3 shadow-sm">
 
         <Controller
         name="post"
@@ -59,9 +60,9 @@ export const CreatePost = () => {
         )}
       />
       {errors && <ErrorMessage error={error} />}
-      <div className="flex justify-between mt-3">
-        <div className="flex-row w-[60%]"><Selector setFirst={setSelectedCategoryValue} setSecond={setSelectedTopicValue}></Selector></div>
-        <div className="h-100 flex items-center">
+      <div className="flex justify-between mt-3 gap-3 ">
+        <div className="flex-row w-full"><Selector setFirst={setSelectedCategoryValue} setSecond={setSelectedTopicValue}></Selector></div>
+        <div className="flex items-center">
           <Button
           color="default"
           className="flex bg-blue-200 h-full font-semibold text-gray-700"
@@ -70,7 +71,7 @@ export const CreatePost = () => {
         >
           Создать пост
         </Button>
-          <Link className="h-full" href='/create'>
+          <Link className="h-full" to='/create'>
             <Button
             startContent={<FaEdit />}
             color="default"

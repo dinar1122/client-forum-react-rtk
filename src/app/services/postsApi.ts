@@ -1,10 +1,16 @@
 import { Post, PostMetaData } from "../types";
 import { api } from "./api";
 
-
+type QueryData = {
+    page?: number
+    type?: string
+    tags?: string[]
+    timeframe?: any
+    q?:any
+  }
 export const postApi = api.injectEndpoints({
     endpoints: (builder) => ({
-        createPost: builder.mutation<Post, { content: string, topicId: string, categoryId: string, postTags?: object }>({
+        createPost: builder.mutation<Post, { content: string, topicId: string, categoryId: string, postTags?: object, }>({
             query: (postData) => ({
                 url: '/posts',
                 method: 'POST',
@@ -18,19 +24,14 @@ export const postApi = api.injectEndpoints({
                 body: postData
             })
         }),
-        getAllPosts: builder.query<PostMetaData, { page: number }>({
-            query: ({ page }) => ({
-                url: `/posts`,
-                method: 'GET',
-                params: { page },
-            }),
-        }),
-        getPostsByQuery: builder.query<PostMetaData, any>({
-            query: (queryData) => ({
-                url: `/posts/search`,
-                method: 'GET',
-                params: queryData
-            }),
+        getAllPosts: builder.query<PostMetaData, QueryData>({
+            query: (queryData) => {
+                return {
+                    url: `/posts`,
+                    method: 'GET',
+                    params: queryData,
+                };
+            },
         }),
         getPostsByTopic: builder.query<PostMetaData, any>({
             query: ({id, limit}) => ({
@@ -60,8 +61,6 @@ export const {
     useUpdatePostByIdMutation,
     useDeletePostByIdMutation,
     useGetAllPostsQuery,
-    useGetPostsByQueryQuery,
-    useLazyGetPostsByQueryQuery,
     useGetPostByIdQuery,
     useLazyGetAllPostsQuery,
     useLazyGetPostByIdQuery,
@@ -75,5 +74,4 @@ export const { endpoints: {
     getPostById, 
     deletePostById, 
     updatePostById, 
-    getPostsByQuery, 
     getPostsByTopic } } = postApi
