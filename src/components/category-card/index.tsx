@@ -1,6 +1,8 @@
 
 import TopicWrapper from '../topic-wrapper';
 import CategoryItem from '../category-item';
+import { useState } from 'react';
+import { Button } from '@nextui-org/react';
 
 type Topic = {
   id: string;
@@ -19,19 +21,33 @@ type Props = {
   description: string,
   topicCount: number
   subsCount: number
+  toggleTopics:any,
+  showTopics:any,
   subscribedCategoryNTopicsData: any
 };
 
 
-const CategoryCard = ({ name, categoryId, avatarUrl, topics, description, subscribedCategoryNTopicsData, subsCount, topicCount }: Props) => {
-
+const CategoryCard = ({
+  name,
+  categoryId,
+  avatarUrl,
+  topics,
+  toggleTopics,
+  showTopics,
+  description,
+  subscribedCategoryNTopicsData,
+  subsCount,
+  topicCount }: Props) => {
 
   const isSubscribedCategory = subscribedCategoryNTopicsData.category.some((el: any) => el.categoryId == categoryId)
 
-  return (
-    <div className="flex flex-col p-4 rounded-md">
 
+  return (
+    <div className="mb-3">
+      
       <CategoryItem
+        toggleTopics={toggleTopics}
+        showTopics={showTopics}
         name={name}
         description={description}
         topicCount={topicCount}
@@ -40,9 +56,13 @@ const CategoryCard = ({ name, categoryId, avatarUrl, topics, description, subscr
         avatarUrl={avatarUrl}
         isSubscribed={isSubscribedCategory}></CategoryItem>
 
-      <TopicWrapper
-        followingList={topics}
-        subscribedCategoryNTopicsData={subscribedCategoryNTopicsData}></TopicWrapper>
+      {showTopics && (
+        <TopicWrapper
+          categoryId={categoryId}
+          followingList={topics}
+          subscribedCategoryNTopicsData={subscribedCategoryNTopicsData}
+        />
+      )}
     </div>
   );
 };

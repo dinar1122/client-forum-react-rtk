@@ -10,7 +10,7 @@ type QueryData = {
   }
 export const postApi = api.injectEndpoints({
     endpoints: (builder) => ({
-        createPost: builder.mutation<Post, { content: string, topicId: string, categoryId: string, postTags?: object, }>({
+        createPost: builder.mutation<Post, { content: string, topicId: string, categoryId: string, postTags?: any[], }>({
             query: (postData) => ({
                 url: '/posts',
                 method: 'POST',

@@ -9,12 +9,8 @@ import FollowingTagsWrapper from '../../components/following-tags-wrapper';
 
 export default function Subs() {
   const [selectedTab, setSelectedTab] = useState('topics');
-  
-  /* const { data: user, isLoading, isError } = useGetUserByIdQuery(id); */
-
 
   const currentUserData = useSelector(selectCurrent)
-
 
   const topicWithLiked = currentUserData?.topics.map((topicItem: any) => {
     const isLiked = currentUserData.likes.some((el: any) => el.topicId === topicItem.topicId);
@@ -25,22 +21,21 @@ export default function Subs() {
 });
   const categoriesByUser = currentUserData?.category
   const followingByUser = currentUserData?.following
-  const userTags = currentUserData?.userTags
-console.log(userTags)
-  const formattedData = {...currentUserData, topics: topicWithLiked}
-
+  const userTags = currentUserData?.userTags.map((tag:any) => {
+    const isSubscribed = true;
+    return {
+      ...tag,
+      tag: {
+        ...tag.tag,
+        isSubscribed
+      }
+    };
+  });
 
   const handleChangeTab = (key: any) => {
     setSelectedTab(key);
   };
 
-  /* if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (isError) {
-    return <div>Error fetching user data</div>;
-  } */
   return (
     <div className="">
     <div className="flex w-full flex-col">

@@ -1,9 +1,11 @@
-import { Button, Card, CardBody, Select, SelectItem } from '@nextui-org/react'
-import React, { useState } from 'react'
+import { Button, Card, CardBody, Input, Select, SelectItem, Textarea } from '@nextui-org/react'
+import React, { useRef, useState } from 'react'
 import TopicItem from '../topic-item';
 import { CSSTransition } from 'react-transition-group';
+import { useCreateTopicMutation } from '../../app/services/topicApi';
+import CreateTopicForm from '../create-topic-form';
 
-const TopicWrapper = ({ followingList, subscribedCategoryNTopicsData = {}}: any) => {
+const TopicWrapper = ({ followingList, subscribedCategoryNTopicsData = {}, categoryId}: any) => {
   const [sortBy, setSortBy] = useState<'posts' | 'rating'>('rating'); 
   const [showForm, setShowForm] = useState(false);
 
@@ -27,17 +29,19 @@ const TopicWrapper = ({ followingList, subscribedCategoryNTopicsData = {}}: any)
     setSortBy(value.target.value);
   }
 
-  const handleCreateTopicClick = () => {
+  const handleShowForm = () => {
     setShowForm(prevState => !prevState);
   }
+
+ 
 
   return (
     <>
       <div className="gap-3 flex flex-col">
         <Card className='flex flex-row justify-between items-center mt-3 gap-0'>
           <CardBody className='text-2xl flex-row font-semibold text-gray-700 pr-0 gap-3 '>
-            <Button variant='ghost' className='w-1/2' onClick={handleCreateTopicClick}>Создать тему</Button>
-            <Button variant='ghost' className='w-1/2' onClick={handleCreateTopicClick}>Создать пост</Button>
+            <Button variant='ghost' className='w-1/2' onClick={handleShowForm}>Создать тему</Button>
+            <Button variant='ghost' className='w-1/2' onClick={handleShowForm}>Создать пост</Button>
           </CardBody>
 
           <CardBody className='w-2/3'>
@@ -54,30 +58,8 @@ const TopicWrapper = ({ followingList, subscribedCategoryNTopicsData = {}}: any)
             </Select>
           </CardBody>
         </Card>
-
-        <CSSTransition
-          in={showForm}
-          timeout={500}
-          classNames="form"
-          unmountOnExit
-        >
-          <Card className='shadow-t  form-container'>
-            <CardBody>
-              <form>
-                <div>
-                  <label htmlFor="topicName">Название темы</label>
-                  <input type="text" id="topicName" name="topicName" className="w-full border rounded p-2 mt-2" />
-                </div>
-                <div className="mt-3">
-                  <label htmlFor="topicDescription">Описание темы</label>
-                  <textarea id="topicDescription" name="topicDescription" className="w-full border rounded p-2 mt-2" rows={4}></textarea>
-                </div>
-                <Button type="submit" className="mt-3">Создать</Button>
-              </form>
-            </CardBody>
-          </Card>
-        </CSSTransition>
-      
+        
+        {showForm && <CreateTopicForm categoryId={categoryId}/>}
 
         {sortedFollowingList.map((item: any) => {
           return (

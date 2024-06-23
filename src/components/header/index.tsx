@@ -3,7 +3,7 @@ import {
   NavbarBrand,
   NavbarContent,
   NavbarItem,
-  Input,
+
 } from "@nextui-org/react"
 import { useDispatch, useSelector } from "react-redux"
 import { CiLogout } from "react-icons/ci"
@@ -33,19 +33,18 @@ export const Header = () => {
 
       <NavbarContent justify="end">
         <NavbarItem>
-          <Input
-            classNames={{
-              base: "max-w-full sm:max-w-[10rem] h-10",
-              mainWrapper: "h-full",
-              input: "text-small",
-              inputWrapper: "h-full font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20",
-            }}
-            placeholder="Type to search..."
-            size="sm"
-
-            type="search"
-          />
+           
+            <CustomButton
+            color="default"
+            type="button"
+            className="font-semibold text-lg text-gray-700 bg-blue-100 flex ml-3 rounded-xl "
+          >
+            <Link to={`/create`}>написать</Link>
+            
+          </CustomButton>
+          
         </NavbarItem>
+     
         <NavbarItem>
           {isAuthenticated && (
             <CustomButton

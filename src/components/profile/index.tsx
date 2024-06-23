@@ -8,31 +8,32 @@ import { Link } from "react-router-dom"
 const Profile = () => {
   const currentData = useSelector(selectCurrent)
 
-  if(!currentData) {
+  if (!currentData) {
     return null
   }
   const { username, avatarUrl, email, id } = currentData
   return (
-   <>
-    <Card className="py-4 shadow-sm">
-      <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
-        <Image
-          alt="Card background"
-          className="object-cover rounded-xl"
-          src={`${BASE_URL}${avatarUrl}`}
-          width={170}
-        />
-      </CardHeader>
-      <CardBody className="overflow-visible py-2">
-        <Link to={`/users/${id}`}>
-          <h4 className="font-bold text-large mb-2">{username}</h4>
-        </Link>
-        <p className="text-default-500 flex items-center gap-2">
-          <MdAlternateEmail />
-          {email}
-        </p>
-      </CardBody>
-    </Card>
+    <>
+      <Card className="p-2 shadow-sm">
+        <CardHeader className="pb-0  flex-col items-center">
+          <Image
+            alt="Card background"
+            className="object-cover rounded-xl "
+            src={`${BASE_URL}${avatarUrl}`}
+            width={170}
+          />
+        </CardHeader>
+        <CardBody className="overflow-visible py-2 items-center gap-1">
+          <div className='bg-gray-200 rounded-lg w-full flex justify-center'>
+            <Link to={`/users/${id}`}>
+              <h4 className="font-bold text-large mx-auto flex-row items-center"> <MdAlternateEmail />{username}</h4>
+            </Link>
+          </div>
+          <p className="text-blue-500 flex items-center ">
+            {email}
+          </p>
+        </CardBody>
+      </Card>
     </>
   )
 }

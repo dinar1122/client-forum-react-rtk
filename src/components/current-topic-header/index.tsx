@@ -3,13 +3,14 @@ import { Card, CardHeader, CardBody, Divider, Avatar, Button } from '@nextui-org
 import { BASE_URL } from '../../constants';
 import { formatToClientDate } from '../../utils/format-to-client-date';
 import useSubscriptionActions from '../../features/SubscribeActions';
+import { Link } from 'react-router-dom';
 const CurrentTopicHeader = ({id, name, createdAt, description, author, isSubscribedOnTopic = false, isSubscribedOnUser = false}:any) => {
 
   const {handleSubscribeUser, handleSubscribeTopic} = useSubscriptionActions()
 
   return (
    <>
-   <Card className="mb-3 shadow-t">
+   <Card className="mb-3 shadow-sm border">
         <CardHeader className="flex-col items-center gap-3 bg-gray-100 p-3 w-full ">
           
 
@@ -27,7 +28,7 @@ const CurrentTopicHeader = ({id, name, createdAt, description, author, isSubscri
           <div className="flex items-center gap-4 p-2 py-0bg-gray-100 ">
             <Avatar src={`${BASE_URL}${author.avatarUrl}`} alt="Author Avatar" />
             <div className=''>
-              <h3 className="text-lg font-semibold">{author.username}</h3>
+              <Link to={`/users/${author.id}`}><h3 className="text-lg font-semibold">{author.username}</h3></Link>
               <p className="text-gray-500">{author.email} </p>
               <p className="text-gray-500">Локация: {author.location}</p>
             </div>

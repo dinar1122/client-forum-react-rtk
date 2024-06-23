@@ -8,6 +8,13 @@ export const topicApi = api.injectEndpoints({
                 method: 'POST',
             })
         }),
+        createTopic: builder.mutation<any, any>({
+            query: (topicData) => ({
+                url: `/topic`,
+                method: 'POST',
+                body: topicData
+            })
+        }),
         deleteSubcription: builder.mutation<void, any>({
             query: (topicId) => ({
                 url: `/topic/${topicId}`,
@@ -29,5 +36,7 @@ export const topicApi = api.injectEndpoints({
         })
     })
 })
+
+export const {useCreateTopicMutation} = topicApi
 
 export const { endpoints: { createSubcription, deleteSubcription, getTopicList, getTopicListByCategoryId} } = topicApi

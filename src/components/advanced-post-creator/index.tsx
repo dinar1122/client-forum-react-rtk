@@ -2,11 +2,8 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Button, Card, CardBody, CardFooter, Input, Listbox, ListboxItem, Select, SelectItem, Textarea } from '@nextui-org/react';
 import { AiOutlineMinusCircle, AiOutlinePlusCircle } from 'react-icons/ai';
 import { useCreatePostMutation, useUpdatePostByIdMutation } from '../../app/services/postsApi';
-import { TextContent } from '../text-content';
-import BlockImage from '../UI/block-image';
-import BlockTitle from '../UI/block-title';
 import CurrentPostBody from '../current-post-body';
-import BlockList from '../UI/block-list';
+
 import { FaCode, FaImage, FaListUl, FaQuoteLeft } from 'react-icons/fa';
 import { MdOutlineDeleteSweep, MdOutlineOndemandVideo, MdTitle } from 'react-icons/md';
 import { GrTextAlignFull } from 'react-icons/gr';
@@ -153,7 +150,6 @@ const AdvancedCreator = ({ data = null }: any) => {
       <Card>
         <CardBody>
           {<CurrentPostBody content={textContentToSend} editor={editor} onUpdateContent={setTextContent}></CurrentPostBody>}
-
         </CardBody>
         <CardBody className='flex-row gap-1'>{(selectionTags).map((tag: any) => {
           return <TagItem key={tag.name} tag={tag} deleteMethod={handleRemoveTag}></TagItem>
@@ -163,28 +159,6 @@ const AdvancedCreator = ({ data = null }: any) => {
       <Card className='mt-3'>
         <CardBody>
           <div className="w-full flex">
-
-            <Button
-              isIconOnly
-              className='mr-2 text-gray-400 hover:text-gray-800 h-22'
-              onClick={() => setoptionsFlag(!optionsFlag)}>
-              {!optionsFlag ? <AiOutlinePlusCircle className='text-3xl' /> :
-                <AiOutlineMinusCircle className='text-3xl' />}
-            </Button>
-            {optionsFlag && <div className="flex flex-col gap-2 pr-2 ">
-              <Select
-                labelPlacement='outside'
-                label="Тип блока"
-                className="max-w-xs min-w-[200px] mr-2"
-                value={selectedOption}
-                onChange={handleSelectChange}
-              >
-                {options.map((item: any) => {
-                  return <SelectItem startContent={item.icon} key={item.id} >{item.name}</SelectItem>
-                })}
-              </Select>
-            </div>}
-
             <Textarea
               value={input}
               onChange={handleInputChange}
@@ -203,7 +177,7 @@ const AdvancedCreator = ({ data = null }: any) => {
           <CardBody className='p-0 flex-row justify-between gap-2'>
 
             <div className='w-full' >
-              {selectionTagsClosed ? <Button onClick={handleGetTags}>Добавить теги</Button> :
+              {selectionTagsClosed ? <Button onClick={handleGetTags} className='text-sm text-gray-600 bg-gray-200 px-3 py-1 font-semibold'>Добавить теги</Button> :
                 <>{tagList &&
                   <div className='flex-row gap-2'>
                     <div className='w-full'>
@@ -214,7 +188,21 @@ const AdvancedCreator = ({ data = null }: any) => {
                 </>}
             </div>
             <div className='py-0 flex-row justify-end gap-2'>
-              <Button onClick={handleSaveBlock}>Добавить блок</Button>
+              {selectionTagsClosed && <div className="flex flex-col gap-2 pr-2 ">
+                <Select
+                  aria-label='Выберите тип блока'
+                  labelPlacement='outside-left'
+                  placeholder='Выберите тип блока'
+                  className="h-4 min-w-[200px] mr-2"
+                  value={selectedOption}
+                  onChange={handleSelectChange}
+                >
+                  {options.map((item: any) => {
+                    return <SelectItem startContent={item.icon} key={item.id} >{item.name}</SelectItem>
+                  })}
+                </Select>
+              </div>}
+              <Button onClick={handleSaveBlock} className='text-sm text-gray-600 bg-gray-200 px-3 py-1 font-semibold'>Добавить блок</Button>
               <Button onClick={() => { setEditor(!editor) }} isIconOnly className='text-2xl' startContent={editor ? <TbToolsOff /> : <TbTools />} >
               </Button>
               <Button onClick={() => { setInput('') }} isIconOnly startContent={<MdOutlineDeleteSweep className='text-2xl' />} >
@@ -228,14 +216,14 @@ const AdvancedCreator = ({ data = null }: any) => {
         <CardBody className='flex-row w-full'>
           <Selector setFirst={setSelectedCategoryValue} setSecond={setSelectedTopicValue} />
         </CardBody>
-        <CardBody className='w-[min-content]'>
-          {textContentToSend.length > 0 && (
-            <div className='flex justify-end h-full'>
-              {isUpdating ? <Button className='h-full' onClick={handleUpdatePost}>Сохранить</Button> :
-                <Button className='h-full' onClick={handleCreatePost}>Опубликовать</Button>}
+        
+          {textContentToSend.length > 0 && (<CardBody className='w-[min-content]'>
+            <div className='flex justify-end '>
+              {isUpdating ? <Button className='text-sm text-gray-600 bg-gray-200 h-12 px-6 font-semibold' onClick={handleUpdatePost}>Сохранить</Button> :
+                <Button className='text-sm text-gray-600 bg-gray-200 h-12 px-6 font-semibold' onClick={handleCreatePost}>Опубликовать</Button>}
             </div>
-          )}
-        </CardBody>
+          </CardBody>)}
+        
       </Card>
 
     </div>

@@ -4,11 +4,11 @@ import { Link } from 'react-router-dom'
 import { useCreateSubMutation, useDeleteSubMutation } from '../../app/services/tagsApi'
 
 
-const TagItem = ({ tag, deleteMethod = null }: any) => {
+const TagItem = ({ tag, deleteMethod = null, tagSubscribed = '' }: any) => {
 
   const [subscribeTag] = useCreateSubMutation()
   const [unsubscribeTag] = useDeleteSubMutation()
-
+  
 
   if (deleteMethod === null) {
     return <Popover placement="right">

@@ -206,3 +206,7 @@ code {
 .glowing-line {
   background-color: #49adf4;
 }
+
+html {
+  scrollbar-gutter: stable;
+}

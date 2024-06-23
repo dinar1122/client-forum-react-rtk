@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useGetCategoryListQuery } from '../../app/services/categoryApi'
 import CategoryCard from '../../components/category-card'
 import { Spinner } from '@nextui-org/react'
@@ -16,6 +16,12 @@ const Categories = () => {
     const likedData = useSelector(selectUserLike)
 
     console.log(data)
+
+    const [showTopics, setShowTopics] = useState(true);
+
+  const toggleTopics = () => {
+    setShowTopics((prevShowTopics) => !prevShowTopics);
+  };
 
 
     if (isError) {
@@ -41,6 +47,8 @@ const Categories = () => {
                     name={item.name}
                     subsCount={item._count.categorySubs}
                     topicCount={item._count.topics}
+                    showTopics={showTopics}
+                    toggleTopics={toggleTopics}
                     avatarUrl={item.avatarUrl}
                     topics={topicArrayWithLikes}
                     isSubscribedCategory={item.isSubscribed}

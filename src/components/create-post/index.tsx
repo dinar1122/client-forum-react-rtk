@@ -32,7 +32,7 @@ export const CreatePost = () => {
       const content = { component: 'TextContent', componentText: data.post, isShowed: true }
       await createPost({ content: JSON.stringify([content]), topicId: selectedTopicValue, categoryId: selectedCategoryValue }).unwrap()
       setValue("post", "")
-      await triggerGetAllPosts({page:1, tags: [], timeframe: ''}).unwrap()
+      await triggerGetAllPosts({ page: 1, tags: [], timeframe: '' }).unwrap()
     } catch (error) {
       console.log("err", error)
     }
@@ -44,48 +44,48 @@ export const CreatePost = () => {
       <Card className="p-3 shadow-sm">
 
         <Controller
-        name="post"
-        control={control}
-        defaultValue=""
-        rules={{
-          required: "Обязательное поле",
-        }}
-        render={({ field }) => (
-          <Textarea
-            {...field}
-            labelPlacement="outside"
-            placeholder="Что хотите написать?"
-            className="m"
-          />
-        )}
-      />
-      {errors && <ErrorMessage error={error} />}
-      <div className="flex justify-between mt-3 gap-3 ">
-        <div className="flex-row w-full"><Selector setFirst={setSelectedCategoryValue} setSecond={setSelectedTopicValue}></Selector></div>
-        <div className="flex items-center">
-          <Button
-          color="default"
-          className="flex bg-blue-200 h-full font-semibold text-gray-700"
-          startContent={<CgAdd />}
-          type="submit"
-        >
-          Создать пост
-        </Button>
-          <Link className="h-full" to='/create'>
+          name="post"
+          control={control}
+          defaultValue=""
+          rules={{
+            required: "Обязательное поле",
+          }}
+          render={({ field }) => (
+            <Textarea
+              {...field}
+              labelPlacement="outside"
+              placeholder="Что хотите написать?"
+              className="m"
+            />
+          )}
+        />
+        {errors && <ErrorMessage error={error} />}
+        <div className="flex justify-between mt-3 gap-3 ">
+          <div className="flex-row w-full"><Selector setFirst={setSelectedCategoryValue} setSecond={setSelectedTopicValue}></Selector></div>
+          <div className="flex items-center">
             <Button
-            startContent={<FaEdit />}
-            color="default"
-            type="button"
-            className="font-semibold text-gray-700 default flex bg-blue-200 ml-3 rounded-xl h-full "
-          >
-            редактор
-          </Button>
-          </Link>
-        </div>
+              color="default"
+              className="flex bg-blue-200 h-full font-semibold text-gray-700"
+              startContent={<CgAdd />}
+              type="submit"
+            >
+              Создать пост
+            </Button>
 
-      </div>
+            <Button
+              startContent={<FaEdit />}
+              color="default"
+              className="font-semibold text-gray-700 default flex bg-blue-200 ml-3 rounded-xl h-full "
+            >
+              <Link className="h-full  items-center flex" to='/create'>редактор</Link>
+
+            </Button>
+
+          </div>
+
+        </div>
       </Card>
-      
+
     </form>
   )
 }

@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { useCreateLikeMutation, useDeleteLikeMutation } from '../../app/services/likesApi'
-import { useDeletePostByIdMutation, useGetAllPostsQuery, useLazyGetAllPostsQuery, useLazyGetPostByIdQuery } from '../../app/services/postsApi'
+import { useLazyGetPostByIdQuery } from '../../app/services/postsApi'
 import { useDeleteCommentMutation } from '../../app/services/commentsApi'
-import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { selectCurrent } from '../../features/UserSlice'
 import {
@@ -18,11 +16,8 @@ import { User } from '../user'
 import { formatToClientDate } from '../../utils/format-to-client-date'
 import { RiDeleteBinLine } from 'react-icons/ri'
 import { TextContent } from '../text-content'
-import { useCreateDislikeMutation, useDeleteDislikeMutation } from '../../app/services/dislikesApi'
-import { FaReply } from 'react-icons/fa'
 import { SlOptions } from 'react-icons/sl'
 import { CommentCreator } from '../comment-creator'
-import { TbMessageReply } from 'react-icons/tb'
 import { PiArrowBendLeftUpBold } from 'react-icons/pi'
 
 type CardProps = {
@@ -97,8 +92,6 @@ export const CommentCard = ({
                                 <div>Ответ на комментарий { JSON.stringify(replyComment.id)}</div>
                             </div>}
                         </div>
-
-                        
                     </div>
                     
                     {(authorId === currentUser?.id) && (

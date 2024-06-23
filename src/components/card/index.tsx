@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useCreateLikeMutation, useDeleteLikeMutation } from '../../app/services/likesApi'
 import { useDeletePostByIdMutation, useGetAllPostsQuery, useLazyGetAllPostsQuery, useLazyGetPostByIdQuery } from '../../app/services/postsApi'
 import { useDeleteCommentMutation } from '../../app/services/commentsApi'
-import { useNavigate, Link as LinkRouter} from 'react-router-dom'
+import { useNavigate, Link as LinkRouter } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { selectCurrent, selectCurrentTagsSubs } from '../../features/UserSlice'
 import {
@@ -39,7 +39,7 @@ type CardProps = {
   commentsCount?: number
   createdAt?: Date
   id?: string
-  cardFor: "comment" | "post" | "current-post"
+  cardFor:  "post" | "current-post"
   likedByUser?: boolean
   dislikedByUser?: boolean,
   topicData?: any,
@@ -62,14 +62,13 @@ export const Card = ({
   likedByUser = false,
   dislikedByUser = false,
   createdAt,
-  commentId = "",
   topicData = '',
   categoryData = '',
   tagsData = '',
   subscribedTagIds = '',
-  page=''
+  page = ''
 }: CardProps) => {
-  tagsData = tagsData.map((tag: any) => tag.tag )
+  tagsData = tagsData.map((tag: any) => tag.tag)
   const [likePost] = useCreateLikeMutation()
   const [unlikePost] = useDeleteLikeMutation()
   const [dislikePost] = useCreateDislikeMutation()
@@ -81,7 +80,6 @@ export const Card = ({
   const [dislikedByUserState, setDislikedByUserState] = useState(dislikedByUser)
   const [dislikesCountState, setDislikesCountState] = useState(dislikesCount)
   const [deletePost, deletePostStatus] = useDeletePostByIdMutation()
-  const [deleteComment, deleteCommentStatus] = useDeleteCommentMutation()
   const [error, setError] = useState("")
   const navigate = useNavigate()
   const currentUser = useSelector(selectCurrent)
@@ -90,24 +88,21 @@ export const Card = ({
   if (cardFor === 'post') {
     filteredBlocks = JSON.parse(content).filter((item: any) => item.isShowed);
   }
-  let updatedTagsData
+  let updatedTagsData = [...tagsData]
 
   if (subscribedTagIds) {
-      updatedTagsData = tagsData.map((tag: any) => ({
-          ...tag,
-          isSubscribed: subscribedTagIds.has(tag.id)
-      }));
+    updatedTagsData = tagsData.map((tag: any) => ({
+      ...tag,
+      isSubscribed: subscribedTagIds.has(tag.id)
+    }));
   }
-  
+
   const refetchPosts = async () => {
     switch (cardFor) {
       case "post":
         await triggerGetAllPosts({ page: page, tags: [], timeframe: '' }).unwrap()
         break
       case "current-post":
-        await triggerGetPostById(id).unwrap()
-        break
-      case "comment":
         await triggerGetPostById(id).unwrap()
         break
       default:
@@ -141,7 +136,7 @@ export const Card = ({
           break;
         };
       }
-      
+
     } catch (err) {
       if (existErrorField(err)) {
         setError(err.data.error)
@@ -162,10 +157,6 @@ export const Card = ({
           await deletePost(id).unwrap()
           navigate('/')
           break
-        case "comment":
-          await deleteComment(commentId).unwrap()
-          await refetchPosts()
-          break
         default:
           throw new Error("Неверный аргумент cardFor")
       }
@@ -182,7 +173,7 @@ export const Card = ({
 
   return (
 
-    <div className=''><NextUICard className='mb-4 mt-4 mx-auto pl-6 pt-4 pr-6 shadow-sm' >
+    <div className=''><NextUICard className='mb-4 mt-4 mx-auto pl-6 pt-4 pr-6 shadow-sm border' >
       <CardHeader className="justify-between items-center bg-transparent ">
         <div><Link href={`/users/${authorId}`}>
           <User
@@ -192,41 +183,34 @@ export const Card = ({
             description={createdAt && formatToClientDate(createdAt)}
           />
         </Link>
-          {cardFor !== 'comment' &&
-            (<div>
+          {
+            <div>
               <div className='flex items-center gap-2 cursor-pointer'><p className='font-semibold text-default-400 text-l'>Категория:</p>
                 <Link href={`/categories/${categoryData?.id}`} className='text-primary-400 text-md'>{categoryData?.name}</Link>
               </div><div className='flex items-center gap-2 cursor-pointer'><p className='font-semibold text-default-400 text-l'>В теме:</p>
                 <Link href={`/categories/topic/${topicData?.id}`} className='text-primary-400 text-md'>{topicData.name}</Link>
               </div>
-            </div>)}
-
+            </div>}
         </div>
         {(authorId === currentUser?.id) && (
           <>
             <div className='flex gap-4'>
-            <Link href={`/post-edit/${id}`}>
-            <HiPencil className="cursor-pointer text-2xl" />
-          </Link>
+              <Link href={`/post-edit/${id}`}>
+                <HiPencil className="cursor-pointer text-2xl" />
+              </Link>
               <div className="cursor-pointer text-2xl" onClick={handleDelete}>
-                {deletePostStatus.isLoading || deleteCommentStatus.isLoading ? (
+                {deletePostStatus.isLoading ? (
                   <Spinner />
                 ) : (
                   <RiDeleteBinLine />
                 )}
               </div></div>
           </>
-
-
         )}
-
       </CardHeader>
-      
       <CardBody className="px-3 py-2 mb-5">
-
         {(cardFor === 'current-post') ?
-          <CurrentPostBody content={JSON.parse(content)} /> : (cardFor === 'comment') ?
-            <TextContent>{content}</TextContent> :
+          <CurrentPostBody content={JSON.parse(content)} /> : 
             <CurrentPostBody content={filteredBlocks}></CurrentPostBody>}
       </CardBody>
       <div className='flex gap-1 ml-4'>
@@ -236,7 +220,7 @@ export const Card = ({
         })}</>}
 
       </div>
-      {cardFor !== "comment" && (
+      {
         <CardFooter className="gap-3">
           <div className="flex gap-5 items-center">
             <div className='bg-blue-200 p-2 rounded-full' onClick={() => handleClick('like')}>
@@ -260,7 +244,7 @@ export const Card = ({
           <CardBody className='flex-row gap-4'><BiRepost className='text-2xl text-gray-400' /><MdInsertLink className='text-2xl text-gray-400' /></CardBody>
           <ErrorMessage error={error} />
         </CardFooter>
-      )}
+      }
     </NextUICard></div>
 
   )

@@ -16,7 +16,7 @@ const RePost = ({postId}:any) => {
     }
 
   return (
-    <div className='m-auto max-w-[90%]'>
+    <div className='m-auto bg-gray-100 p-3 px-6 rounded-2xl'>
     <Card
             avatarUrl={data.author.avatarUrl}
             name={data.author.username}

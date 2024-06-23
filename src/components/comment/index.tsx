@@ -28,7 +28,6 @@ export const Comment = ({ comment, id, level = 1, maxDepth = 5, isReply = false,
                 <div className={limitTree ? `ml-10 ` : ``}>
                     {comment.replies.map((replied: any, index: number) => {
                         const isLastReply = index === comment.replies.length - 1
-                        console.log(comment, comment.replies)
                         return (
                             <Comment
                                 key={replied.id}
