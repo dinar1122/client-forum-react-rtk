@@ -78,7 +78,7 @@ export default function Posts() {
              return <SelectItem  key={el.id} value={el.name}>{el.name}</SelectItem>
             })}
             </Select>
-    <Button isIconOnly><TbArrowsSort /></Button>
+   
           </div>
         </CardBody>
       </CardNext>
@@ -106,7 +106,7 @@ export default function Posts() {
           />
         }) : <></>
       }</> }
-      
+      <Pagination onChange={handleSelectPage} size='lg' variant='flat' showControls total={data?.totalPages || 1} initialPage={1} />
     </>
   )
 }

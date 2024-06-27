@@ -3,7 +3,9 @@ import { Card, Button, Badge, CardFooter, CardHeader, CardBody } from '@nextui-o
 import TopicItem from '../topic-item';
 
 const FollowingTopic = ({ followingList }: any) => {
-    console.log(followingList)
+    if(followingList.length < 1 ) {
+        return (<div className="text-2xl font-semibold text-gray-600 bg-gray-200 rounded-2xl justify-center flex m-3 p-3">Вы не подписаны ни на одну тему</div>)
+      }
     if(!followingList) {
         return <>Нет данных</>
     }

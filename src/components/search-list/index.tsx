@@ -6,30 +6,29 @@ const SearchList = ({ list, onSearchResult, methodIfEmpty }: any) => {
     const [filteredItems, setFilteredItems] = useState(list);
 
     useEffect(() => {
-        setFilteredItems(list);
-        const sortedItems = [...filteredItems].sort((a: any, b: any) => {
-            return b._count.postTags - a._count.postTags });
-            setFilteredItems(sortedItems);
-    }, [list]);
+        const sortedItems = [...list].sort((a: any, b: any) => {
+            return b._count.postTags - a._count.postTags;
+        })
+        setFilteredItems(sortedItems)
+    }, [list])
 
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value;
-        setSearchTerm(value);
+        setSearchTerm(value)
         const filtered = list.filter((item: any) =>
             item.name.toLowerCase().includes(value.toLowerCase())
         );
-        setFilteredItems(filtered);
+        setFilteredItems(filtered)
     };
 
     const handleAction = (item: any) => {
-        onSearchResult({ id: item.id, name: item.name });
+        onSearchResult({ id: item.id, name: item.name })
     };
-    
 
     return (
         <>
             <Input
-                placeholder="Поиск"
+                placeholder="Поиск тегов"
                 value={searchTerm}
                 onChange={handleSearchChange}
             />

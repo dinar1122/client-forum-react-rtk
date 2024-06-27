@@ -12,6 +12,10 @@ import {
   CardFooter,
   Link,
   Spinner,
+  Popover,
+  PopoverTrigger,
+  Button,
+  PopoverContent,
 } from "@nextui-org/react"
 import { User } from '../user'
 import { formatToClientDate } from '../../utils/format-to-client-date'
@@ -27,6 +31,7 @@ import CurrentPostBody from '../current-post-body'
 import { BiRepost } from 'react-icons/bi'
 import { HiPencil } from 'react-icons/hi'
 import TagItem from '../tag-item'
+import { BASE_URL } from '../../constants'
 
 type CardProps = {
   avatarUrl?: string
@@ -39,7 +44,7 @@ type CardProps = {
   commentsCount?: number
   createdAt?: Date
   id?: string
-  cardFor:  "post" | "current-post"
+  cardFor: "post" | "current-post"
   likedByUser?: boolean
   dislikedByUser?: boolean,
   topicData?: any,
@@ -210,8 +215,8 @@ export const Card = ({
       </CardHeader>
       <CardBody className="px-3 py-2 mb-5">
         {(cardFor === 'current-post') ?
-          <CurrentPostBody content={JSON.parse(content)} /> : 
-            <CurrentPostBody content={filteredBlocks}></CurrentPostBody>}
+          <CurrentPostBody content={JSON.parse(content)} /> :
+          <CurrentPostBody content={filteredBlocks}></CurrentPostBody>}
       </CardBody>
       <div className='flex gap-1 ml-4'>
         {updatedTagsData && <>{updatedTagsData?.map((tag: any) => {
@@ -223,14 +228,14 @@ export const Card = ({
       {
         <CardFooter className="gap-3">
           <div className="flex gap-5 items-center">
-            <div className='bg-blue-200 p-2 rounded-full' onClick={() => handleClick('like')}>
+            <div className='bg-blue-100 p-2 rounded-xl' onClick={() => handleClick('like')}>
               <MetaData
                 count={likesCountState}
                 color={likedByUserState ? 'green' : ''}
                 Icon={likedByUserState ? MdKeyboardArrowUp : MdKeyboardArrowUp}
               />
             </div>
-            <div className='bg-blue-200 p-2 rounded-full' onClick={() => handleClick('dislike')}>
+            <div className='bg-blue-100 p-2 rounded-xl' onClick={() => handleClick('dislike')}>
               <MetaData
                 count={dislikesCountState}
                 color={dislikedByUserState ? 'red' : ''}
@@ -241,7 +246,21 @@ export const Card = ({
               <MetaData count={commentsCount} Icon={FaRegComment} />
             </LinkRouter>
           </div>
-          <CardBody className='flex-row gap-4'><BiRepost className='text-2xl text-gray-400' /><MdInsertLink className='text-2xl text-gray-400' /></CardBody>
+          <CardBody className='flex-row gap-4'>
+
+            <Popover placement="bottom" showArrow={true}>
+              <PopoverTrigger>
+                <button>
+                  <MdInsertLink type="button" className="text-3xl text-gray-400 hover:text-gray-600" />
+                </button>
+              </PopoverTrigger>
+              <PopoverContent className="bg-white border border-gray-200 rounded-lg shadow-lg p-4 flex-row gap-2">
+                <div id='link' className="text-lg font-semibold text-blue-600 mt-1">{`${BASE_URL}/posts/${id}`}</div>
+              <button className="code bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-md" data-clipboard-target="#link">
+                        Копировать</button>
+              </PopoverContent>
+            </Popover>
+          </CardBody>
           <ErrorMessage error={error} />
         </CardFooter>
       }

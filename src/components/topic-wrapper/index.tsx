@@ -4,6 +4,7 @@ import TopicItem from '../topic-item';
 import { CSSTransition } from 'react-transition-group';
 import { useCreateTopicMutation } from '../../app/services/topicApi';
 import CreateTopicForm from '../create-topic-form';
+import { Link } from 'react-router-dom';
 
 const TopicWrapper = ({ followingList, subscribedCategoryNTopicsData = {}, categoryId}: any) => {
   const [sortBy, setSortBy] = useState<'posts' | 'rating'>('rating'); 
@@ -41,7 +42,7 @@ const TopicWrapper = ({ followingList, subscribedCategoryNTopicsData = {}, categ
         <Card className='flex flex-row justify-between items-center mt-3 gap-0'>
           <CardBody className='text-2xl flex-row font-semibold text-gray-700 pr-0 gap-3 '>
             <Button variant='ghost' className='w-1/2' onClick={handleShowForm}>Создать тему</Button>
-            <Button variant='ghost' className='w-1/2' onClick={handleShowForm}>Создать пост</Button>
+            <Button variant='ghost' className='w-1/2' ><Link to={`/create`}>Создать пост</Link></Button>
           </CardBody>
 
           <CardBody className='w-2/3'>

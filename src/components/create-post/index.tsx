@@ -62,10 +62,11 @@ export const CreatePost = () => {
         {errors && <ErrorMessage error={error} />}
         <div className="flex justify-between mt-3 gap-3 ">
           <div className="flex-row w-full"><Selector setFirst={setSelectedCategoryValue} setSecond={setSelectedTopicValue}></Selector></div>
-          <div className="flex items-center">
+          <div className="flex items-center gap-2">
             <Button
-              color="default"
-              className="flex bg-blue-200 h-full font-semibold text-gray-700"
+              color="primary"
+              variant="ghost"
+              className="font-semibold text-gray-700 h-full"
               startContent={<CgAdd />}
               type="submit"
             >
@@ -74,8 +75,9 @@ export const CreatePost = () => {
 
             <Button
               startContent={<FaEdit />}
-              color="default"
-              className="font-semibold text-gray-700 default flex bg-blue-200 ml-3 rounded-xl h-full "
+              variant="ghost"
+              color="primary"
+              className="font-semibold text-gray-700 h-full"
             >
               <Link className="h-full  items-center flex" to='/create'>редактор</Link>
 

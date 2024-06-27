@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Button, Input } from "@nextui-org/react";
-import { IoMdCreate, IoMdLink } from "react-icons/io";
+import { IoMdCreate, IoMdLink, IoMdCode } from "react-icons/io";
 import { useForm, Controller } from "react-hook-form";
 import { ErrorMessage } from "../error-message";
 import { useCreateCommentMutation } from "../../app/services/commentsApi";
@@ -16,10 +16,12 @@ export const CommentCreator = ({ replyId = null, setIsReplying, quotedText = '' 
   const [getUserByUsername] = useLazyGetUsersByUsernameQuery()
   const [showLinkInput, setShowLinkInput] = useState(false)
   const [showQuoteInput, setShowQuoteInput] = useState(false)
+  const [showCodeInput, setShowCodeInput] = useState(false) // State for code input
   const [showDecoration, setShowDecoration] = useState(false)
   const [linkText, setLinkText] = useState('')
   const [quoteText, setQuoteText] = useState(quotedText)
   const [linkUrl, setLinkUrl] = useState('')
+  const [codeText, setCodeText] = useState('') // State for code text
 
   const fetchUserSuggestions = async (query: any, callback: any) => {
     const users = await getUserByUsername(query).unwrap();
@@ -55,12 +57,14 @@ export const CommentCreator = ({ replyId = null, setIsReplying, quotedText = '' 
       console.log("err", error)
     }
   });
-const handleCloseForm = () => {
-  setShowQuoteInput(false)
-  setShowDecoration(false)
-  setShowLinkInput(false)
-  
-}
+
+  const handleCloseForm = () => {
+    setShowQuoteInput(false)
+    setShowDecoration(false)
+    setShowLinkInput(false)
+    setShowCodeInput(false) // Close code input form
+  }
+
   const addLinkToComment = () => {
     const linkMarkdown = `!link:[${linkText}](${linkUrl})`
     const currentComment = getValues("comment") || ""
@@ -76,11 +80,18 @@ const handleCloseForm = () => {
     setQuoteText('')
   }
 
+  const addCodeToComment = () => {
+    const codeMarkdown = `!code[${codeText}]!code`
+    const currentComment = getValues("comment") || ""
+    setValue("comment", currentComment + codeMarkdown)
+    setCodeText('')
+    setShowCodeInput(false)
+  }
+
   const error = errors?.comment?.message as string;
 
   return (
     <>
-
       <form className={`flex-grow mb-8`} onSubmit={onSubmit}>
         <Controller
           name="comment"
@@ -114,43 +125,56 @@ const handleCloseForm = () => {
         />
         {errors && <ErrorMessage error={error} />}
         <div className="flex-row gap-2 justify-between">
-          <div className="flex-row gap-2"><Button
-            color="primary"
-            endContent={<IoMdCreate />}
-            type="submit"
-          >
-            Ответить
-          </Button>
+          <div className="flex-row gap-2">
+            <Button
+              color="primary"
+              endContent={<IoMdCreate />}
+              type="submit"
+            >
+              Ответить
+            </Button>
 
-            {showDecoration ? <>
+            {showDecoration ? (
+              <>
+                <Button
+                  variant="ghost"
+                  color="primary"
+                  endContent={<IoMdLink />}
+                  onClick={() => setShowLinkInput(!showLinkInput)}
+                >
+                  ссылка
+                </Button>
+                <Button
+                  variant="ghost"
+                  color="primary"
+                  endContent={<IoMdLink />}
+                  onClick={() => setShowQuoteInput(!showQuoteInput)}
+                >
+                  цитата
+                </Button>
+                <Button
+                  variant="ghost"
+                  color="primary"
+                  endContent={<IoMdCode />}
+                  onClick={() => setShowCodeInput(!showCodeInput)}
+                >
+                  код
+                </Button>
+                <Button onClick={handleCloseForm}>Закрыть</Button>
+              </>
+            ) : (
               <Button
-              variant="ghost"
-                color="primary"
-                endContent={<IoMdLink />}
-                onClick={() => setShowLinkInput(!showLinkInput)}
-              >
-                Сделать ссылкой
-              </Button>
-              <Button
-              variant="ghost"
-                color="primary"
-                endContent={<IoMdLink />}
-                onClick={() => setShowQuoteInput(!showQuoteInput)}
-              >
-                Сделать цитатой
-              </Button>
-              <Button onClick={ handleCloseForm}>Закрыть</Button></>
-              : <Button
                 color="primary"
                 onClick={() => setShowDecoration(!showDecoration)}
               >
                 Декорация
               </Button>
-            }</div>
+            )}
+          </div>
           <Button variant="ghost" onClick={() => setIsReplying(false)}>Закрыть</Button>
         </div>
         {showLinkInput && (
-          <div className="grid grid-cols-1 gap-2 mt-2">
+          <div className="grid grid-cols-1 gap-2 mt-2 ">
             <Input
               fullWidth
               color="primary"
@@ -185,9 +209,20 @@ const handleCloseForm = () => {
             </Button>
           </div>
         )}
-
+        {showCodeInput && (
+          <div className="grid grid-cols-1 gap-2 mt-2">
+            <textarea
+              className="resize-y p-2 border border-gray-300 rounded-2xl"
+              placeholder="Введите ваш код"
+              value={codeText}
+              onChange={(e) => setCodeText(e.target.value)}
+            />
+            <Button onClick={addCodeToComment}>
+              Добавить блок кода
+            </Button>
+          </div>
+        )}
       </form>
-
     </>
   );
 };

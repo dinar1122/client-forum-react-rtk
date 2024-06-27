@@ -6,8 +6,8 @@ import { NavButton } from "../UI/nav-button"
 import { CgProfile } from "react-icons/cg"
 import { useSelector } from "react-redux"
 import { selectCurrent } from "../../features/UserSlice"
-import { IoMdNotificationsOutline } from "react-icons/io"
 import { MdOutlineManageSearch } from "react-icons/md"
+import { BackButton } from "../UI/back-button"
 
 export const NavBar: React.FC = () => {
   const currentUser = useSelector(selectCurrent)
@@ -39,7 +39,7 @@ export const NavBar: React.FC = () => {
             Обзор
           </NavButton>
         </li>
-        
+        <BackButton></BackButton>
       </ul>
     </nav>
   )

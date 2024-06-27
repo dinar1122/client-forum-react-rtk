@@ -12,8 +12,10 @@ export const BackButton = () => {
 
   return (
     <Button
+      variant="ghost"
+      color="default"
       onClick={handleGoBack}
-      className="text-default-700 flex items-center gap-2 mb-10 cursor-pointer"
+      className="text-gray-500 text-lg flex items-center gap-2 mb-10 cursor-pointer border-none font-semibold w-min self-end"
     >
       <FaRegArrowAltCircleLeft />
       Назад

@@ -45,7 +45,7 @@ const CurrentPost = () => {
   console.log(comments)
   return (
     <>
-      <BackButton></BackButton>
+      
       <Card
         cardFor="current-post"
         avatarUrl={author?.avatarUrl ?? ""}

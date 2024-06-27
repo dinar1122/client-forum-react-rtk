@@ -31,7 +31,6 @@ const AdvancedCreator = ({ data = null }: any) => {
 
 
   const [input, setInput] = useState('');
-  const [optionsFlag, setoptionsFlag] = useState(false);
   const [selectedOption, setSelectedOption] = useState(1)
   const [editor, setEditor] = useState(true)
   const [isUpdating, setIsUpdating] = useState(false)
@@ -147,7 +146,7 @@ const AdvancedCreator = ({ data = null }: any) => {
 
   return (
     <div>
-      <Card>
+      {textContentToSend.length > 0 && <Card>
         <CardBody>
           {<CurrentPostBody content={textContentToSend} editor={editor} onUpdateContent={setTextContent}></CurrentPostBody>}
         </CardBody>
@@ -155,7 +154,7 @@ const AdvancedCreator = ({ data = null }: any) => {
           return <TagItem key={tag.name} tag={tag} deleteMethod={handleRemoveTag}></TagItem>
         })}</CardBody>
 
-      </Card>
+      </Card>}
       <Card className='mt-3'>
         <CardBody>
           <div className="w-full flex">

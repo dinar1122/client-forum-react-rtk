@@ -5,12 +5,13 @@ import { CustomButton } from "../custom-button/index"
 type Props = {
   children: React.ReactNode
   icon: JSX.Element
-  href: string
+  href: string,
+  className?: string
 }
 
-export const NavButton: React.FC<Props> = ({ children, icon, href }) => {
+export const NavButton: React.FC<Props> = ({ children, icon, href, className = '' }) => {
   return (
-    <CustomButton className="flex justify-start text-xl border-2 border-solid border-gray-100  w-full" icon={icon}>
+    <CustomButton className={`flex justify-start text-xl border-2 border-solid border-gray-100  w-full ${className}`} icon={icon}>
       <Link to={href}>
         {children}
       </Link>

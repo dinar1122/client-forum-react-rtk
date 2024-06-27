@@ -22,7 +22,7 @@ import { PiArrowBendLeftUpBold } from 'react-icons/pi'
 
 type CardProps = {
     reply?: boolean,
-    replyComment: any,
+    replyComment?: any,
     comment?: any,
     avatarUrl?: string
     name?: string
@@ -49,16 +49,17 @@ export const CommentCard = ({
     const [deleteComment, deleteCommentStatus] = useDeleteCommentMutation()
     const currentUser = useSelector(selectCurrent)
     const [isReplying, setIsReplying] = useState(false);
+    const [replyContentShow, setReplyContentShow] = useState(false);
 
     const [selectedText, setSelectedText] = useState('')
 
     const handleMouseUp = () => {
         const text = window.getSelection()?.toString()
         if (text) {
-          setSelectedText(text)
+            setSelectedText(text)
         }
-      };
-   
+    };
+
 
 
     const refetchPosts = async () => {
@@ -71,7 +72,7 @@ export const CommentCard = ({
         await deleteComment(commentId).unwrap()
         await refetchPosts()
     }
-
+    console.log(replyComment)
     return (
 
         <div >
@@ -87,13 +88,13 @@ export const CommentCard = ({
                                 description={formatToClientDate(createdAt, true)}
                             />
                         </Link>
-                            {reply && <div className='flex-row ml-3 bg-gray-200 p-2 px-3 rounded-xl font-semibold'>
+                            {reply && <div onClick={()=> setReplyContentShow(!replyContentShow)} className='flex-row ml-3 bg-gray-200 p-2 px-3 rounded-xl cursor-pointer font-semibold'>
                                 <PiArrowBendLeftUpBold className='text-2xl' />
-                                <div>Ответ на комментарий { JSON.stringify(replyComment.id)}</div>
+                                <div>Ответ на комментарий {replyComment.user.username}</div>
                             </div>}
                         </div>
                     </div>
-                    
+
                     {(authorId === currentUser?.id) && (
                         <div className="cursor-pointer text-2xl" onClick={handleDelete}>
                             {deleteCommentStatus.isLoading ? (
@@ -104,11 +105,11 @@ export const CommentCard = ({
                         </div>
                     )}
                 </CardHeader>
-                {reply &&
-                            <div className='flex-col gap-3 m-3 mb-0 '>
+                {reply && replyContentShow &&
+                    <div className='flex-col gap-3 m-3 mb-0 '>
 
-                                <div className='bg-gray-200 p-1 px-3 rounded-lg font-semibold italic text-gray-600'>« {replyComment.content} »</div>
-                            </div>}
+                        <div className='bg-gray-200 p-1 px-3 rounded-lg font-semibold italic text-gray-600'>« {replyComment.content} »</div>
+                    </div>}
                 <CardBody onMouseUp={handleMouseUp} >
                     <TextContent>{content}</TextContent>
                 </CardBody>
@@ -120,7 +121,7 @@ export const CommentCard = ({
                     <button><SlOptions /></button>
                 </CardFooter>
             </NextUICard>
-            {isReplying && <CommentCreator  replyId={commentId} setIsReplying={setIsReplying} quotedText={selectedText} />}
+            {isReplying && <CommentCreator replyId={commentId} setIsReplying={setIsReplying} quotedText={selectedText} />}
         </div>
 
     )

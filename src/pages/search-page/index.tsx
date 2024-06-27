@@ -1,4 +1,4 @@
-import { Button, Card as CardNextUI, CardBody, Input, Switch,  CardHeader, Spinner, Pagination } from '@nextui-org/react';
+import { Button, Card as CardNextUI, CardBody, Input, Switch, CardHeader, Spinner, Pagination } from '@nextui-org/react';
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useLazyGetAllPostsQuery } from '../../app/services/postsApi';
@@ -10,69 +10,75 @@ import useTags from '../../features/useTags';
 import { subscribedData } from '../../utils/subscribed-data';
 
 const SearchPage = () => {
-  const [query, setQuery] = useState('');
-  const navigate = useNavigate();
+  const [query, setQuery] = useState('')
+  const navigate = useNavigate()
   const [getPostsByQuery, { data, isFetching }] = useLazyGetAllPostsQuery()
-  const { selectionTags, error, handleAddTag, handleRemoveTag, setSelectionTags } = useTags();
-  const { subscribedTagIds } = subscribedData() 
+  const { selectionTags, error, handleAddTag, handleRemoveTag, setSelectionTags } = useTags()
+  const { subscribedTagIds } = subscribedData()
 
-  const [searchParams, setSearchParams] = useSearchParams();
-  const pageParam = searchParams.get("page");
-  const page = pageParam ? parseInt(pageParam, 10) : 1;
-
+  const [searchParams, setSearchParams] = useSearchParams()
+  const pageParam = searchParams.get("page")
+  const page = pageParam ? parseInt(pageParam, 10) : 1
 
   const [getTags] = useLazyGetAllTagsQuery()
-  const [tagList, setTagList] = useState([]);
+  const [tagList, setTagList] = useState([])
   const [tagsSearchMode, setTagsSearchMode] = useState(true);
 
   useEffect(() => {
     const fetchTags = async () => {
-      const queryParam = searchParams.get('q');
-      const tagsParam = searchParams.get('tags');
-      const { data: tagsData } = await getTags();
-      setTagList(tagsData);
-      if (queryParam) {
-        setQuery(queryParam);
-      }
-      if (tagsParam) {
-        const tagsArray = tagsParam.split(',').map(tagId => {
-          const tag = tagsData.find((t: any) => t.id === tagId);
-          return tag ? { id: tag.id, name: tag.name } : null;
-        }).filter(tag => tag !== null);
-        setSelectionTags(tagsArray);
+      try {
+        const queryParam = searchParams.get('q')
+        const tagsParam = searchParams.get('tags')
+
+        const { data: tagsData } = await getTags()
+        setTagList(tagsData);
+
+        if (queryParam) {
+          setQuery(queryParam);
+        }
+
+        if (tagsParam) {
+          const tagsArray = tagsParam.split(',').map(tagId => {
+            const tag = tagsData.find((t: any) => t.id === tagId)
+            return tag ? { id: tag.id, name: tag.name } : null
+          }).filter(tag => tag !== null);
+          setSelectionTags(tagsArray);
+        }
+      } catch (error) {
+        console.error('Ошибка при получении тегов:', error)
       }
     };
 
     fetchTags();
-    
-  }, []);
-  useEffect(() => {
-    const tagsQuery = selectionTags.map((tag: any) => tag.id).join(',');
-    const newQuery = `${encodeURIComponent(query)}&tags=${encodeURIComponent(tagsQuery)}&page=${page}`;
-    navigate(`/search?q=${newQuery}`);
-  }, [query, navigate, selectionTags, page]);
+  }, [searchParams, getTags, setSelectionTags]);
 
-  useEffect(()=> {
+  useEffect(() => {
+    const tagsQuery = selectionTags.map((tag: any) => tag.id).join(',')
+    const newQuery = `${encodeURIComponent(query)}&tags=${encodeURIComponent(tagsQuery)}&page=${page}`
+    navigate(`/search?q=${newQuery}`)
+  }, [query, navigate, selectionTags, page])
+
+  useEffect(() => {
     handleSearchSubmit()
-  }, [page])
+  }, [page, tagsSearchMode])
 
   const handleSearchChange = (event: any) => {
     setQuery(event.target.value);
   };
-  const handleSelectPage = (selectedPage:any) => {
-    setSearchParams({ page: selectedPage });
-  }
-  const handleSearchSubmit = () => {
-    if (query.trim() || selectionTags) {
-      if(!tagsSearchMode) {
-        getPostsByQuery({ q: query, page });
-      } else {
-        getPostsByQuery({ q: query, tags: selectionTags.map((tag: any) => tag.id), page });
-      }
-      
-    }
+
+  const handleSelectPage = (selectedPage: any) => {
+    setSearchParams({ page: selectedPage })
   };
 
+  const handleSearchSubmit = () => {
+    if (query.trim() || selectionTags.length) {
+      if (!tagsSearchMode) {
+        getPostsByQuery({ q: query, page })
+      } else {
+        getPostsByQuery({ q: query, tags: selectionTags.map((tag: any) => tag.id), page })
+      }
+    }
+  };
 
   return (
     <div className="gap-3">
@@ -109,7 +115,7 @@ const SearchPage = () => {
           })}
         </CardBody>
         <CardBody className='gap-2 '>
-          <SearchList list={tagList} onSearchResult={handleAddTag}></SearchList>
+          {tagList && <SearchList list={tagList} onSearchResult={handleAddTag}></SearchList>}
         </CardBody>
       </CardNextUI>}
       <CardNextUI className='flex-row shadow-sm justify-between p-3'>

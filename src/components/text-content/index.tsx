@@ -1,7 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-
-
+import BlockCode from "../UI/block-code";
 
 type Props = {
   children: string;
@@ -9,60 +8,79 @@ type Props = {
 };
 
 const parseMentions = (text: string) => {
+  const codePattern = /!code\[(.*?)\]!code/gs;
+  const parts: any = [];
+
+  let lastIndex = 0;
+  let match;
+
+  while ((match = codePattern.exec(text)) !== null) {
+    if (lastIndex < match.index) {
+      const beforeCode = text.slice(lastIndex, match.index);
+      parts.push(...parseText(beforeCode));
+    }
+    parts.push({
+      type: "code",
+      display: match[1],
+    });
+    lastIndex = codePattern.lastIndex;
+  }
+
+  if (lastIndex < text.length) {
+    parts.push(...parseText(text.slice(lastIndex)));
+  }
+
+  return parts;
+};
+
+const parseText = (text: string) => {
   const mentionPattern = /@\[(.*?)\]\((.*?)\)/g;
   const quotePattern = /^>\s*(.*)$/gm;
   const linkPattern = /!link:\[(.*?)\]\((.*?)\)/g;
   const parts: any = [];
+  let lastIndex = 0;
+  let match;
 
-  const lines = text.split("\n");
-
-  lines.forEach((line) => {
-    let lastIndex = 0;
-    let match;
-
-    while ((match = mentionPattern.exec(line)) !== null) {
-      if (lastIndex < match.index) {
-        parts.push(line.slice(lastIndex, match.index));
-      }
-      parts.push({
-        type: "mention",
-        display: match[1],
-        id: match[2],
-      });
-      lastIndex = mentionPattern.lastIndex;
+  while ((match = mentionPattern.exec(text)) !== null) {
+    if (lastIndex < match.index) {
+      parts.push(text.slice(lastIndex, match.index));
     }
+    parts.push({
+      type: "mention",
+      display: match[1],
+      id: match[2],
+    });
+    lastIndex = mentionPattern.lastIndex;
+  }
 
-    const quoteMatch = quotePattern.exec(line);
-    if (quoteMatch) {
-      if (lastIndex < quoteMatch.index) {
-        parts.push(line.slice(lastIndex, quoteMatch.index));
-      }
-      parts.push({
-        type: "quote",
-        display: quoteMatch[1],
-        id: null,
-      });
-      lastIndex = quotePattern.lastIndex;
+  const quoteMatches = [...text.matchAll(quotePattern)];
+  quoteMatches.forEach((quoteMatch) => {
+    if (lastIndex < quoteMatch.index) {
+      parts.push(text.slice(lastIndex, quoteMatch.index));
     }
-
-    while ((match = linkPattern.exec(line)) !== null) {
-      if (lastIndex < match.index) {
-        parts.push(line.slice(lastIndex, match.index));
-      }
-      parts.push({
-        type: "link",
-        display: match[1],
-        url: match[2],
-      });
-      lastIndex = linkPattern.lastIndex;
-    }
-
-    if (lastIndex < line.length) {
-      parts.push(line.slice(lastIndex));
-    }
-
-    parts.push({ type: "newline" });
+    parts.push({
+      type: "quote",
+      display: quoteMatch[1],
+      id: null,
+    });
+    lastIndex = quotePattern.lastIndex;
   });
+
+  while ((match = linkPattern.exec(text)) !== null) {
+    if (lastIndex < match.index) {
+      parts.push(text.slice(lastIndex, match.index));
+    }
+    parts.push({
+      type: "link",
+      display: match[1],
+      url: match[2],
+    });
+    lastIndex = linkPattern.lastIndex;
+  }
+
+  if (lastIndex < text.length) {
+    parts.push(text.slice(lastIndex));
+  }
 
   return parts;
 };
@@ -99,6 +117,11 @@ export const TextContent: React.FC<Props> = ({ children, size = "text-xl myTextC
           {part.display}
         </a>
       );
+    }
+
+    if (part.type === "code") {
+
+      return <BlockCode key={index} textContent={part.display} />;
     }
 
     if (part.type === "newline") {
