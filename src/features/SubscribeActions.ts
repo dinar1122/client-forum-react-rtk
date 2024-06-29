@@ -1,7 +1,6 @@
-import { useParams } from "react-router-dom";
-import { categoryApi, useLazyGetCategoryByIdQuery, useLazyGetCategoryListQuery } from "../app/services/categoryApi";
+
+import { categoryApi } from "../app/services/categoryApi";
 import { topicApi } from "../app/services/topicApi";
-import { useLazyGetUserByIdQuery } from "../app/services/userApi";
 import { useDeleteFollowOnUserMutation, useFollowOnUserMutation } from "../app/services/followsApi";
 import { useCreateSubMutation, useDeleteSubMutation } from "../app/services/tagsApi";
 

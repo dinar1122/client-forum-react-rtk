@@ -2,7 +2,6 @@ import React from 'react'
 import { useGetCategoryByIdQuery } from '../../app/services/categoryApi'
 import { Link, useParams } from 'react-router-dom';
 
-import CategoryHeader from '../../components/category-header';
 import TopicWrapper from '../../components/topic-wrapper';
 import { subscribedCategoryNTopics } from '../../utils/subscribed-data';
 import { useSelector } from 'react-redux';

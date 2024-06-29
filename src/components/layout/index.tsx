@@ -15,16 +15,7 @@ const Layout = () => {
     const navigate = useNavigate();
     const [newNotif, setNewNotif] = useState(false);
   
-    /* console.log(user);
-  
-    useEffect(() => {
-      if (user?.notifications.find((el) => el.isRead === false)) {
-        setNewNotif(true);
-      } else {
-        setNewNotif(false);
-      }
-      
-    }, [user]); */
+
   
     useEffect(() => {
       if (!isAuthenticated) {

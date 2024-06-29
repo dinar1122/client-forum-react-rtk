@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, FunctionComponent } from "react";
 import { Button, Input } from "@nextui-org/react";
 import { IoMdCreate, IoMdLink, IoMdCode } from "react-icons/io";
 import { useForm, Controller } from "react-hook-form";
@@ -9,19 +9,25 @@ import { useLazyGetPostByIdQuery } from "../../app/services/postsApi";
 import { Mention, MentionsInput } from 'react-mentions';
 import { useLazyGetUsersByUsernameQuery } from "../../app/services/userApi";
 
-export const CommentCreator = ({ replyId = null, setIsReplying, quotedText = '' }: any) => {
+type Props = {
+  replyId: string;
+  setIsReplying: any;
+  quotedText: string;
+}
+
+export const CommentCreator = ({ replyId = '', setIsReplying, quotedText = '' }: Props) => {
   const { id } = useParams<{ id: string }>()
   const [createComment] = useCreateCommentMutation()
   const [getPostById] = useLazyGetPostByIdQuery()
   const [getUserByUsername] = useLazyGetUsersByUsernameQuery()
   const [showLinkInput, setShowLinkInput] = useState(false)
   const [showQuoteInput, setShowQuoteInput] = useState(false)
-  const [showCodeInput, setShowCodeInput] = useState(false) // State for code input
+  const [showCodeInput, setShowCodeInput] = useState(false)
   const [showDecoration, setShowDecoration] = useState(false)
   const [linkText, setLinkText] = useState('')
   const [quoteText, setQuoteText] = useState(quotedText)
   const [linkUrl, setLinkUrl] = useState('')
-  const [codeText, setCodeText] = useState('') // State for code text
+  const [codeText, setCodeText] = useState('')
 
   const fetchUserSuggestions = async (query: any, callback: any) => {
     const users = await getUserByUsername(query).unwrap();
@@ -62,13 +68,13 @@ export const CommentCreator = ({ replyId = null, setIsReplying, quotedText = '' 
     setShowQuoteInput(false)
     setShowDecoration(false)
     setShowLinkInput(false)
-    setShowCodeInput(false) // Close code input form
+    setShowCodeInput(false)
   }
 
   const addLinkToComment = () => {
-    const linkMarkdown = `!link:[${linkText}](${linkUrl})`
+    const link = `!link:[${linkText}](${linkUrl})`
     const currentComment = getValues("comment") || ""
-    setValue("comment", currentComment + linkMarkdown)
+    setValue("comment", currentComment + link)
     setLinkText('')
     setLinkUrl('')
     setShowLinkInput(false)
@@ -81,9 +87,9 @@ export const CommentCreator = ({ replyId = null, setIsReplying, quotedText = '' 
   }
 
   const addCodeToComment = () => {
-    const codeMarkdown = `!code[${codeText}]!code`
+    const code = `!code[${codeText}]!code`
     const currentComment = getValues("comment") || ""
-    setValue("comment", currentComment + codeMarkdown)
+    setValue("comment", currentComment + code)
     setCodeText('')
     setShowCodeInput(false)
   }

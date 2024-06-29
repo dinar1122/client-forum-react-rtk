@@ -1,9 +1,13 @@
-import React, { useState } from 'react';
+
 import { Comment } from '../comment';
 
-export const CommentTree = ({ comments, id }:any) => {
-  const [isLineGlowing, setLineGlowing] = useState(false);
+type CommentTreeProps = {
+  comments: any[];
+  id: string;
+};
 
+
+export const CommentTree = ({ comments, id }:CommentTreeProps) => {
   return (
     <div className="mt-10">
       {comments.map((comment:any) => (
@@ -12,8 +16,6 @@ export const CommentTree = ({ comments, id }:any) => {
             key={comment.id}
             comment={comment}
             id={id}
-            isLineGlowing={isLineGlowing}
-            setLineGlowing={setLineGlowing}
           />
         )
       ))}

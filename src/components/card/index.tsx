@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { useCreateLikeMutation, useDeleteLikeMutation } from '../../app/services/likesApi'
-import { useDeletePostByIdMutation, useGetAllPostsQuery, useLazyGetAllPostsQuery, useLazyGetPostByIdQuery } from '../../app/services/postsApi'
-import { useDeleteCommentMutation } from '../../app/services/commentsApi'
+import { useDeletePostByIdMutation, useLazyGetAllPostsQuery, useLazyGetPostByIdQuery } from '../../app/services/postsApi'
 import { useNavigate, Link as LinkRouter } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { selectCurrent, selectCurrentTagsSubs } from '../../features/UserSlice'
@@ -20,7 +19,6 @@ import {
 import { User } from '../user'
 import { formatToClientDate } from '../../utils/format-to-client-date'
 import { RiDeleteBinLine } from 'react-icons/ri'
-import { TextContent } from '../text-content'
 import { MetaData } from '../meta-data'
 import { MdInsertLink, MdKeyboardArrowDown, MdKeyboardArrowUp } from 'react-icons/md'
 import { FaRegComment } from 'react-icons/fa'
@@ -28,7 +26,6 @@ import { ErrorMessage } from '../error-message'
 import { existErrorField } from '../../utils/exist-error-field'
 import { useCreateDislikeMutation, useDeleteDislikeMutation } from '../../app/services/dislikesApi'
 import CurrentPostBody from '../current-post-body'
-import { BiRepost } from 'react-icons/bi'
 import { HiPencil } from 'react-icons/hi'
 import TagItem from '../tag-item'
 import { BASE_URL } from '../../constants'
@@ -178,7 +175,7 @@ export const Card = ({
 
   return (
 
-    <div className=''><NextUICard className='mb-4 mt-4 mx-auto pl-6 pt-4 pr-6 shadow-sm border' >
+    <div className=''><NextUICard className='mb-4  mx-auto pl-6 pt-4 pr-6 shadow-sm border' >
       <CardHeader className="justify-between items-center bg-transparent ">
         <div><Link href={`/users/${authorId}`}>
           <User
@@ -256,8 +253,8 @@ export const Card = ({
               </PopoverTrigger>
               <PopoverContent className="bg-white border border-gray-200 rounded-lg shadow-lg p-4 flex-row gap-2">
                 <div id='link' className="text-lg font-semibold text-blue-600 mt-1">{`${BASE_URL}/posts/${id}`}</div>
-              <button className="code bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-md" data-clipboard-target="#link">
-                        Копировать</button>
+                <button className="code bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-md" data-clipboard-target="#link">
+                  Копировать</button>
               </PopoverContent>
             </Popover>
           </CardBody>

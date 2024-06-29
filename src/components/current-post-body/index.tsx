@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import BlockQuote from '../UI/block-quote';
 import { TextContent } from '../text-content';
 import BlockImage from '../UI/block-image';
 import BlockTitle from '../UI/block-title';
@@ -11,7 +10,21 @@ import RePost from '../re-post';
 import Spoiler from '../UI/spoiler'
 import { TbNews, TbNewsOff } from 'react-icons/tb';
 
-const EditForm = ({ item, onSave, onCancel }: any) => {
+type EditFormProps = {
+  item: any;
+  onSave: (item: any, text: string) => void;
+  onCancel: () => void;
+};
+
+type CurrentPostBodyProps = {
+  content: any[];
+  editor?: boolean;
+  onUpdateContent?: any;
+  spoilerTitle?: string;
+};
+
+
+const EditForm = ({ item, onSave, onCancel }: EditFormProps) => {
   const [text, setText] = useState(item.componentText);
 
   const handleSave = () => {
@@ -40,7 +53,7 @@ const EditForm = ({ item, onSave, onCancel }: any) => {
   );
 };
 
-const CurrentPostBody = ({ content, editor = false, onUpdateContent = '', spoilerTitle = 'Спойлер' }: any) => {
+const CurrentPostBody = ({ content, editor = false, onUpdateContent = null, spoilerTitle = 'Спойлер' }: CurrentPostBodyProps) => {
   const [editingIndex, setEditingIndex] = useState(-1);
   const [showedIndex, setShowedIndex] = useState<boolean[]>([]);
   const [spoilerIndex, setSpoilerIndex] = useState([]);
@@ -91,9 +104,6 @@ const CurrentPostBody = ({ content, editor = false, onUpdateContent = '', spoile
         />
       ) : (
         <>
-          {item.component === "BlockQuote" && (
-            <BlockQuote text={item.componentText} />
-          )}
           {item.component === 'TextContent' && (
             <TextContent>{item.componentText}</TextContent>
           )}

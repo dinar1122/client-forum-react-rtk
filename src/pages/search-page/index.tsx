@@ -21,31 +21,36 @@ const SearchPage = () => {
   const page = pageParam ? parseInt(pageParam, 10) : 1
 
   const [getTags] = useLazyGetAllTagsQuery()
-  const [tagList, setTagList] = useState([])
+  const [tagList, setTagList] = useState<any>([])
   const [tagsSearchMode, setTagsSearchMode] = useState(true);
 
   useEffect(() => {
     const fetchTags = async () => {
       try {
-        const queryParam = searchParams.get('q')
-        const tagsParam = searchParams.get('tags')
+        const queryParam = searchParams.get('q');
+        const tagsParam = searchParams.get('tags');
 
-        const { data: tagsData } = await getTags()
-        setTagList(tagsData);
+        const { data: tagsData } = await getTags();
 
-        if (queryParam) {
-          setQuery(queryParam);
-        }
+        if (tagsData) {
+          setTagList(tagsData);
 
-        if (tagsParam) {
-          const tagsArray = tagsParam.split(',').map(tagId => {
-            const tag = tagsData.find((t: any) => t.id === tagId)
-            return tag ? { id: tag.id, name: tag.name } : null
-          }).filter(tag => tag !== null);
-          setSelectionTags(tagsArray);
+          if (queryParam) {
+            setQuery(queryParam);
+          }
+
+          if (tagsParam) {
+            const tagsArray = tagsParam.split(',').map(tagId => {
+              const tag = tagsData.find((t: any) => t.id === tagId);
+              return tag ? { id: tag.id, name: tag.name } : null;
+            }).filter(tag => tag !== null);
+            setSelectionTags(tagsArray);
+          }
+        } else {
+          console.error('Ошибка при получении тегов: tagsData is undefined');
         }
       } catch (error) {
-        console.error('Ошибка при получении тегов:', error)
+        console.error('Ошибка при получении тегов:', error);
       }
     };
 

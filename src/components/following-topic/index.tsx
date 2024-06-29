@@ -1,5 +1,3 @@
-import { useState } from 'react';
-import { Card, Button, Badge, CardFooter, CardHeader, CardBody } from '@nextui-org/react';
 import TopicItem from '../topic-item';
 
 const FollowingTopic = ({ followingList }: any) => {

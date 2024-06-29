@@ -1,26 +1,27 @@
+import { Category } from "../types";
 import { api } from "./api";
 
 export const categoryApi = api.injectEndpoints({
     endpoints: (builder) => ({
-        getCategoryList: builder.query<any, void>({
+        getCategoryList: builder.query<Category[], void>({
             query: () => ({
                 url: `/category`,
                 method: `GET`
             })
         }),
-        getCategoryById: builder.query<any, string>({
+        getCategoryById: builder.query<Category, string>({
             query: (categoryId) => ({
                 url: `/category/${categoryId}`,
                 method: `GET`
             })
         }),
-        createSubscriptionCategory: builder.mutation<void, any>({
+        createSubscriptionCategory: builder.mutation<any, any>({
             query: (categoryId) => ({
                 url: `/category/${categoryId}`,
                 method: `POST`
             })
         }),
-        deleteSubscriptionCategory: builder.mutation<void, any>({
+        deleteSubscriptionCategory: builder.mutation<any, any>({
             query: (categoryId) => ({
                 url: `/category/${categoryId}`,
                 method: `DELETE`

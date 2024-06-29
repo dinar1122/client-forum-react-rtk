@@ -1,8 +1,9 @@
+import { Tag, UserTag } from "../types";
 import { api } from "./api";
 
 export const tagsApi = api.injectEndpoints({
     endpoints: (builder) => ({
-        getAllTags: builder.query<any, void>({
+        getAllTags: builder.query<Tag[], void>({
             query: () => ({
                 url: `/tags`,
                 method: `GET`
@@ -14,7 +15,7 @@ export const tagsApi = api.injectEndpoints({
                 method: `POST`
             })
         }),
-        createSub: builder.mutation<any, string>({
+        createSub: builder.mutation<UserTag, string>({
             query: (tagId) => ({
                 url: `/tags/sub/${tagId}`,
                 method: `POST`

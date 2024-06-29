@@ -8,7 +8,19 @@ import useSubscriptionActions from '../../features/SubscribeActions';
 import useVotesActions from '../../features/VotesActions';
 import { useLazyGetPostsByTopicQuery } from '../../app/services/postsApi';
 
-const TopicItem = ({ name, description, rating, isSubscribed, isLiked, categoryId, id, postsCount, category = '' }: any) => {
+type TopicItemProps = {
+    name: string;
+    description: string;
+    rating: number;
+    isSubscribed: boolean;
+    isLiked: boolean;
+    categoryId: string;
+    id: string;
+    postsCount: number;
+    category?: string;
+};
+
+const TopicItem = ({ name, description, rating, isSubscribed, isLiked, categoryId, id, postsCount, category = '' }: TopicItemProps) => {
     const { handleSubscribeTopic } = useSubscriptionActions();
     const { handleLikeTopic } = useVotesActions();
     const [getPostsByTopic] = useLazyGetPostsByTopicQuery();

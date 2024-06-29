@@ -1,14 +1,15 @@
+import { Topic, TopicSubs } from "../types";
 import { api } from "./api";
 
 export const topicApi = api.injectEndpoints({
     endpoints: (builder) => ({
-        createSubcription: builder.mutation<void, any>({
+        createSubcription: builder.mutation<TopicSubs, any>({
             query: (topicId) => ({
                 url: `/topic/${topicId}`,
                 method: 'POST',
             })
         }),
-        createTopic: builder.mutation<any, any>({
+        createTopic: builder.mutation<Topic, any>({
             query: (topicData) => ({
                 url: `/topic`,
                 method: 'POST',
@@ -22,7 +23,7 @@ export const topicApi = api.injectEndpoints({
 
             })
         }),
-        getTopicList: builder.query<any, void>({
+        getTopicList: builder.query<Topic[], void>({
             query: () => ({
                 url: `/topic`,
                 method: `GET`

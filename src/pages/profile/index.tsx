@@ -72,7 +72,6 @@ const Profile = () => {
 
   return (
     <>
-      <BackButton />
       <div className="flex items-stretch gap-4">
       <Card className="flex flex-col items-center text-center space-y-3 p-6 flex-2 shadow-sm border rounded-2xl bg-white">
       <Image

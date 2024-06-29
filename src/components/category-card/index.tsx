@@ -1,8 +1,6 @@
 
 import TopicWrapper from '../topic-wrapper';
 import CategoryItem from '../category-item';
-import { useState } from 'react';
-import { Button } from '@nextui-org/react';
 
 type Topic = {
   id: string;

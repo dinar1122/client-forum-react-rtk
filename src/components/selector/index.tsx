@@ -3,7 +3,15 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import CreateTopicForm from '../create-topic-form';
 
-const Selector = ({ setFirst, setSecond, valueFirst = '', valueSecond = '', }: any) => {
+type SelectorProps = {
+  setFirst: any;
+  setSecond: any;
+  valueFirst?: string;
+  valueSecond?: string;
+};
+
+
+const Selector = ({ setFirst, setSecond, valueFirst = '', valueSecond = '', }: SelectorProps) => {
   const [selectedTopicValue, setSelectedTopicValue] = useState(valueSecond);
   const [selectedCategoryValue, setSelectedCategoryValue] = useState(valueFirst);
   const [createTopicMode, setCreateTopicMode] = useState(false)

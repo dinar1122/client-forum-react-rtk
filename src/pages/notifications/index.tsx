@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { useGetNotificationsByUserIdQuery, useLazyGetNotificationsByUserIdQuery, useReadNotificationsMutation } from '../../app/services/notificationsApi';
-import { Button, Card, CardBody, Spinner, Tabs, Tab } from '@nextui-org/react';
-import { formatToClientDate } from '../../utils/format-to-client-date';
+import { Button, Spinner, Tabs, Tab } from '@nextui-org/react';
 import { MdOutlineQuestionAnswer, MdPostAdd } from 'react-icons/md';
 import { BiRefresh } from 'react-icons/bi';
 import { FaEye, FaUserPlus } from 'react-icons/fa';
-import { LuSettings } from 'react-icons/lu';
+
 import Alert from '../../components/UI/alert';
 import { Link } from 'react-router-dom';
+import { NotificationItem } from '../../components/notification-item';
 
 const Notifications = () => {
     const [triggerGetNewNotifications] = useLazyGetNotificationsByUserIdQuery();
@@ -24,13 +24,13 @@ const Notifications = () => {
     };
 
     const handleWipeNotifications = async () => {
-        const response = await setIsReadNotif(true)
+        const response = await setIsReadNotif(true);
         if ('error' in response) {
-            setMessage(response.error?.data)
+            setMessage('');
         } else {
-            setMessage(response.data)
+            setMessage(response.data);
         }
-        triggerGetNewNotifications()
+        triggerGetNewNotifications();
     };
 
     if (isLoading) {
@@ -41,84 +41,76 @@ const Notifications = () => {
         return <Spinner />;
     }
 
-    const renderNotification = (elem, Icon, message) => (
-        <Card key={elem.id} className="mt-3 border-l-4 border-blue-500">
-            <CardBody className="flex-row justify-between p-4">
-                <div className="flex items-center">
-                    {!elem.isRead && <div className="w-3 h-3 bg-red-500 rounded-full mr-3"></div>}
-                    <div className="flex flex-col">
-                        <div className="text-gray-800 text-lg font-semibold">{message}</div>
-                        <div className="text-gray-500 text-sm">{formatToClientDate(elem.timestamp, true)}</div>
-                    </div>
-                </div>
-                <Icon className="text-3xl text-blue-500" />
-            </CardBody>
-        </Card>
-    );
-
     return (
         <>
-
-            <Tabs aria-label="Notifications" color='primary' variant='light'>
-
-                <Tab key="posts" title="Посты">
-                    {data?.post?.map((elem) =>
-                        renderNotification(
-                            elem,
-                            MdPostAdd,
-                            <>
-                                Пост опубликован в теме <Link to={`/categories/topic/${elem.post.topic.id}`} className="text-blue-500 hover:underline">{elem.post?.topic.name}</Link>: <Link to={`/posts/${elem.postId}`} className="text-blue-500 hover:underline"> Перейти к посту</Link>
-                            </>
-                        )
-                    )}
-                </Tab>
-                <Tab key="topics" title="Темы">
-                    {data?.topic?.map((elem) =>
-                        renderNotification(
-                            elem,
-                            MdOutlineQuestionAnswer,
-                            <>
-                                Новая тема в разделе <Link to={`/categories/${elem.topic?.category.id}`} className="text-blue-500 hover:underline">{elem?.topic.category.name}</Link>: <Link to={`/topics/${elem.topic.id}`} className="text-blue-500 hover:underline">{elem.topic.name}</Link>.
-                            </>
-                        )
-                    )}
-                </Tab>
-                <Tab key="follows" title="Подписчики">
-                    {data?.follows?.map((elem) =>
-                        renderNotification(
-                            elem,
-                            FaUserPlus,
-                            <>
-                                Новый подписчик: <Link to={`/users/${elem.follows?.follower.id}`} className="text-blue-500 hover:underline">{elem.follows?.follower.username}</Link>
-                            </>
-                        )
-                    )}
-                </Tab>
-                <Tab key="mentions" title="Упоминания">
-                    {data?.MENTION?.map((elem) =>
-                        renderNotification(
-                            elem,
-                            MdOutlineQuestionAnswer,
-                            <>
-                                Упоминание в комментариях: <Link to={`/posts/${elem.postId}`} className="text-blue-500 hover:underline">Перейти к посту</Link>
-                            </>
-                        )
-                    )}
-                </Tab>
-                <Tab className='my-2 px-0'>
+            <div className="flex justify-between items-center mb-4">
+                <div className="flex space-x-2">
                     <Button variant='ghost' startContent={<BiRefresh className="text-2xl" />} onClick={handleUpdateNotif} className="font-semibold text-gray-700">
                         Обновить
                     </Button>
-                </Tab>
-                <Tab className='my-2'>
                     <Button startContent={<FaEye />} variant='ghost' onClick={handleWipeNotifications} className="font-semibold text-gray-700">
                         Прочитать все уведомления
                     </Button>
+                </div>
+            </div>
+            <Tabs aria-label="Notifications" color='primary' variant='light'>
+                <Tab key="posts" title="Посты">
+                    {data?.post?.map((elem: any) =>
+                        <NotificationItem
+                            key={elem.id}
+                            elem={elem}
+                            Icon={MdPostAdd}
+                            message={
+                                <>
+                                    Пост опубликован в теме <Link to={`/categories/topic/${elem.post.topic.id}`} className="text-blue-500 hover:underline">{elem.post?.topic.name}</Link>: <Link to={`/posts/${elem.postId}`} className="text-blue-500 hover:underline"> Перейти к посту</Link>
+                                </>
+                            }
+                        />
+                    )}
                 </Tab>
-
+                <Tab key="topics" title="Темы">
+                    {data?.topic?.map((elem: any) =>
+                        <NotificationItem
+                            key={elem.id}
+                            elem={elem}
+                            Icon={MdOutlineQuestionAnswer}
+                            message={
+                                <>
+                                    Новая тема в разделе <Link to={`/categories/${elem.topic?.category.id}`} className="text-blue-500 hover:underline">{elem?.topic.category.name}</Link>: <Link to={`/topics/${elem.topic.id}`} className="text-blue-500 hover:underline">{elem.topic.name}</Link>.
+                                </>
+                            }
+                        />
+                    )}
+                </Tab>
+                <Tab key="follows" title="Подписчики">
+                    {data?.follows?.map((elem: any) =>
+                        <NotificationItem
+                            key={elem.id}
+                            elem={elem}
+                            Icon={FaUserPlus}
+                            message={
+                                <>
+                                    Новый подписчик: <Link to={`/users/${elem.follows?.follower.id}`} className="text-blue-500 hover:underline">{elem.follows?.follower.username}</Link>
+                                </>
+                            }
+                        />
+                    )}
+                </Tab>
+                <Tab key="mentions" title="Упоминания">
+                    {data?.MENTION?.map((elem: any) =>
+                        <NotificationItem
+                            key={elem.id}
+                            elem={elem}
+                            Icon={MdOutlineQuestionAnswer}
+                            message={
+                                <>
+                                    Упоминание в комментариях: <Link to={`/posts/${elem.postId}`} className="text-blue-500 hover:underline">Перейти к посту</Link>
+                                </>
+                            }
+                        />
+                    )}
+                </Tab>
             </Tabs>
-
-
             {message && <Alert message={message} closeMethod={handleCloseAlert} />}
         </>
     );

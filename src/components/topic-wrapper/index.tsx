@@ -68,7 +68,6 @@ const TopicWrapper = ({ followingList, subscribedCategoryNTopicsData = {}, categ
               key={item.id} 
               name={item.name} 
               description={item.description}
-              posts={item.posts} 
               isSubscribed={item.isSubscribed}
               isLiked={item.isLiked}
               categoryId={item.categoryId}

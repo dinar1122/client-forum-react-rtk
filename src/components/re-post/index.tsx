@@ -24,8 +24,6 @@ const RePost = ({postId}:any) => {
             content={data.content}
             cardFor={'post'}
             id={data.id}
-            likedByUser={data.likedByUser}
-            dislikedByUser={data.dislikedByUser}
             createdAt={data.createdAt}
             commentsCount={data.comments.length}
             likesCount={data.likes.length}

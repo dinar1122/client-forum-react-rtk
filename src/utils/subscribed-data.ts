@@ -4,17 +4,17 @@ import { selectCurrentSubscribedTopicsNCategories, selectCurrentTagsSubs, select
 export const subscribedData = () => {
     const dataUserTagsSubs = useSelector(selectCurrentTagsSubs)
     const subscribedTagIds = new Set(dataUserTagsSubs?.map((sub: any) => sub.tagId));
-    
 
-    return {subscribedTagIds}
+
+    return { subscribedTagIds }
 }
 export const subscribedCategoryNTopics = () => {
     const subscribedCategoryNTopicsData = useSelector(selectCurrentSubscribedTopicsNCategories)
 
-    return {subscribedCategoryNTopicsData}
+    return { subscribedCategoryNTopicsData }
 }
 export const userFollows = () => {
     const currentUserFollows = useSelector(selectCurrentUserFollows)
 
-    return {currentUserFollows}
+    return { currentUserFollows }
 }

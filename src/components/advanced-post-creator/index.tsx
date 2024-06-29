@@ -1,6 +1,6 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { Button, Card, CardBody, CardFooter, Input, Listbox, ListboxItem, Select, SelectItem, Textarea } from '@nextui-org/react';
-import { AiOutlineMinusCircle, AiOutlinePlusCircle } from 'react-icons/ai';
+import React, { useEffect, useState } from 'react';
+import { Button, Card, CardBody, CardFooter, Select, SelectItem, Textarea } from '@nextui-org/react';
+
 import { useCreatePostMutation, useUpdatePostByIdMutation } from '../../app/services/postsApi';
 import CurrentPostBody from '../current-post-body';
 
@@ -24,7 +24,7 @@ const AdvancedCreator = ({ data = null }: any) => {
   const [updatePost] = useUpdatePostByIdMutation()
 
   const [getTags] = useLazyGetAllTagsQuery()
-  const [tagList, setTagList] = useState();
+  const [tagList, setTagList] = useState<any>([]);
   const { selectionTags, error, handleAddTag, handleRemoveTag, setSelectionTags, setError } = useTags();
   const [selectionTagsClosed, setSelectionTagsClosed] = useState(true);
   const [createTag] = useCreateTagMutation()
@@ -148,7 +148,10 @@ const AdvancedCreator = ({ data = null }: any) => {
     <div>
       {textContentToSend.length > 0 && <Card>
         <CardBody>
-          {<CurrentPostBody content={textContentToSend} editor={editor} onUpdateContent={setTextContent}></CurrentPostBody>}
+          {<CurrentPostBody 
+          content={textContentToSend} 
+          editor={editor} 
+          onUpdateContent={setTextContent}></CurrentPostBody>}
         </CardBody>
         <CardBody className='flex-row gap-1'>{(selectionTags).map((tag: any) => {
           return <TagItem key={tag.name} tag={tag} deleteMethod={handleRemoveTag}></TagItem>
@@ -165,7 +168,7 @@ const AdvancedCreator = ({ data = null }: any) => {
               labelPlacement="outside"
               placeholder="Напишите что-то ..."
               classNames={{
-                base: "col-span-12 md:col-span-6 mb-6 md:mb-0",
+                base: "col-span-12  md:col-span-6 mb-6 md:mb-0",
                 input: "resize-y min-h-[70px] text-lg/7 transition duration-300",
               }}
             />

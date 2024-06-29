@@ -4,7 +4,18 @@ import { BASE_URL } from '../../constants';
 import { formatToClientDate } from '../../utils/format-to-client-date';
 import useSubscriptionActions from '../../features/SubscribeActions';
 import { Link } from 'react-router-dom';
-const CurrentTopicHeader = ({id, name, createdAt, description, author, isSubscribedOnTopic = false, isSubscribedOnUser = false}:any) => {
+
+type CurrentTopicHeaderProps = {
+  id: string;
+  name: string;
+  createdAt: Date;
+  description: string;
+  author: any;
+  isSubscribedOnTopic?: boolean;
+  isSubscribedOnUser?: boolean;
+};
+
+const CurrentTopicHeader = ({id, name, createdAt, description, author, isSubscribedOnTopic = false, isSubscribedOnUser = false}:CurrentTopicHeaderProps) => {
 
   const {handleSubscribeUser, handleSubscribeTopic} = useSubscriptionActions()
 

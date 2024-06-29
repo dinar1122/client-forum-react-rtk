@@ -8,16 +8,29 @@ type QueryData = {
     timeframe?: any
     q?:any
   }
+type updateData = { 
+    postId: string, 
+    content: string, 
+    topicId: string, 
+    categoryId: string, 
+    postTags: object 
+}
+type createData = {
+    content: string, 
+    topicId: string, 
+    categoryId: string, 
+    postTags?: any[]
+}
 export const postApi = api.injectEndpoints({
     endpoints: (builder) => ({
-        createPost: builder.mutation<Post, { content: string, topicId: string, categoryId: string, postTags?: any[], }>({
+        createPost: builder.mutation<Post, createData >({
             query: (postData) => ({
                 url: '/posts',
                 method: 'POST',
                 body: postData
             })
         }),
-        updatePostById: builder.mutation<Post, { postId: string, content: string, topicId: string, categoryId: string, postTags: object }>({
+        updatePostById: builder.mutation<Post, updateData>({
             query: (postData) => ({
                 url: `/posts/${postData.postId}`,
                 method: 'PUT',

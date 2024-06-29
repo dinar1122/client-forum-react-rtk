@@ -12,7 +12,7 @@ const SearchList = ({ list, onSearchResult, methodIfEmpty }: any) => {
         setFilteredItems(sortedItems)
     }, [list])
 
-    const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleSearchChange = (event: any) => {
         const value = event.target.value;
         setSearchTerm(value)
         const filtered = list.filter((item: any) =>

@@ -2,7 +2,7 @@ import { api } from "./api";
 
 export const notificationsApi = api.injectEndpoints({
     endpoints: (builder) => ({
-        getNotificationsByUserId: builder.query<any, void>({
+        getNotificationsByUserId: builder.query<Notification[], void>({
             query: () => ({
                 url: `/notifications`,
                 method: 'GET',

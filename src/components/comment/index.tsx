@@ -1,7 +1,18 @@
 import React from 'react';
 import { CommentCard } from '../card-comment';
 
-export const Comment = ({ comment, id, level = 1, maxDepth = 5, isReply = false, replyComment = null, isLast = false }: any) => {
+type CommentProps = {
+    comment: any;
+    id: string;
+    level?: number;
+    maxDepth?: number;
+    isReply?: boolean;
+    replyComment?: any;
+    isLast?: boolean;
+  };
+  
+
+export const Comment = ({ comment, id, level = 1, maxDepth = 5, isReply = false, replyComment = null, isLast = false }: CommentProps) => {
     const limitTree = level < maxDepth
 
     return (
