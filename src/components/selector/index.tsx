@@ -10,16 +10,23 @@ type SelectorProps = {
   valueSecond?: string;
 };
 
-
-const Selector = ({ setFirst, setSecond, valueFirst = '', valueSecond = '', }: SelectorProps) => {
+const Selector = ({
+  setFirst,
+  setSecond,
+  valueFirst = '',
+  valueSecond = '',
+}: SelectorProps) => {
   const [selectedTopicValue, setSelectedTopicValue] = useState(valueSecond);
-  const [selectedCategoryValue, setSelectedCategoryValue] = useState(valueFirst);
-  const [createTopicMode, setCreateTopicMode] = useState(false)
+  const [selectedCategoryValue, setSelectedCategoryValue] =
+    useState(valueFirst);
+  const [createTopicMode, setCreateTopicMode] = useState(false);
   const dataCategory = useSelector((state: any) => state.categorySlice);
   let dataTopicsbyCategory = null;
 
   if (dataCategory.categories) {
-    dataTopicsbyCategory = dataCategory.categories.find((cat: any) => cat.id === selectedCategoryValue);
+    dataTopicsbyCategory = dataCategory.categories.find(
+      (cat: any) => cat.id === selectedCategoryValue,
+    );
   }
 
   const handleSelectCategoryChange = (event: any) => {
@@ -41,45 +48,49 @@ const Selector = ({ setFirst, setSecond, valueFirst = '', valueSecond = '', }: S
   };
 
   return (
+    <div className="w-full flex-col ">
+      <CardBody className="flex-row p-0">
+        {dataCategory.categories && (
+          <Select
+            label="Выберите категорию"
+            className="max-w-xs mr-3"
+            size="sm"
+            value={selectedCategoryValue}
+            onChange={handleSelectCategoryChange}
+          >
+            {dataCategory.categories.map((category: any) => (
+              <SelectItem key={category.id} value={category.id}>
+                {category.name}
+              </SelectItem>
+            ))}
+          </Select>
+        )}
 
-    <div className='w-full flex-col '><CardBody className='flex-row p-0'>
-      {dataCategory.categories && (
-        <Select
-          label="Выберите категорию"
-          className="max-w-xs mr-3"
-          size="sm"
-          value={selectedCategoryValue}
-          onChange={handleSelectCategoryChange}
-        >
-          {dataCategory.categories.map((category: any) => (
-            <SelectItem key={category.id} value={category.id}>
-              {category.name}
+        {dataCategory.categories && selectedCategoryValue && (
+          <Select
+            label="Выберите тему"
+            className="max-w-xs "
+            size="sm"
+            onChange={handleSelectChangeTopic}
+            value={selectedTopicValue}
+          >
+            {dataTopicsbyCategory.topics.map((topic: any) => (
+              <SelectItem key={topic.id} value={topic.id}>
+                {topic.name}
+              </SelectItem>
+            ))}
+            <SelectItem key="create-new-topic" value="create-new-topic">
+              Создать новую тему
             </SelectItem>
-          ))}
-        </Select>
+          </Select>
+        )}
+      </CardBody>
+      {createTopicMode && (
+        <CardBody className="p-0 pt-3">
+          <CreateTopicForm categoryId={selectedCategoryValue} />
+        </CardBody>
       )}
-
-      {dataCategory.categories && selectedCategoryValue && (
-        <Select
-          label="Выберите тему"
-          className="max-w-xs "
-          size="sm"
-          onChange={handleSelectChangeTopic}
-          value={selectedTopicValue}
-        >
-          {dataTopicsbyCategory.topics.map((topic: any) => (
-            <SelectItem key={topic.id} value={topic.id}>
-              {topic.name}
-            </SelectItem>
-          ))}
-          <SelectItem key="create-new-topic" value="create-new-topic">
-            Создать новую тему
-          </SelectItem>
-        </Select>
-      )}
-
-    </CardBody>
-      {createTopicMode && <CardBody className='p-0 pt-3'><CreateTopicForm categoryId={selectedCategoryValue} /></CardBody>}</div>
+    </div>
   );
 };
 

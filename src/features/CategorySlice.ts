@@ -29,14 +29,17 @@ const categorySlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder
-      .addMatcher(categoryApi.endpoints.getCategoryList.matchFulfilled, (state, action) => {
-        state.categories = action.payload
-      })
-  }
+    builder.addMatcher(
+      categoryApi.endpoints.getCategoryList.matchFulfilled,
+      (state, action) => {
+        state.categories = action.payload;
+      },
+    );
+  },
 });
 
 export const { setCategories, clearCategories } = categorySlice.actions;
 export default categorySlice.reducer;
 
-export const selectCategories = (state: RootState) => state.categorySlice.categories;
+export const selectCategories = (state: RootState) =>
+  state.categorySlice.categories;

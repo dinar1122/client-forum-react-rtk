@@ -189,10 +189,10 @@ code {
 .vertical-line {
   position: absolute;
   width: 3px;
-  height: 110%;
+  height: calc(100% + 20px);
   background-color: #ccc;
   left: -20px;
-  top: -25px;
+  top: -20px;
 }
 
 .vertical-line-short {

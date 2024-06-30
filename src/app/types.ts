@@ -56,8 +56,8 @@ export type Post = {
   notifications: Notification[];
   reports: Report[];
   _count: any;
-  likedByUser: boolean
-  dislikedByUser: boolean
+  likedByUser: boolean;
+  dislikedByUser: boolean;
 };
 
 export type PostMetaData = {
@@ -100,6 +100,8 @@ export type Category = {
   topics: Topic[];
   categorySubs: CategorySubs[];
   avatarUrl?: string;
+  _count: any
+  followers:any
 };
 
 export type CategorySubs = {
@@ -160,6 +162,7 @@ export type Notification = {
   userId: string;
   user: User;
   postId?: string;
+  MENTION: any;
   topicId?: string;
   followsId?: string;
   follows?: Follows;
@@ -183,5 +186,3 @@ export type Report = {
   processedBy?: string;
   processedAt?: Date;
 };
-
-

@@ -1,14 +1,14 @@
-import { Button } from "@nextui-org/react"
-import React from "react"
-import { FaRegArrowAltCircleLeft } from "react-icons/fa"
-import { useNavigate } from "react-router-dom"
+import { Button } from '@nextui-org/react';
+import React from 'react';
+import { FaRegArrowAltCircleLeft } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
 export const BackButton = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleGoBack = () => {
-    navigate(-1)
-  }
+    navigate(-1);
+  };
 
   return (
     <Button
@@ -20,5 +20,5 @@ export const BackButton = () => {
       <FaRegArrowAltCircleLeft />
       Назад
     </Button>
-  )
-}
+  );
+};

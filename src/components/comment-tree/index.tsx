@@ -1,4 +1,3 @@
-
 import { Comment } from '../comment';
 
 type CommentTreeProps = {
@@ -6,19 +5,15 @@ type CommentTreeProps = {
   id: string;
 };
 
-
-export const CommentTree = ({ comments, id }:CommentTreeProps) => {
+export const CommentTree = ({ comments, id }: CommentTreeProps) => {
   return (
     <div className="mt-10">
-      {comments.map((comment:any) => (
-        !comment.replyToCommentId && (
-          <Comment
-            key={comment.id}
-            comment={comment}
-            id={id}
-          />
-        )
-      ))}
+      {comments.map(
+        (comment: any) =>
+          !comment.replyToCommentId && (
+            <Comment key={comment.id} comment={comment} id={id} />
+          ),
+      )}
     </div>
   );
 };

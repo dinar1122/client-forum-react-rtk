@@ -1,9 +1,7 @@
-import React from 'react'
+import React from 'react';
 
 const ReportList = () => {
-  return (
-    <div>ReportList</div>
-  )
-}
+  return <div>ReportList</div>;
+};
 
-export default ReportList
+export default ReportList;

@@ -1,4 +1,13 @@
-import { Button, Card as CardNextUI, CardBody, Input, Switch, CardHeader, Spinner, Pagination } from '@nextui-org/react';
+import {
+  Button,
+  Card as CardNextUI,
+  CardBody,
+  Input,
+  Switch,
+  CardHeader,
+  Spinner,
+  Pagination,
+} from '@nextui-org/react';
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useLazyGetAllPostsQuery } from '../../app/services/postsApi';
@@ -10,18 +19,24 @@ import useTags from '../../features/useTags';
 import { subscribedData } from '../../utils/subscribed-data';
 
 const SearchPage = () => {
-  const [query, setQuery] = useState('')
-  const navigate = useNavigate()
-  const [getPostsByQuery, { data, isFetching }] = useLazyGetAllPostsQuery()
-  const { selectionTags, error, handleAddTag, handleRemoveTag, setSelectionTags } = useTags()
-  const { subscribedTagIds } = subscribedData()
+  const [query, setQuery] = useState('');
+  const navigate = useNavigate();
+  const [getPostsByQuery, { data, isFetching }] = useLazyGetAllPostsQuery();
+  const {
+    selectionTags,
+    error,
+    handleAddTag,
+    handleRemoveTag,
+    setSelectionTags,
+  } = useTags();
+  const { subscribedTagIds } = subscribedData();
 
-  const [searchParams, setSearchParams] = useSearchParams()
-  const pageParam = searchParams.get("page")
-  const page = pageParam ? parseInt(pageParam, 10) : 1
+  const [searchParams, setSearchParams] = useSearchParams();
+  const pageParam = searchParams.get('page');
+  const page = pageParam ? parseInt(pageParam, 10) : 1;
 
-  const [getTags] = useLazyGetAllTagsQuery()
-  const [tagList, setTagList] = useState<any>([])
+  const [getTags] = useLazyGetAllTagsQuery();
+  const [tagList, setTagList] = useState<any>([]);
   const [tagsSearchMode, setTagsSearchMode] = useState(true);
 
   useEffect(() => {
@@ -40,10 +55,13 @@ const SearchPage = () => {
           }
 
           if (tagsParam) {
-            const tagsArray = tagsParam.split(',').map(tagId => {
-              const tag = tagsData.find((t: any) => t.id === tagId);
-              return tag ? { id: tag.id, name: tag.name } : null;
-            }).filter(tag => tag !== null);
+            const tagsArray = tagsParam
+              .split(',')
+              .map((tagId) => {
+                const tag = tagsData.find((t: any) => t.id === tagId);
+                return tag ? { id: tag.id, name: tag.name } : null;
+              })
+              .filter((tag) => tag !== null);
             setSelectionTags(tagsArray);
           }
         } else {
@@ -58,29 +76,33 @@ const SearchPage = () => {
   }, [searchParams, getTags, setSelectionTags]);
 
   useEffect(() => {
-    const tagsQuery = selectionTags.map((tag: any) => tag.id).join(',')
-    const newQuery = `${encodeURIComponent(query)}&tags=${encodeURIComponent(tagsQuery)}&page=${page}`
-    navigate(`/search?q=${newQuery}`)
-  }, [query, navigate, selectionTags, page])
+    const tagsQuery = selectionTags.map((tag: any) => tag.id).join(',');
+    const newQuery = `${encodeURIComponent(query)}&tags=${encodeURIComponent(tagsQuery)}&page=${page}`;
+    navigate(`/search?q=${newQuery}`);
+  }, [query, navigate, selectionTags, page]);
 
   useEffect(() => {
-    handleSearchSubmit()
-  }, [page, tagsSearchMode])
+    handleSearchSubmit();
+  }, [page, tagsSearchMode]);
 
   const handleSearchChange = (event: any) => {
     setQuery(event.target.value);
   };
 
   const handleSelectPage = (selectedPage: any) => {
-    setSearchParams({ page: selectedPage })
+    setSearchParams({ page: selectedPage });
   };
 
   const handleSearchSubmit = () => {
     if (query.trim() || selectionTags.length) {
       if (!tagsSearchMode) {
-        getPostsByQuery({ q: query, page })
+        getPostsByQuery({ q: query, page });
       } else {
-        getPostsByQuery({ q: query, tags: selectionTags.map((tag: any) => tag.id), page })
+        getPostsByQuery({
+          q: query,
+          tags: selectionTags.map((tag: any) => tag.id),
+          page,
+        });
       }
     }
   };
@@ -88,7 +110,7 @@ const SearchPage = () => {
   return (
     <div className="gap-3">
       <CardNextUI className="flex flex-row gap-2 mb-3 w-full rounded-2xl p-0 shadow-sm">
-        <CardHeader className='gap-3 '>
+        <CardHeader className="gap-3 ">
           <Input
             type="text"
             placeholder="введите поисковой запрос"
@@ -104,7 +126,7 @@ const SearchPage = () => {
             Искать
           </Button>
           <Switch
-            className='w-full h-full bg-gray-100 rounded-xl px-2 font-semibold'
+            className="w-full h-full bg-gray-100 rounded-xl px-2 font-semibold"
             isSelected={tagsSearchMode}
             onValueChange={() => setTagsSearchMode(!tagsSearchMode)}
           >
@@ -112,25 +134,47 @@ const SearchPage = () => {
           </Switch>
         </CardHeader>
       </CardNextUI>
-      {error && <div className='text-red-600 mb-3'>{error}</div>}
-      {tagsSearchMode && <CardNextUI className='shadow-sm mb-3'>
-        <CardBody className='flex-row gap-2 flex-wrap	pb-0 '>
-          {(selectionTags).map((tag: any) => {
-            return <TagItem key={tag.name} tag={tag} deleteMethod={handleRemoveTag}></TagItem>
-          })}
-        </CardBody>
-        <CardBody className='gap-2 '>
-          {tagList && <SearchList list={tagList} onSearchResult={handleAddTag}></SearchList>}
-        </CardBody>
-      </CardNextUI>}
-      <CardNextUI className='flex-row shadow-sm justify-between p-3'>
+      {error && <div className="text-red-600 mb-3">{error}</div>}
+      {tagsSearchMode && (
+        <CardNextUI className="shadow-sm mb-3">
+          <CardBody className="flex-row gap-2 flex-wrap	pb-0 ">
+            {selectionTags.map((tag: any) => {
+              return (
+                <TagItem
+                  key={tag.name}
+                  tag={tag}
+                  deleteMethod={handleRemoveTag}
+                ></TagItem>
+              );
+            })}
+          </CardBody>
+          <CardBody className="gap-2 ">
+            {tagList && (
+              <SearchList
+                list={tagList}
+                onSearchResult={handleAddTag}
+              ></SearchList>
+            )}
+          </CardBody>
+        </CardNextUI>
+      )}
+      <CardNextUI className="flex-row shadow-sm justify-between p-3">
         <div>
-          <Pagination onChange={handleSelectPage} size='lg' variant='flat' showControls total={data?.totalPages || 1} initialPage={1} />
+          <Pagination
+            onChange={handleSelectPage}
+            size="lg"
+            variant="flat"
+            showControls
+            total={data?.totalPages || 1}
+            initialPage={1}
+          />
         </div>
-        <div className='my-auto text-xl my-auto font-semibold bg-gray-100 p-1 px-3 rounded-xl'>Найдено записей: {data?.totalPosts}</div>
+        <div className="my-auto text-xl my-auto font-semibold bg-gray-100 p-1 px-3 rounded-xl">
+          Найдено записей: {data?.totalPosts}
+        </div>
       </CardNextUI>
       <div className="mt-3 w-full ">
-        {isFetching && <Spinner size='lg' />}
+        {isFetching && <Spinner size="lg" />}
         {data?.posts.map((postData) => (
           <Card
             key={postData.id}
@@ -152,7 +196,9 @@ const SearchPage = () => {
             subscribedTagIds={subscribedTagIds}
           />
         ))}
-        {!isFetching && data && data.posts && data.posts.length === 0 && <p>Нет данных</p>}
+        {!isFetching && data && data.posts && data.posts.length === 0 && (
+          <p>Нет данных</p>
+        )}
       </div>
     </div>
   );

@@ -1,40 +1,46 @@
-import React, { useState, useEffect, FunctionComponent } from "react";
-import { Button, Input } from "@nextui-org/react";
-import { IoMdCreate, IoMdLink, IoMdCode } from "react-icons/io";
-import { useForm, Controller } from "react-hook-form";
-import { ErrorMessage } from "../error-message";
-import { useCreateCommentMutation } from "../../app/services/commentsApi";
-import { useParams } from "react-router-dom";
-import { useLazyGetPostByIdQuery } from "../../app/services/postsApi";
+import React, { useState, useEffect, FunctionComponent } from 'react';
+import { Button, Input } from '@nextui-org/react';
+import { IoMdCreate, IoMdLink, IoMdCode } from 'react-icons/io';
+import { useForm, Controller } from 'react-hook-form';
+import { ErrorMessage } from '../error-message';
+import { useCreateCommentMutation } from '../../app/services/commentsApi';
+import { useParams } from 'react-router-dom';
+import { useLazyGetPostByIdQuery } from '../../app/services/postsApi';
 import { Mention, MentionsInput } from 'react-mentions';
-import { useLazyGetUsersByUsernameQuery } from "../../app/services/userApi";
+import { useLazyGetUsersByUsernameQuery } from '../../app/services/userApi';
 
 type Props = {
-  replyId: string;
-  setIsReplying: any;
-  quotedText: string;
-}
+  replyId?: string;
+  setIsReplying?: any;
+  quotedText?: string;
+};
 
-export const CommentCreator = ({ replyId = '', setIsReplying, quotedText = '' }: Props) => {
-  const { id } = useParams<{ id: string }>()
-  const [createComment] = useCreateCommentMutation()
-  const [getPostById] = useLazyGetPostByIdQuery()
-  const [getUserByUsername] = useLazyGetUsersByUsernameQuery()
-  const [showLinkInput, setShowLinkInput] = useState(false)
-  const [showQuoteInput, setShowQuoteInput] = useState(false)
-  const [showCodeInput, setShowCodeInput] = useState(false)
-  const [showDecoration, setShowDecoration] = useState(false)
-  const [linkText, setLinkText] = useState('')
-  const [quoteText, setQuoteText] = useState(quotedText)
-  const [linkUrl, setLinkUrl] = useState('')
-  const [codeText, setCodeText] = useState('')
+export const CommentCreator = ({
+  replyId = '',
+  setIsReplying,
+  quotedText = '',
+}: Props) => {
+  const { id } = useParams<{ id: string }>();
+  const [createComment] = useCreateCommentMutation();
+  const [getPostById] = useLazyGetPostByIdQuery();
+  const [getUserByUsername] = useLazyGetUsersByUsernameQuery();
+  const [showLinkInput, setShowLinkInput] = useState(false);
+  const [showQuoteInput, setShowQuoteInput] = useState(false);
+  const [showCodeInput, setShowCodeInput] = useState(false);
+  const [showDecoration, setShowDecoration] = useState(false);
+  const [linkText, setLinkText] = useState('');
+  const [quoteText, setQuoteText] = useState(quotedText);
+  const [linkUrl, setLinkUrl] = useState('');
+  const [codeText, setCodeText] = useState('');
 
   const fetchUserSuggestions = async (query: any, callback: any) => {
     const users = await getUserByUsername(query).unwrap();
     const suggestions = users
-      .filter((user: any) => user.username.toLowerCase().includes(query.toLowerCase()))
-      .map((user: any) => ({ id: user.id, display: user.username }))
-    callback(suggestions)
+      .filter((user: any) =>
+        user.username.toLowerCase().includes(query.toLowerCase()),
+      )
+      .map((user: any) => ({ id: user.id, display: user.username }));
+    callback(suggestions);
   };
 
   const {
@@ -42,7 +48,7 @@ export const CommentCreator = ({ replyId = '', setIsReplying, quotedText = '' }:
     control,
     formState: { errors },
     setValue,
-    getValues
+    getValues,
   } = useForm();
 
   useEffect(() => {
@@ -54,45 +60,51 @@ export const CommentCreator = ({ replyId = '', setIsReplying, quotedText = '' }:
   const onSubmit = handleSubmit(async (data) => {
     try {
       if (id) {
-        await createComment({ content: data.comment, postId: id, replyToCommentId: replyId }).unwrap();
-        await getPostById(id).unwrap()
-        if (replyId) { setIsReplying(false) }
-        setValue("comment", "")
+        await createComment({
+          content: data.comment,
+          postId: id,
+          replyToCommentId: replyId,
+        }).unwrap();
+        await getPostById(id).unwrap();
+        if (replyId) {
+          setIsReplying(false);
+        }
+        setValue('comment', '');
       }
     } catch (error) {
-      console.log("err", error)
+      console.log('err', error);
     }
   });
 
   const handleCloseForm = () => {
-    setShowQuoteInput(false)
-    setShowDecoration(false)
-    setShowLinkInput(false)
-    setShowCodeInput(false)
-  }
+    setShowQuoteInput(false);
+    setShowDecoration(false);
+    setShowLinkInput(false);
+    setShowCodeInput(false);
+  };
 
   const addLinkToComment = () => {
-    const link = `!link:[${linkText}](${linkUrl})`
-    const currentComment = getValues("comment") || ""
-    setValue("comment", currentComment + link)
-    setLinkText('')
-    setLinkUrl('')
-    setShowLinkInput(false)
+    const link = `!link:[${linkText}](${linkUrl})`;
+    const currentComment = getValues('comment') || '';
+    setValue('comment', currentComment + link);
+    setLinkText('');
+    setLinkUrl('');
+    setShowLinkInput(false);
   };
 
   const addQuoteComment = async () => {
-    const currentComment = getValues("comment") || ""
+    const currentComment = getValues('comment') || '';
     setValue('comment', currentComment + `\n> ${quoteText}\n`);
-    setQuoteText('')
-  }
+    setQuoteText('');
+  };
 
   const addCodeToComment = () => {
-    const code = `!code[${codeText}]!code`
-    const currentComment = getValues("comment") || ""
-    setValue("comment", currentComment + code)
-    setCodeText('')
-    setShowCodeInput(false)
-  }
+    const code = `!code[${codeText}]!code`;
+    const currentComment = getValues('comment') || '';
+    setValue('comment', currentComment + code);
+    setCodeText('');
+    setShowCodeInput(false);
+  };
 
   const error = errors?.comment?.message as string;
 
@@ -104,7 +116,7 @@ export const CommentCreator = ({ replyId = '', setIsReplying, quotedText = '' }:
           control={control}
           defaultValue=""
           rules={{
-            required: "Поле обязательно",
+            required: 'Поле обязательно',
           }}
           render={({ field }) => (
             <MentionsInput
@@ -114,14 +126,14 @@ export const CommentCreator = ({ replyId = '', setIsReplying, quotedText = '' }:
               value={field.value}
               onChange={(e: any) => field.onChange(e.target.value)}
               onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  e.preventDefault()
-                  field.onChange(field.value + "\n")
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  field.onChange(field.value + '\n');
                 }
               }}
             >
               <Mention
-                className='mentions__dropdown'
+                className="mentions__dropdown"
                 trigger="@"
                 data={fetchUserSuggestions}
                 displayTransform={(id: any, display: any) => `@${display}`}
@@ -132,11 +144,7 @@ export const CommentCreator = ({ replyId = '', setIsReplying, quotedText = '' }:
         {errors && <ErrorMessage error={error} />}
         <div className="flex-row gap-2 justify-between">
           <div className="flex-row gap-2">
-            <Button
-              color="primary"
-              endContent={<IoMdCreate />}
-              type="submit"
-            >
+            <Button color="primary" endContent={<IoMdCreate />} type="submit">
               Ответить
             </Button>
 
@@ -177,7 +185,9 @@ export const CommentCreator = ({ replyId = '', setIsReplying, quotedText = '' }:
               </Button>
             )}
           </div>
-          <Button variant="ghost" onClick={() => setIsReplying(false)}>Закрыть</Button>
+          <Button variant="ghost" onClick={() => setIsReplying(false)}>
+            Закрыть
+          </Button>
         </div>
         {showLinkInput && (
           <div className="grid grid-cols-1 gap-2 mt-2 ">
@@ -197,9 +207,7 @@ export const CommentCreator = ({ replyId = '', setIsReplying, quotedText = '' }:
               value={linkUrl}
               onChange={(e) => setLinkUrl(e.target.value)}
             />
-            <Button onClick={addLinkToComment}>
-              Добавить ссылку
-            </Button>
+            <Button onClick={addLinkToComment}>Добавить ссылку</Button>
           </div>
         )}
         {showQuoteInput && (
@@ -210,9 +218,7 @@ export const CommentCreator = ({ replyId = '', setIsReplying, quotedText = '' }:
               value={quoteText}
               onChange={(e) => setQuoteText(e.target.value)}
             />
-            <Button onClick={addQuoteComment}>
-              Добавить цитату
-            </Button>
+            <Button onClick={addQuoteComment}>Добавить цитату</Button>
           </div>
         )}
         {showCodeInput && (
@@ -223,9 +229,7 @@ export const CommentCreator = ({ replyId = '', setIsReplying, quotedText = '' }:
               value={codeText}
               onChange={(e) => setCodeText(e.target.value)}
             />
-            <Button onClick={addCodeToComment}>
-              Добавить блок кода
-            </Button>
+            <Button onClick={addCodeToComment}>Добавить блок кода</Button>
           </div>
         )}
       </form>

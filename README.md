@@ -1,27 +1,50 @@
-# vite-template-redux
+## Описание
 
-Uses [Vite](https://vitejs.dev/), [Vitest](https://vitest.dev/), and [React Testing Library](https://github.com/testing-library/react-testing-library) to create a modern [React](https://react.dev/) app compatible with [Create React App](https://create-react-app.dev/)
+Проект представляет собой клиентскую часть веб-приложения, разработанную с использованием React и Redux Toolkit.
+Для управления состоянием и выполнения запросов к API используется Redux Toolkit Query (RTK Query).
 
-```sh
-npx degit reduxjs/redux-templates/packages/vite-template-redux my-app
-```
+- Платформа организована в виде категорий и подразделов. 
+- Публикации могут содержать теги, а пользователи могут создавать новые теги и подписываться на них. 
+- Темы и посты имеют систему оценок: темы оцениваются для перемещения в рейтинге, посты - лайками и дизлайками. 
+- Пользователи могут создавать темы и публиковать контент, включая текст, изображения, видео и опросы, с возможностью редактирования и жалоб. Комментарии к постам поддерживают ответы и упоминания. 
+- Взаимодействие с пользователями включает подписку на авторов, темы и разделы, а также упоминания в комментариях. Настройки профиля позволяют редактировать данные, менять аватар и персонализировать профиль.
 
-## Goals
+1. ![разделы](https://i.ibb.co/Xy68dwd/Screenshot-1.png)
+2. ![главная](https://i.ibb.co/T0b82w0/Screenshot-2.png)
+3. ![редактор](https://i.ibb.co/TTQP8Dq/Screenshot-3.png)
 
-- Easy migration from Create React App or Vite
-- As beginner friendly as Create React App
-- Optimized performance compared to Create React App
-- Customizable without ejecting
+## Технологии
 
-## Scripts
+- **React**: Библиотека для создания пользовательских интерфейсов.
+- **Redux Toolkit**: Современный подход к управлению состоянием в приложениях React.
+- **RTK Query**: Инструмент для упрощенного выполнения запросов к API и кэширования ответов.
+- **TypeScript**: Статическая типизация для повышения надежности и улучшения разработки.
+- **Tailwind CSS**: Утилитарный CSS-фреймворк для стилизации.
 
-- `dev`/`start` - start dev server and open browser
-- `build` - build for production
-- `preview` - locally preview production build
-- `test` - launch test runner
+## Установка и запуск
 
-## Inspiration
+### Шаги для запуска проекта
 
-- [Create React App](https://github.com/facebook/create-react-app/tree/main/packages/cra-template)
-- [Vite](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react)
-- [Vitest](https://github.com/vitest-dev/vitest/tree/main/examples/react-testing-lib)
+1. Склонируйте репозиторий:
+
+   ```bash
+   git clone https://github.com/dinar1122/client-forum-react-rtk.git
+   ```
+
+   серверная часть
+
+   ```
+   git clone https://github.com/dinar1122/express-api.git
+   ```
+
+2. Установите зависимости:
+
+   ```bash
+   npm install
+   ```
+
+3. Запустите проект в режиме разработки:
+
+   ```bash
+   npm run dev
+   ```

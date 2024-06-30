@@ -1,117 +1,167 @@
-import { createSelector, createSlice } from "@reduxjs/toolkit"
-import { userApi } from "../app/services/userApi"
-import { RootState } from "../app/store"
-import { User } from "../app/types"
-import { tagsApi } from "../app/services/tagsApi"
-import { categoryApi } from "../app/services/categoryApi"
-import { topicApi } from "../app/services/topicApi"
-import { likesApi } from "../app/services/likesApi"
-import { followsApi } from "../app/services/followsApi"
-
+import { createSelector, createSlice } from '@reduxjs/toolkit';
+import { userApi } from '../app/services/userApi';
+import { RootState } from '../app/store';
+import { User } from '../app/types';
+import { tagsApi } from '../app/services/tagsApi';
+import { categoryApi } from '../app/services/categoryApi';
+import { topicApi } from '../app/services/topicApi';
+import { likesApi } from '../app/services/likesApi';
+import { followsApi } from '../app/services/followsApi';
 
 type InitialState = {
-  user: User | null
-  isAuthenticated: boolean
-  users: User[] | null
-  current: User | null
-  token?: string
-}
+  user: User | null;
+  isAuthenticated: boolean;
+  users: User[] | null;
+  current: User | null;
+  token?: string;
+};
 
 const initialState: InitialState = {
   user: null,
   isAuthenticated: false,
   users: null,
   current: null,
-}
+};
 
 const slice = createSlice({
-  name: "user",
+  name: 'user',
   initialState,
   reducers: {
     logout: () => initialState,
     resetUser: (state) => {
-      state.user = null
+      state.user = null;
     },
   },
   extraReducers: (builder) => {
     builder
       .addMatcher(userApi.endpoints.login.matchFulfilled, (state, action) => {
-        state.token = action.payload.token
-        state.isAuthenticated = true
+        state.token = action.payload.token;
+        state.isAuthenticated = true;
       })
       .addMatcher(userApi.endpoints.current.matchFulfilled, (state, action) => {
-        state.isAuthenticated = true
-        state.current = action.payload
+        state.isAuthenticated = true;
+        state.current = action.payload;
       })
-      .addMatcher(followsApi.endpoints.followOnUser.matchFulfilled, (state, action) => {
-        if (state.current !== null && state.current.following ) {
-          state.current.following = [ ...state.current.following,{ ...action.payload}];
-        }
-      })
-      .addMatcher(followsApi.endpoints.deleteFollowOnUser.matchFulfilled, (state, action) => {
-        if (state.current !== null && state.current.following ) {
-          state.current.following = state.current.following.filter(following => following.followingId !== action.payload.followingId);
-        }
-      })
-      .addMatcher(tagsApi.endpoints.createSub.matchFulfilled, (state, action) => {
-        if(state.current !== null)
-        state.current.userTags = [ ...state.current.userTags,{ ...action.payload}]
-      })
-      .addMatcher(categoryApi.endpoints.createSubscriptionCategory.matchFulfilled, (state, action) => {
-        if(state.current !== null)
-        state.current.category = [ ...state.current.category , action.payload]
-      })
-      .addMatcher(categoryApi.endpoints.deleteSubscriptionCategory.matchFulfilled, (state, action: any) => {
-        if(state.current !== null)
-        state.current.category = state.current.category.filter(category => category.categoryId !== action.payload.categoryId);
-      })
-      .addMatcher(topicApi.endpoints.createSubcription.matchFulfilled, (state, action) => {
-        if(state.current !== null)
-        state.current.topics = [ ...state.current.topics , action.payload]
-      })
-      .addMatcher(likesApi.endpoints.createLikeOnTopic.matchFulfilled, (state, action) => {
-        if(state.current !== null)
-        state.current.likes = [ ...state.current.likes , { ...action.payload}]
-      })
-      .addMatcher(topicApi.endpoints.deleteSubcription.matchFulfilled, (state, action: any) => {
-        if(state.current !== null)
-        state.current.topics = state.current.topics.filter(topic => topic.topicId !== action.payload.topicId);
-      })
-      .addMatcher(tagsApi.endpoints.deleteSub.matchFulfilled, (state, action) => {
-        if (state.current !== null) {
-          state.current.userTags = state.current.userTags.filter(tag => tag.id !== action.payload.id);
-        }
-      })
-      .addMatcher(userApi.endpoints.getUserById.matchFulfilled,(state, action) => {
-          state.user = action.payload
+      .addMatcher(
+        followsApi.endpoints.followOnUser.matchFulfilled,
+        (state, action) => {
+          if (state.current !== null && state.current.following) {
+            state.current.following = [
+              ...state.current.following,
+              { ...action.payload },
+            ];
+          }
         },
       )
+      .addMatcher(
+        followsApi.endpoints.deleteFollowOnUser.matchFulfilled,
+        (state, action) => {
+          if (state.current !== null && state.current.following) {
+            state.current.following = state.current.following.filter(
+              (following) =>
+                following.followingId !== action.payload.followingId,
+            );
+          }
+        },
+      )
+      .addMatcher(
+        tagsApi.endpoints.createSub.matchFulfilled,
+        (state, action) => {
+          if (state.current !== null)
+            state.current.userTags = [
+              ...state.current.userTags,
+              { ...action.payload },
+            ];
+        },
+      )
+      .addMatcher(
+        categoryApi.endpoints.createSubscriptionCategory.matchFulfilled,
+        (state, action) => {
+          if (state.current !== null)
+            state.current.category = [
+              ...state.current.category,
+              action.payload,
+            ];
+        },
+      )
+      .addMatcher(
+        categoryApi.endpoints.deleteSubscriptionCategory.matchFulfilled,
+        (state, action: any) => {
+          if (state.current !== null)
+            state.current.category = state.current.category.filter(
+              (category) => category.categoryId !== action.payload.categoryId,
+            );
+        },
+      )
+      .addMatcher(
+        topicApi.endpoints.createSubcription.matchFulfilled,
+        (state, action) => {
+          if (state.current !== null)
+            state.current.topics = [...state.current.topics, action.payload];
+        },
+      )
+      .addMatcher(
+        likesApi.endpoints.createLikeOnTopic.matchFulfilled,
+        (state, action) => {
+          if (state.current !== null)
+            state.current.likes = [
+              ...state.current.likes,
+              { ...action.payload },
+            ];
+        },
+      )
+      .addMatcher(
+        topicApi.endpoints.deleteSubcription.matchFulfilled,
+        (state, action: any) => {
+          if (state.current !== null)
+            state.current.topics = state.current.topics.filter(
+              (topic) => topic.topicId !== action.payload.topicId,
+            );
+        },
+      )
+      .addMatcher(
+        tagsApi.endpoints.deleteSub.matchFulfilled,
+        (state, action) => {
+          if (state.current !== null) {
+            state.current.userTags = state.current.userTags.filter(
+              (tag) => tag.id !== action.payload.id,
+            );
+          }
+        },
+      )
+      .addMatcher(
+        userApi.endpoints.getUserById.matchFulfilled,
+        (state, action) => {
+          state.user = action.payload;
+        },
+      );
   },
-})
+});
 
-export const { logout, resetUser } = slice.actions
-export default slice.reducer
+export const { logout, resetUser } = slice.actions;
+export default slice.reducer;
 
 export const selectIsAuthenticated = (state: RootState) =>
-  state.user.isAuthenticated
+  state.user.isAuthenticated;
 
-export const selectCurrent = (state: RootState) => state.user.current
+export const selectCurrent = (state: RootState) => state.user.current;
 
-export const selectCurrentTagsSubs = (state: RootState) => state.user.current?.userTags
+export const selectCurrentTagsSubs = (state: RootState) =>
+  state.user.current?.userTags;
 
 export const selectCurrentSubscribedTopicsNCategories = createSelector(
   (state: RootState) => state.user.current,
   (current) => ({
     category: current?.category,
     topic: current?.topics,
-  })
+  }),
 );
 
-export const selectCurrentUserFollows = (state: RootState) => state.user.current?.following
+export const selectCurrentUserFollows = (state: RootState) =>
+  state.user.current?.following;
 
-export const selectUserLike = (state: RootState) => state.user.current?.likes
+export const selectUserLike = (state: RootState) => state.user.current?.likes;
 
+export const selectUsers = (state: RootState) => state.user.users;
 
-export const selectUsers = (state: RootState) => state.user.users
-
-export const selectUser = (state: RootState) => state.user.user
+export const selectUser = (state: RootState) => state.user.user;

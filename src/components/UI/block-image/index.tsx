@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Image } from "@nextui-org/react";
+import React, { useState } from 'react';
+import { Image } from '@nextui-org/react';
 
 const BlockImage = ({ imageSource }: any) => {
   const [isZoomed, setIsZoomed] = useState(false);
@@ -7,7 +7,7 @@ const BlockImage = ({ imageSource }: any) => {
   const [showAllImages, setShowAllImages] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  const imageSources = imageSource.split('\n').map((src:any) => src.trim());
+  const imageSources = imageSource.split('\n').map((src: any) => src.trim());
 
   const toggleZoom = (images: string[]) => {
     setZoomedImages(images);
@@ -26,7 +26,10 @@ const BlockImage = ({ imageSource }: any) => {
   };
 
   const handlePrevImage = () => {
-    setCurrentImageIndex((prevIndex) => (prevIndex - 1 + zoomedImages.length) % zoomedImages.length);
+    setCurrentImageIndex(
+      (prevIndex) =>
+        (prevIndex - 1 + zoomedImages.length) % zoomedImages.length,
+    );
   };
 
   return (
@@ -71,7 +74,7 @@ const BlockImage = ({ imageSource }: any) => {
                 />
               </div>
               <div className="w-1/4 flex flex-col gap-2">
-                <div >
+                <div>
                   <Image
                     src={imageSources[1]}
                     alt="Second Image"
@@ -79,13 +82,16 @@ const BlockImage = ({ imageSource }: any) => {
                     className="object-cover w-full h-full"
                   />
                 </div>
-                <div className="flex-1 flex items-center justify-center bg-gray-300 rounded-2xl" onClick={() => toggleZoom(imageSources.slice(2))}>
+                <div
+                  className="flex-1 flex items-center justify-center bg-gray-300 rounded-2xl"
+                  onClick={() => toggleZoom(imageSources.slice(2))}
+                >
                   <span className="text-5xl text-gray-700">{`+${imageSources.length - 2}`}</span>
                 </div>
               </div>
             </>
           ) : (
-            imageSources.map((src:any, index: any) => (
+            imageSources.map((src: any, index: any) => (
               <Image
                 key={index}
                 src={src.trim()}

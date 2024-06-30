@@ -1,4 +1,3 @@
-
 import TopicWrapper from '../topic-wrapper';
 import CategoryItem from '../category-item';
 
@@ -13,17 +12,16 @@ type Topic = {
 type Props = {
   name: string;
   categoryId: string;
-  avatarUrl: string
+  avatarUrl: string;
   topics: Topic[];
   isSubscribedCategory: boolean;
-  description: string,
-  topicCount: number
-  subsCount: number
-  toggleTopics:any,
-  showTopics:any,
-  subscribedCategoryNTopicsData: any
+  description: string;
+  topicCount: number;
+  subsCount: number;
+  toggleTopics: any;
+  showTopics: any;
+  subscribedCategoryNTopicsData: any;
 };
-
 
 const CategoryCard = ({
   name,
@@ -35,14 +33,14 @@ const CategoryCard = ({
   description,
   subscribedCategoryNTopicsData,
   subsCount,
-  topicCount }: Props) => {
-
-  const isSubscribedCategory = subscribedCategoryNTopicsData.category.some((el: any) => el.categoryId == categoryId)
-
+  topicCount,
+}: Props) => {
+  const isSubscribedCategory = subscribedCategoryNTopicsData.category.some(
+    (el: any) => el.categoryId == categoryId,
+  );
 
   return (
     <div className="mb-3">
-      
       <CategoryItem
         toggleTopics={toggleTopics}
         showTopics={showTopics}
@@ -52,7 +50,8 @@ const CategoryCard = ({
         subsCount={subsCount}
         categoryId={categoryId}
         avatarUrl={avatarUrl}
-        isSubscribed={isSubscribedCategory}></CategoryItem>
+        isSubscribed={isSubscribedCategory}
+      ></CategoryItem>
 
       {showTopics && (
         <TopicWrapper

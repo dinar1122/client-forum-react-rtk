@@ -1,54 +1,60 @@
-import { Button, Card, Textarea } from "@nextui-org/react"
+import { Button, Card, Textarea } from '@nextui-org/react';
 import {
   useCreatePostMutation,
   useLazyGetAllPostsQuery,
-} from "../../app/services/postsApi"
-import { useForm, Controller } from "react-hook-form"
-import { ErrorMessage } from "../error-message"
-import { CgAdd } from "react-icons/cg"
+} from '../../app/services/postsApi';
+import { useForm, Controller } from 'react-hook-form';
+import { ErrorMessage } from '../error-message';
+import { CgAdd } from 'react-icons/cg';
 
-import { useState } from "react"
+import { useState } from 'react';
 
-import Selector from "../selector"
-import { FaEdit } from "react-icons/fa"
-import { Link } from "react-router-dom"
+import Selector from '../selector';
+import { FaEdit } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 
 export const CreatePost = () => {
-  const [createPost] = useCreatePostMutation()
-  const [triggerGetAllPosts] = useLazyGetAllPostsQuery()
+  const [createPost] = useCreatePostMutation();
+  const [triggerGetAllPosts] = useLazyGetAllPostsQuery();
   const [selectedTopicValue, setSelectedTopicValue] = useState('');
   const [selectedCategoryValue, setSelectedCategoryValue] = useState('');
-
 
   const {
     handleSubmit,
     control,
     formState: { errors },
     setValue,
-  } = useForm()
+  } = useForm();
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      const content = { component: 'TextContent', componentText: data.post, isShowed: true }
-      await createPost({ content: JSON.stringify([content]), topicId: selectedTopicValue, categoryId: selectedCategoryValue }).unwrap()
-      setValue("post", "")
-      await triggerGetAllPosts({ page: 1, tags: [], timeframe: '' }).unwrap()
+      const content = {
+        component: 'TextContent',
+        componentText: data.post,
+        isShowed: true,
+      };
+      await createPost({
+        content: JSON.stringify([content]),
+        topicId: selectedTopicValue,
+        categoryId: selectedCategoryValue,
+      }).unwrap();
+      setValue('post', '');
+      await triggerGetAllPosts({ page: 1, tags: [], timeframe: '' }).unwrap();
     } catch (error) {
-      console.log("err", error)
+      console.log('err', error);
     }
-  })
-  const error = errors?.post?.message as string
+  });
+  const error = errors?.post?.message as string;
 
   return (
     <form className="flex-grow  " onSubmit={onSubmit}>
-      <Card className="p-3 shadow-sm">
-
+      <Card className="p-3 shadow-sm border">
         <Controller
           name="post"
           control={control}
           defaultValue=""
           rules={{
-            required: "Обязательное поле",
+            required: 'Обязательное поле',
           }}
           render={({ field }) => (
             <Textarea
@@ -61,7 +67,12 @@ export const CreatePost = () => {
         />
         {errors && <ErrorMessage error={error} />}
         <div className="flex justify-between mt-3 gap-3 ">
-          <div className="flex-row w-full"><Selector setFirst={setSelectedCategoryValue} setSecond={setSelectedTopicValue}></Selector></div>
+          <div className="flex-row w-full">
+            <Selector
+              setFirst={setSelectedCategoryValue}
+              setSecond={setSelectedTopicValue}
+            ></Selector>
+          </div>
           <div className="flex items-center gap-2">
             <Button
               color="primary"
@@ -79,15 +90,13 @@ export const CreatePost = () => {
               color="primary"
               className="font-semibold text-gray-700 h-full"
             >
-              <Link className="h-full  items-center flex" to='/create'>редактор</Link>
-
+              <Link className="h-full  items-center flex" to="/create">
+                редактор
+              </Link>
             </Button>
-
           </div>
-
         </div>
       </Card>
-
     </form>
-  )
-}
+  );
+};
